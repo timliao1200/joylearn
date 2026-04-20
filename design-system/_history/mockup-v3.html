@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>享學 Design System — Mockup v2</title>
+  <style>
+    :root {
+      /* ── 品牌紫系（Direction 1：#6442A1 → #A5B4FC）── */
+      --brand:       #6442A1;   /* 主強調色 */
+      --brand-end:   #A5B4FC;   /* 漸層終點（淡藍紫）*/
+      --brand-grad:  linear-gradient(135deg, #6442A1, #A5B4FC);
+      --brand-dark:  #1A1440;   /* 深色背景（sidebar）*/
+      --brand-mid:   #9B87D0;   /* hover / 次強調 */
+      --brand-light: #EEF0FF;   /* 淺背景色塊 */
+      --brand-xlight:#FAFBFF;   /* 頁面底色（帶藍紫調的白）*/
+
+      /* ── 中性色（帶藍紫色溫，非純灰）── */
+      --ink:         #1A1440;   /* 主文字 */
+      --ink-2:       #5A5A7A;   /* 次文字 */
+      --ink-3:       #9090B8;   /* 佔位/說明文字 */
+      --bg:          #FFFFFF;   /* 卡片白底 */
+      --bg-2:        #FAFBFF;   /* 頁面底色 */
+      --border:      #E0E4FF;   /* 邊框（帶藍紫調淺灰）*/
+
+      /* ── 功能色（飽和度偏低，不搶主色）── */
+      --green:       #28C76F;
+      --green-light: #E2F8ED;
+      --amber:       #FF9F43;
+      --amber-light: #FFF3E0;
+
+      --radius:      12px;
+      --radius-sm:   8px;
+      --shadow:      0 2px 16px rgba(100,66,161,0.07);
+      --shadow-md:   0 8px 40px rgba(100,66,161,0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', 'Helvetica Neue', sans-serif;
+      background: #ECEEFF;   /* 外層底色，帶藍紫調 */
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    /* ─── DS WRAPPER ─── */
+    .ds-page { max-width: 1100px; margin: 0 auto; padding: 60px 24px 120px; }
+
+    /* ─── SECTION ─── */
+    .ds-section { margin-bottom: 80px; }
+    .ds-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 6px;
+    }
+    .ds-section-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 32px;
+      line-height: 1.2;
+    }
+
+    /* ─── HEADER ─── */
+    .ds-header {
+      background: var(--brand-dark);
+      border-radius: 20px;
+      padding: 48px 56px;
+      margin-bottom: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ds-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo-mark {
+      width: 52px; height: 52px;
+      background: var(--brand-grad);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff;
+      letter-spacing: -1px;
+    }
+    .logo-text { color: #fff; }
+    .logo-text .name { font-size: 26px; font-weight: 800; line-height: 1; }
+    .logo-text .tagline { font-size: 13px; opacity: .55; margin-top: 4px; }
+    .ds-header-meta { text-align: right; color: rgba(255,255,255,.4); font-size: 13px; line-height: 1.8; }
+    .ds-header-meta strong { color: rgba(255,255,255,.9); font-size: 15px; display: block; }
+
+    /* ─── COLOR SWATCHES ─── */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 16px; }
+    .color-swatch { border-radius: var(--radius); overflow: hidden; background: var(--bg); box-shadow: var(--shadow); }
+    .color-preview { height: 72px; }
+    .color-info { padding: 12px 14px; }
+    .color-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .color-hex  { font-size: 12px; color: var(--ink-3); font-family: monospace; margin-top: 2px; }
+
+    /* ─── TYPOGRAPHY ─── */
+    .type-grid { display: flex; flex-direction: column; gap: 24px; }
+    .type-row {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      display: flex; align-items: baseline; gap: 24px;
+      box-shadow: var(--shadow);
+    }
+    .type-meta { min-width: 100px; color: var(--ink-3); font-size: 12px; font-family: monospace; }
+    .type-sample { color: var(--ink); }
+
+    /* ─── COMPONENTS GRID ─── */
+    .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .comp-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .comp-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px;
+    }
+
+    /* ─── COPY PROMPT BUTTON ─── */
+    .prompt-box {
+      background: var(--brand-xlight);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      position: relative;
+    }
+    .prompt-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      color: var(--brand); text-transform: uppercase; margin-bottom: 10px;
+    }
+    .prompt-text {
+      font-size: 15px; color: var(--ink-2); line-height: 1.6;
+      padding-right: 80px;
+    }
+    .prompt-copy-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--brand-grad);
+      color: #fff;
+      border: none; cursor: pointer;
+      font-size: 12px; font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 8px;
+      letter-spacing: .3px;
+    }
+    .prompt-copy-btn:hover { background: #4a3ce0; }
+
+    /* ─── STEP INDICATOR ─── */
+    .steps { display: flex; flex-direction: column; gap: 12px; }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-2);
+      border: 1.5px solid var(--border);
+    }
+    .step-item.active {
+      background: var(--brand-light);
+      border-color: var(--brand-mid);
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--ink-3); color: #fff;
+      font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-item.active .step-num { background: var(--brand-grad); }
+    .step-item.done .step-num { background: var(--green); }
+    .step-content {}
+    .step-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .step-desc  { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+
+    /* ─── BASIC / ADVANCED TOGGLE ─── */
+    .toggle-tabs {
+      display: flex;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      width: fit-content;
+      margin-bottom: 16px;
+    }
+    .toggle-tab {
+      padding: 9px 20px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--ink-3);
+      border: none;
+      transition: all .18s;
+    }
+    .toggle-tab.active { background: var(--brand-grad); color: #fff; }
+    .toggle-content {
+      background: var(--bg-2);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      font-size: 15px;
+      color: var(--ink-2);
+      line-height: 1.7;
+      border: 1.5px solid var(--border);
+    }
+    .toggle-content strong { color: var(--ink); }
+
+    /* ─── IMAGE BLOCK ─── */
+    .img-block {
+      background: var(--bg-2);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      height: 160px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; color: var(--ink-3);
+      font-size: 13px;
+    }
+    .img-block-icon { font-size: 32px; }
+    .img-caption {
+      margin-top: 10px;
+      font-size: 13px; color: var(--ink-3); text-align: center; font-style: italic;
+    }
+
+    /* ─── QUIZ ─── */
+    .quiz-q { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      font-size: 14px; color: var(--ink-2);
+      cursor: pointer; background: var(--bg);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .quiz-option:hover { border-color: var(--brand-mid); background: var(--brand-xlight); }
+    .quiz-option.correct { border-color: var(--green); background: var(--green-light); color: var(--ink); }
+    .quiz-option .opt-key {
+      width: 24px; height: 24px; border-radius: 6px;
+      background: var(--border); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--ink-2);
+    }
+    .quiz-option.correct .opt-key { background: var(--green); color: #fff; }
+
+    /* ─── DIVIDER ─── */
+    .ds-divider {
+      height: 1px; background: var(--border);
+      margin: 80px 0;
+    }
+
+    /* ─── FULL COURSE PAGE PREVIEW ─── */
+    .preview-label {
+      text-align: center; margin-bottom: 28px;
+    }
+    .preview-label h2 { font-size: 22px; font-weight: 800; color: var(--ink); }
+    .preview-label p  { font-size: 14px; color: var(--ink-3); margin-top: 6px; }
+
+    .course-shell {
+      background: var(--bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      height: 680px;
+      border: 1.5px solid var(--border);
+    }
+
+    /* SIDEBAR */
+    .course-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--brand-dark);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-brand {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-logo-mark {
+      width: 32px; height: 32px; background: var(--brand-grad);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; color: #fff;
+    }
+    .sidebar-logo-text { color: #fff; font-size: 15px; font-weight: 700; }
+    .sidebar-course-title {
+      padding: 14px 20px 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(255,255,255,.35);
+    }
+    .sidebar-week-badge {
+      margin: 0 16px 12px;
+      background: rgba(100,66,161,.35);
+      border-radius: 8px;
+      padding: 8px 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sidebar-week-badge .week-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--brand-mid);
+    }
+    .sidebar-week-badge span { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8); }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 4px 12px; }
+    .nav-item {
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      color: rgba(255,255,255,.5);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 2px;
+      line-height: 1.4;
+    }
+    .nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.8); }
+    .nav-item.active { background: var(--brand-grad); color: #fff; font-weight: 600; }
+    .nav-item.done { color: rgba(255,255,255,.35); }
+    .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .nav-item.active .nav-dot { background: rgba(255,255,255,.8); }
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      font-size: 12px; color: rgba(255,255,255,.25);
+    }
+
+    /* CONTENT AREA */
+    .course-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 36px 48px;
+    }
+    .content-breadcrumb {
+      font-size: 12px; color: var(--ink-3);
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .content-breadcrumb span { color: var(--brand); font-weight: 600; }
+    .content-h1 {
+      font-size: 30px; font-weight: 800; color: var(--ink);
+      line-height: 1.2; margin-bottom: 8px;
+    }
+    .content-meta {
+      font-size: 13px; color: var(--ink-3); margin-bottom: 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .content-meta .badge {
+      background: var(--brand-light);
+      color: var(--brand);
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .content-section-title {
+      font-size: 15px; font-weight: 700; color: var(--ink);
+      margin-bottom: 12px; margin-top: 32px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .content-section-title::before {
+      content: '';
+      display: block;
+      width: 4px; height: 18px;
+      background: var(--brand);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .content-p { font-size: 16px; color: var(--ink-2); line-height: 1.75; margin-bottom: 16px; }
+    .content-p strong { color: var(--ink); }
+
+    /* Inline components within content */
+    .content-prompt-box {
+      background: var(--brand-xlight);
+      border: 1.5px solid var(--brand-light);
+      border-left: 4px solid var(--brand);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      position: relative;
+      margin: 20px 0;
+    }
+    .content-prompt-box .prompt-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      color: var(--brand); text-transform: uppercase; margin-bottom: 10px;
+    }
+    .content-prompt-box .prompt-text {
+      font-size: 15px; color: var(--ink-2); line-height: 1.7;
+      padding-right: 90px;
+    }
+    .content-prompt-box .copy-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--brand-grad); color: #fff;
+      border: none; cursor: pointer;
+      font-size: 12px; font-weight: 700;
+      padding: 7px 14px; border-radius: 8px;
+    }
+
+    .content-toggle-wrap { margin: 20px 0; }
+    .content-toggle-tabs {
+      display: flex; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      overflow: hidden; width: fit-content; border: 1.5px solid var(--border);
+      border-bottom: none;
+    }
+    .content-toggle-tab {
+      padding: 8px 18px; font-size: 13px; font-weight: 600;
+      cursor: pointer; background: var(--bg); color: var(--ink-3);
+      border: none;
+    }
+    .content-toggle-tab.active { background: var(--brand-grad); color: #fff; }
+    .content-toggle-body {
+      background: var(--bg-2); border: 1.5px solid var(--border);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+      padding: 16px 18px; font-size: 15px; color: var(--ink-2); line-height: 1.7;
+    }
+
+    .content-steps { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+    .content-step {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px; border-radius: var(--radius-sm);
+      background: var(--bg-2); border: 1.5px solid var(--border);
+    }
+    .content-step.active {
+      background: var(--brand-light); border-color: var(--brand-mid);
+    }
+    .content-step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--ink-3); color: #fff;
+      font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .content-step.active .content-step-num { background: var(--brand-grad); }
+    .content-step-text { font-size: 15px; color: var(--ink); }
+    .content-step-text .hint { font-size: 13px; color: var(--ink-2); margin-top: 3px; }
+  </style>
+</head>
+<body>
+<div class="ds-page">
+
+  <!-- ── HEADER ── -->
+  <div class="ds-header">
+    <div class="ds-header-logo">
+      <div class="logo-mark">享</div>
+      <div class="logo-text">
+        <div class="name">享學</div>
+        <div class="tagline">享受學習・學習享受</div>
+      </div>
+    </div>
+    <div class="ds-header-meta">
+      <strong>Design System v3</strong>
+      課件系統 · 2026<br>
+      Mockup for Review
+    </div>
+  </div>
+
+  <!-- ── COLORS ── -->
+  <div class="ds-section">
+    <div class="ds-section-label">Color System</div>
+    <div class="ds-section-title">色票</div>
+    <div style="background:#1A1440;border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+      <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.35);text-transform:uppercase;">設計原則</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.65);line-height:1.6">漸層（紫→淡藍紫）只打在關鍵元素 · 中性色帶藍紫色溫（非純灰）· 大面積用白底讓顏色呼吸</div>
+    </div>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-preview" style="background:linear-gradient(135deg,#6442A1,#A5B4FC)"></div>
+        <div class="color-info">
+          <div class="color-name">品牌漸層</div>
+          <div class="color-hex">#6442A1 → #A5B4FC</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#6442A1"></div>
+        <div class="color-info">
+          <div class="color-name">品牌主色</div>
+          <div class="color-hex">#6442A1 · 漸層起點</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#1A1440"></div>
+        <div class="color-info">
+          <div class="color-name">品牌深色</div>
+          <div class="color-hex">#1A1440 · Sidebar</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#9B87D0"></div>
+        <div class="color-info">
+          <div class="color-name">品牌中色</div>
+          <div class="color-hex">#9B87D0 · Hover</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#EEF0FF;border:1px solid #C4CAEE"></div>
+        <div class="color-info">
+          <div class="color-name">品牌淡色</div>
+          <div class="color-hex">#EEF0FF · 淺底色塊</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#FAFBFF;border:1px solid #E0E4FF"></div>
+        <div class="color-info">
+          <div class="color-name">頁面底色</div>
+          <div class="color-hex">#FAFBFF · 帶藍紫調白</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#5A5A7A"></div>
+        <div class="color-info">
+          <div class="color-name">次要文字</div>
+          <div class="color-hex">#5A5A7A · 帶藍紫調灰</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#28C76F"></div>
+        <div class="color-info">
+          <div class="color-name">成功綠</div>
+          <div class="color-hex">#28C76F · 完成/通過</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-preview" style="background:#FF9F43"></div>
+        <div class="color-info">
+          <div class="color-name">提示橘</div>
+          <div class="color-hex">#FF9F43 · 注意/提醒</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TYPOGRAPHY ── -->
+  <div class="ds-section">
+    <div class="ds-section-label">Typography</div>
+    <div class="ds-section-title">字型規範</div>
+    <div class="type-grid">
+      <div class="type-row">
+        <div class="type-meta">32px / 800</div>
+        <div class="type-sample" style="font-size:32px;font-weight:800;line-height:1.2">課程標題 Heading 1</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">24px / 700</div>
+        <div class="type-sample" style="font-size:24px;font-weight:700;line-height:1.3">章節名稱 Heading 2</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">18px / 600</div>
+        <div class="type-sample" style="font-size:18px;font-weight:600">小節標題 Heading 3</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">17px / 400</div>
+        <div class="type-sample" style="font-size:17px;font-weight:400;color:#5C5875">課程內文文字，適合投影閱讀，行高 1.65。享受學習，學習享受。Body Text</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">13px / 500</div>
+        <div class="type-sample" style="font-size:13px;font-weight:500;color:#A39DB8;letter-spacing:.5px">輔助說明文字 · 標籤 · 提示 · LABEL / META TEXT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPONENTS ── -->
+  <div class="ds-section">
+    <div class="ds-section-label">Components</div>
+    <div class="ds-section-title">核心元件</div>
+    <div class="comp-grid">
+
+      <!-- Prompt Copy -->
+      <div class="comp-card">
+        <div class="comp-label">Prompt 複製按鈕</div>
+        <div class="prompt-box">
+          <div class="prompt-label">📋 今日 Prompt</div>
+          <div class="prompt-text">
+            給我 15 個跟芝加哥旅行相關的資訊、網頁、blog、YouTube 影片，要有可信度的網站，並附上連結。
+          </div>
+          <button class="prompt-copy-btn">複製</button>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="comp-card">
+        <div class="comp-label">步驟指引</div>
+        <div class="steps">
+          <div class="step-item done">
+            <div class="step-num">✓</div>
+            <div class="step-content">
+              <div class="step-title">收集旅遊資料</div>
+              <div class="step-desc">用 Gemini 深入研究找來源</div>
+            </div>
+          </div>
+          <div class="step-item active">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">匯入 NotebookLM</div>
+              <div class="step-desc">把連結貼入筆記本，讓它消化</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">產出旅遊企劃</div>
+              <div class="step-desc">用報告模板一鍵輸出</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Basic/Advanced Toggle -->
+      <div class="comp-card">
+        <div class="comp-label">基礎 / 進階切換</div>
+        <div class="toggle-tabs">
+          <button class="toggle-tab active">基礎版</button>
+          <button class="toggle-tab">進階版</button>
+        </div>
+        <div class="toggle-content">
+          想像你有一個助理，他本來就<strong>讀過世界上大部分的書</strong>——歷史、地理、科學都懂。但今天你把他請進你的<strong>私人書房</strong>，說：「你今天只能根據這裡的資料回答我。」這樣答案更準確，也不會亂說。
+        </div>
+      </div>
+
+      <!-- Quiz -->
+      <div class="comp-card">
+        <div class="comp-label">小測驗</div>
+        <div class="quiz-q">你放進 NotebookLM 的資料品質不好，會有什麼結果？</div>
+        <div class="quiz-options">
+          <div class="quiz-option">
+            <div class="opt-key">A</div>
+            NotebookLM 會自動補充更好的資料
+          </div>
+          <div class="quiz-option correct">
+            <div class="opt-key">B</div>
+            輸出的結果品質也會跟著變差
+          </div>
+          <div class="quiz-option">
+            <div class="opt-key">C</div>
+            沒有影響，AI 都能處理
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Block -->
+      <div class="comp-card">
+        <div class="comp-label">圖片 / 截圖展示區</div>
+        <div class="img-block">
+          <div class="img-block-icon">🖼</div>
+          <div>拖放截圖或圖片到這裡</div>
+        </div>
+        <div class="img-caption">↑ 示範：NotebookLM 探索功能截圖</div>
+      </div>
+
+      <!-- Note/Tip Card -->
+      <div class="comp-card">
+        <div class="comp-label">提示卡 / 重要筆記</div>
+        <div style="background:#FFF3E0;border-left:4px solid #FF9F43;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:700;color:#E08A2A;letter-spacing:.5px;margin-bottom:6px;">💡 重要提醒</div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.6">免費版每月 Audio Overview 有生成次數限制，課堂 Demo 用老師帳號即可。</div>
+        </div>
+        <div style="background:#E2F8ED;border-left:4px solid #28C76F;border-radius:var(--radius-sm);padding:14px 16px;">
+          <div style="font-size:12px;font-weight:700;color:#1A9952;letter-spacing:.5px;margin-bottom:6px;">✅ 你做到了</div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.6">成功建立筆記本並匯入 3 個以上的資料來源。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FULL COURSE PAGE PREVIEW ── -->
+  <div class="ds-divider"></div>
+  <div class="preview-label">
+    <h2>完整課件預覽</h2>
+    <p>Week 4 · NotebookLM 旅遊實戰 · 實際兩欄課件樣貌</p>
+  </div>
+
+  <div class="course-shell">
+    <!-- SIDEBAR -->
+    <div class="course-sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-mark">享</div>
+        <div class="sidebar-logo-text">享學</div>
+      </div>
+      <div class="sidebar-course-title">AI 數位生活應用課</div>
+      <div class="sidebar-week-badge">
+        <div class="week-dot"></div>
+        <span>Week 4 · NotebookLM</span>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-item done"><div class="nav-dot"></div>開場：複習心法</div>
+        <div class="nav-item done"><div class="nav-dot"></div>什麼是 NotebookLM</div>
+        <div class="nav-item active"><div class="nav-dot"></div>RAG 是什麼</div>
+        <div class="nav-item"><div class="nav-dot"></div>找到自己的主題</div>
+        <div class="nav-item"><div class="nav-dot"></div>場景一：收集資料</div>
+        <div class="nav-item"><div class="nav-dot"></div>場景二：匯入筆記本</div>
+        <div class="nav-item"><div class="nav-dot"></div>場景三：對話問需求</div>
+        <div class="nav-item"><div class="nav-dot"></div>場景四：Gemini 優化</div>
+        <div class="nav-item"><div class="nav-dot"></div>場景五：輸出企劃</div>
+        <div class="nav-item"><div class="nav-dot"></div>Studio 驚喜功能</div>
+        <div class="nav-item"><div class="nav-dot"></div>課後練習任務</div>
+      </div>
+      <div class="sidebar-footer">Week 4 / 9 堂 · 3 小時</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="course-content">
+      <div class="content-breadcrumb">
+        Week 4 › <span>RAG 是什麼</span>
+      </div>
+      <h1 class="content-h1">RAG 是什麼？</h1>
+      <div class="content-meta">
+        <span class="badge">知識點</span>
+        <span>約 5 分鐘</span>
+      </div>
+
+      <div class="content-toggle-wrap">
+        <div class="content-toggle-tabs">
+          <button class="content-toggle-tab active">基礎版</button>
+          <button class="content-toggle-tab">進階版</button>
+        </div>
+        <div class="content-toggle-body">
+          想像你有一個助理，他本來就<strong>讀過世界上大部分的書</strong>——歷史、地理、科學都懂。但今天你把他請進你的<strong>私人書房</strong>，給了他你自己整理的旅遊資料，並說：「你今天只能根據這間書房裡的東西回答我。」<br><br>
+          這樣有兩個好處：答案更精準、不會亂說你沒給的東西。這就是 NotebookLM 的運作方式。
+        </div>
+      </div>
+
+      <div class="content-section-title">核心原則</div>
+      <div style="background:#FFF3E0;border-left:4px solid #FF9F43;border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;">
+        <div style="font-size:12px;font-weight:700;color:#E08A2A;letter-spacing:.5px;margin-bottom:6px;">💡 記住這一句話</div>
+        <div style="font-size:16px;color:var(--ink);font-weight:700;line-height:1.6">垃圾進、垃圾出。<br><span style="font-size:14px;font-weight:400;color:var(--ink-2)">你放進去的資料品質，決定了它回答的品質。</span></div>
+      </div>
+
+      <div class="content-section-title">今日 Prompt — 請 AI 幫你找資料</div>
+      <div class="content-prompt-box">
+        <div class="prompt-label">📋 複製貼到 Gemini / ChatGPT</div>
+        <div class="prompt-text">
+          給我 15 個跟芝加哥旅行相關的資訊、網頁、blog、YouTube 影片、旅遊網站資訊，要有可信度的網站，並附上完整連結。
+        </div>
+        <button class="copy-btn">複製</button>
+      </div>
+
+      <div class="content-section-title">操作步驟</div>
+      <div class="content-steps">
+        <div class="content-step">
+          <div class="content-step-num" style="background:var(--green)">✓</div>
+          <div class="content-step-text">
+            用 Gemini 深入研究，找 15 個旅遊資料來源（附連結）
+            <div class="hint">這個步驟幫你省去自己到處搜尋的時間</div>
+          </div>
+        </div>
+        <div class="content-step active">
+          <div class="content-step-num">2</div>
+          <div class="content-step-text">
+            開新筆記本，把連結一個個匯入 NotebookLM
+            <div class="hint">網址、PDF、YouTube 影片都可以匯入</div>
+          </div>
+        </div>
+        <div class="content-step">
+          <div class="content-step-num">3</div>
+          <div class="content-step-text">
+            在對話框告訴它你的需求
+            <div class="hint">「幫我規劃芝加哥五天四夜，四位大人，路線要順」</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

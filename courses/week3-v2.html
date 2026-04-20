@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Week 3：AI 旅遊規劃師</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1e3a5f;
+      --amber:  #d4762a;
+      --bg:     #f4f0eb;
+      --white:  #ffffff;
+      --text:   #2c2c2c;
+      --muted:  #888;
+      --border: #e2dbd2;
+      --c1: #3b82f6; --c1bg: #dbeafe; --c1dk: #1d4ed8;
+      --c2: #f59e0b; --c2bg: #fef3c7; --c2dk: #92400e;
+      --c3: #10b981; --c3bg: #d1fae5; --c3dk: #065f46;
+      --c4: #8b5cf6; --c4bg: #ede9fe; --c4dk: #5b21b6;
+      --c5: #ef4444; --c5bg: #fee2e2; --c5dk: #991b1b;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Noto Sans TC', 'Helvetica Neue', sans-serif;
+      font-size: 18px;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: var(--navy);
+      color: #fff;
+      padding: 48px 32px 52px;
+      text-align: center;
+    }
+    .week-badge {
+      display: inline-block;
+      background: var(--amber);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 7px 20px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+    }
+    .header h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; }
+    .header p  { font-size: 18px; opacity: .7; line-height: 1.6; }
+
+    /* ─── VALUE CHAIN ─── */
+    /* ─── DEMO HERO ─── */
+    .demo-hero {
+      background: #111;
+      text-align: center;
+      padding: 0;
+      position: relative;
+    }
+    .demo-hero-label {
+      position: absolute;
+      top: 18px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.65);
+      color: #fcd34d;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 8px 22px;
+      border-radius: 20px;
+      white-space: nowrap;
+      z-index: 2;
+    }
+    .demo-hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .demo-hero-caption {
+      background: #111;
+      color: rgba(255,255,255,.55);
+      font-size: 16px;
+      padding: 14px 28px;
+      letter-spacing: .3px;
+    }
+
+    /* ─── VALUE CHAIN IMAGE ─── */
+    .chain-img-wrap {
+      background: #0d1117;
+      padding: 0;
+    }
+    .chain-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ─── DEMO IMAGES (Scene 5) ─── */
+    .demo-img-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .demo-img-block { position: relative; border-radius: 12px; overflow: hidden; }
+    .demo-img-block img {
+      width: 100%; height: 160px;
+      object-fit: cover; display: block;
+    }
+    .demo-img-tag {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,.75));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 20px 10px 8px;
+      text-align: center;
+    }
+
+    .chain-wrap {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 24px 36px;
+    }
+    .chain-label {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .chain-flow {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .chain-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 100px;
+    }
+    .step-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      font-size: 28px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 10px;
+    }
+    .step-en  { font-size: 12px; font-weight: 700; letter-spacing: .5px; color: var(--muted); }
+    .step-zh  { font-size: 16px; font-weight: 600; color: var(--text); margin-top: 4px; text-align: center; }
+    .chain-arrow { font-size: 24px; color: #ccc; padding: 0 4px; margin-top: 18px; }
+
+    .s1-icon { background: var(--c1bg); }
+    .s2-icon { background: var(--c2bg); }
+    .s3-icon { background: var(--c3bg); }
+    .s4-icon { background: var(--c4bg); }
+    .s5-icon { background: var(--c5bg); }
+
+    /* ─── CONTENT ─── */
+    .content {
+      max-width: min(1100px, 95vw);
+      margin: 0 auto;
+      padding: 36px 24px 60px;
+    }
+
+    /* ─── SECTION CARD ─── */
+    .card {
+      background: var(--white);
+      border-radius: 22px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+    .card-head {
+      padding: 32px 36px 26px;
+      border-bottom: 1px solid var(--border);
+    }
+    .stage-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .card-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .card-desc  { font-size: 17px; color: var(--muted); line-height: 1.65; }
+    .card-body  { padding: 28px 36px; }
+
+    /* ─── TIP BOX ─── */
+    .tip {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 12px 12px 0;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      font-size: 17px;
+      line-height: 1.75;
+      color: #78350f;
+    }
+    .tip strong { display: block; margin-bottom: 6px; font-weight: 700; font-size: 18px; }
+
+    .info {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      border-radius: 0 12px 12px 0;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      font-size: 17px;
+      line-height: 1.75;
+      color: #1e3a8a;
+    }
+    .info strong { display: block; margin-bottom: 6px; font-weight: 700; font-size: 18px; }
+
+    /* ─── PROMPT ─── */
+    .prompt-label {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .prompt-box {
+      background: #f8f7f5;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      font-size: 16px;
+      line-height: 1.9;
+      color: #333;
+      white-space: pre-wrap;
+      font-family: inherit;
+      margin-bottom: 14px;
+    }
+    .copy-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 13px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity .15s, transform .1s;
+      font-family: inherit;
+    }
+    .copy-btn:active { transform: scale(.98); opacity: .85; }
+    .copy-btn.ok { background: #10b981 !important; color: #fff !important; }
+
+    .prompt-group { margin-top: 28px; }
+    .divider { border: none; border-top: 1px dashed var(--border); margin: 28px 0; }
+
+    /* ─── LINKS ─── */
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .demo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      text-decoration: none;
+    }
+    .demo-link:hover { background: #ece8e2; }
+
+    /* ─── SCENARIO COLORS ─── */
+    .s1 .stage-tag { background: var(--c1bg); color: var(--c1dk); }
+    .s1 .copy-btn  { background: var(--c1bg); color: var(--c1dk); }
+    .s2 .stage-tag { background: var(--c2bg); color: var(--c2dk); }
+    .s2 .copy-btn  { background: var(--c2bg); color: var(--c2dk); }
+    .s3 .stage-tag { background: var(--c3bg); color: var(--c3dk); }
+    .s3 .copy-btn  { background: var(--c3bg); color: var(--c3dk); }
+    .s4 .stage-tag { background: var(--c4bg); color: var(--c4dk); }
+    .s4 .copy-btn  { background: var(--c4bg); color: var(--c4dk); }
+    .s5 .stage-tag { background: var(--c5bg); color: var(--c5dk); }
+    .s5 .copy-btn  { background: var(--c5bg); color: var(--c5dk); }
+
+    /* ─── MAPPING ─── */
+    .mapping-card {
+      background: var(--navy);
+      border-radius: 22px;
+      padding: 40px 36px;
+      margin-bottom: 32px;
+      color: #fff;
+    }
+    .mapping-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 28px;
+      opacity: .85;
+      letter-spacing: .3px;
+    }
+    .map-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      font-size: 18px;
+    }
+    .map-row:last-of-type { border-bottom: none; }
+    .map-left  { font-weight: 700; color: var(--amber); }
+    .map-arrow { color: rgba(255,255,255,.3); font-size: 22px; }
+    .map-right { color: rgba(255,255,255,.8); }
+    .mapping-quote {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.15);
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.8;
+      opacity: .85;
+    }
+    .mapping-quote strong { color: #fcd34d; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 28px;
+      font-size: 15px;
+      color: var(--muted);
+      letter-spacing: .5px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="week-badge">Week 3 · AI 數位生活應用</div>
+  <h1>AI 旅遊規劃師</h1>
+  <p>從資料收集到視覺化成果<br>一次完整的 AI 應用練習</p>
+</div>
+
+<!-- DEMO RESULT HERO -->
+<div class="demo-hero">
+  <div class="demo-hero-label">今日實作目標 — AI 生成旅遊地圖</div>
+  <img src="week3-assets/chicago-map.png" alt="芝加哥建築與生活探險地圖" />
+  <div class="demo-hero-caption">用 Gemini 生成的芝加哥 5 日旅遊地圖 ✦ 今天你也可以做出自己的版本</div>
+</div>
+
+<!-- VALUE CHAIN IMAGE -->
+<div class="chain-img-wrap">
+  <img src="week3-assets/value-chain.png" alt="Creator's Value Chain" />
+</div>
+
+<!-- VALUE CHAIN -->
+<div class="chain-wrap">
+  <div class="chain-label">今日旅遊場景對應</div>
+  <div class="chain-flow">
+    <div class="chain-step">
+      <div class="step-icon s1-icon">🔍</div>
+      <div class="step-en">THINK</div>
+      <div class="step-zh">了解當地</div>
+    </div>
+    <div class="chain-arrow">›</div>
+    <div class="chain-step">
+      <div class="step-icon s2-icon">💡</div>
+      <div class="step-en">IDEA</div>
+      <div class="step-zh">初步想法</div>
+    </div>
+    <div class="chain-arrow">›</div>
+    <div class="chain-step">
+      <div class="step-icon s3-icon">✍️</div>
+      <div class="step-en">CREATE</div>
+      <div class="step-zh">行程初稿</div>
+    </div>
+    <div class="chain-arrow">›</div>
+    <div class="chain-step">
+      <div class="step-icon s4-icon">🔧</div>
+      <div class="step-en">PERFECT</div>
+      <div class="step-zh">深化細節</div>
+    </div>
+    <div class="chain-arrow">›</div>
+    <div class="chain-step">
+      <div class="step-icon s5-icon">📤</div>
+      <div class="step-en">EXCHANGE</div>
+      <div class="step-zh">分享旅伴</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ── SCENE 1 ── -->
+  <div class="card s1">
+    <div class="card-head">
+      <div class="stage-tag">🔍 場景 1 · Think</div>
+      <div class="card-title">了解這個地方有什麼好玩</div>
+      <div class="card-desc">資料收集的起點。用你自己的角度說明你是誰、你想要什麼，讓 AI 成為你的「旅行知己」。</div>
+    </div>
+    <div class="card-body">
+      <div class="tip">
+        <strong>💡 這次的挑戰</strong>
+        上週老師幫大家寫提示詞，這次輪到你自己寫。<br>
+        提示詞的三要素：<strong>背景</strong>（我是誰）· <strong>需求</strong>（我想要什麼）· <strong>角色</strong>（我希望 AI 怎麼幫我）
+      </div>
+
+      <div class="prompt-label">📋 老師示範 Prompt（芝加哥案例）</div>
+      <div class="prompt-box" id="p1a">我想去芝加哥看我妹，我們有很多年沒見了，他在那裡當律師。
+
+帶我了解一下當地的旅遊景點有哪些會是我感興趣的。我覺得每個城市都有自己的發展歷史和定位，我喜歡去用這個視角了解一個城市，進一步看景點建築。另外我也喜歡融入當地人的生活，我想知道生活在那裡的人平時都過什麼樣的生活。網紅景點我不太喜歡，1-2 個就可以。我還沒想好我要去那裡玩幾天。
+
+我希望你作為我的「旅行知己」來幫我。</div>
+      <button class="copy-btn" onclick="cp('p1a',this)">📋 複製 Prompt</button>
+
+      <hr class="divider" />
+
+      <div class="prompt-label">✏️ 輪到你了（自己填入）</div>
+      <div class="prompt-box" id="p1b">我想去【目的地】旅遊。
+【說明你跟這趟旅行的關係：特別目的？還是純想放鬆？】
+
+帶我了解一下當地的旅遊景點有哪些會是我感興趣的。
+【說明你的偏好：喜歡歷史？美食？自然景觀？在地生活？不喜歡什麼？】
+
+我希望你作為我的「旅行知己」來幫我。</div>
+      <button class="copy-btn" onclick="cp('p1b',this)">📋 複製 Prompt</button>
+
+      <div class="links">
+        <a class="demo-link" href="https://gemini.google.com/app/5e1d6a80f4e5d6e3" target="_blank">🔗 示範：無格式版</a>
+        <a class="demo-link" href="https://gemini.google.com/app/c531c6bb3a7bafab" target="_blank">🔗 示範：有格式版</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 2 ── -->
+  <div class="card s2">
+    <div class="card-head">
+      <div class="stage-tag">💡 場景 2 · Idea → Create</div>
+      <div class="card-title">行程初稿</div>
+      <div class="card-desc">把你在場景 1 跟 AI 討論後的想法整理出來，貼給 AI 幫你出初稿。有不確定的地方，AI 會繼續問你。</div>
+    </div>
+    <div class="card-body">
+      <div class="info">
+        <strong>💬 這個格式是怎麼來的？</strong>
+        就像告訴同事「幫我整理一份報告，格式是這樣…」——你給 AI 明確的輸出格式，結果就會符合你的期待。提示詞不只是問問題，還可以設計輸出的樣子。
+      </div>
+
+      <div class="prompt-label">📋 行程初稿 Prompt</div>
+      <div class="prompt-box" id="p2">我看完了，我有了一些初步的想法，貼給你：
+
+【把你跟 AI 討論後整理出來的旅遊想法貼在這裡】
+
+幫我先規劃一個行程初稿，我把格式貼給你，有不確定的你就用「一步一步問我問題」的方式了解我的需求。一次只問 1-2 個問題，等我回答後再繼續，或是給我選項選。問題可以簡單、好回答，像朋友在聊天一樣。
+
+────────────────────
+每一天請包含：
+1. 日期與主題（例如：Day 1 — 城市初探）
+2. 住宿地點
+3. 詳細時間表
+   • 09:00 — 早餐（地點與推薦餐點）
+   • 10:30 — 景點（交通方式、停留時間、注意事項）
+   • 12:00 — 午餐（餐廳名稱、特色料理、預算）
+   • 以此類推…
+4. 交通安排（每個景點間的移動方式與時間）
+5. 預算估算（當日預估花費）
+6. 備註提醒（天氣、特殊活動、訂票需求等）
+────────────────────</div>
+      <button class="copy-btn" onclick="cp('p2',this)">📋 複製 Prompt</button>
+
+      <div class="links">
+        <a class="demo-link" href="https://gemini.google.com/app/c531c6bb3a7bafab" target="_blank">🔗 示範：初稿討論過程</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 3 ── -->
+  <div class="card s3">
+    <div class="card-head">
+      <div class="stage-tag">🔧 場景 3 · Make it Perfect</div>
+      <div class="card-title">深化細節</div>
+      <div class="card-desc">行程初稿有了，讓 AI 幫你把交通票券、訂位清單、美食推薦、省錢攻略全部搞定。</div>
+    </div>
+    <div class="card-body">
+      <div class="tip">
+        <strong>📌 備注</strong>
+        這份模板是快速使用版，適合課堂練習。實際出發前，可以再加入更多個人細節（住哪裡、幾月幾號飛等）讓結果更精準。
+      </div>
+
+      <div class="prompt-label">📋 深化細節 Prompt</div>
+      <div class="prompt-box" id="p3">針對以上規劃的行程，請幫我深化以下細節：
+
+1. 交通優化
+   - 建議購買哪些交通票券最划算？（列出價格、使用範圍、購買地點）
+   - 提供每日詳細的交通路線
+   - 標註每段交通的預估時間與費用
+
+2. 訂位與預約清單
+   - 哪些景點需要提前預約？（預約網站、建議提前多久）
+   - 哪些餐廳需要訂位？（訂位方式、熱門時段）
+   - 哪些體驗需要事先報名？
+
+3. 美食深度推薦
+   - 每天三餐推薦（主要店家 + 替代方案）
+   - 必點菜色與預算
+   - 訂位資訊
+
+4. 省錢攻略
+   - 免費景點推薦
+   - 優惠券與折扣資訊
+   - 省錢小技巧
+
+5. 實用 APP 與工具
+
+6. 行李打包建議（依出發月份）
+
+7. 緊急備案
+   - 下雨時的室內替代方案
+   - 景點臨時關閉時的備案
+
+請針對每一項提供具體、可執行的資訊。</div>
+      <button class="copy-btn" onclick="cp('p3',this)">📋 複製 Prompt</button>
+    </div>
+  </div>
+
+  <!-- ── SCENE 4 ── -->
+  <div class="card s4">
+    <div class="card-head">
+      <div class="stage-tag">📤 場景 4 · Value Exchange</div>
+      <div class="card-title">視覺化旅遊地圖</div>
+      <div class="card-desc">把行程變成一張精美插畫地圖，分享給朋友或家人。<br><br><strong style="color:#7c3aed">⚠️ 需要 Gemini — 先開啟 Tools → Create Images（生成圖像）</strong></div>
+    </div>
+    <div class="card-body">
+      <div class="info">
+        <strong>💡 關鍵觀念：為什麼要在同一個對話窗？</strong>
+        因為「上下文」。AI 記得你之前說的所有內容，你可以直接說「按照我們討論的行程來生成地圖」，不用重複貼一遍行程。這就是同一個對話窗最大的好處。
+      </div>
+
+      <div class="prompt-label">📋 視覺化地圖 Prompt（Gemini 專用）</div>
+      <div class="prompt-box" id="p4a">直接依照我的旅遊行程生成一張插畫風格的「旅程地圖」圖片，像是冒險地圖一樣有蜿蜒的道路。
+
+地圖設計要求：
+
+1. 整體風格
+   - 插畫風格：莫蘭迪手繪質感
+   - 色調：清新質感
+   - 文字使用繁體中文
+
+2. 主要元素
+   - 標題與副標符合我的旅遊主旨
+   - 畫一條蜿蜒的道路，從起點（機場）到終點（機場）
+   - 每一天是道路上的一個站點，用大圓圈標示「DAY 1」「DAY 2」…
+   - 每個站點包含：當日主要景點插畫、景點名稱、必吃美食小圖示
+   - 道路兩旁裝飾相關元素（建築、食物、文化符號等）
+
+3. 附加資訊區
+   - 一側：必吃美食清單（配插畫，用虛線連到對應天數）
+   - 另一側：旅行小貼士
+   - 裝飾元素：指南針、雲朵、太陽/月亮
+
+4. 色彩配置
+   - 道路使用漸層色，象徵旅程推進
+   - 每天用不同深淺的主題色區分
+
+重要：要有「旅程流動感」，讓人跟著道路一天天前進！
+
+以下是我的詳細行程：
+【把前面規劃的行程貼在這裡，或直接說「用我們剛才討論的行程」】</div>
+      <button class="copy-btn" onclick="cp('p4a',this)">📋 複製 Prompt（Gemini）</button>
+
+      <hr class="divider" />
+
+      <div class="prompt-label">📋 ChatGPT 版本（文字卡片）</div>
+      <div class="prompt-box" id="p4b">根據我的旅遊行程，幫我設計一張可以分享給朋友的旅遊計畫卡片：
+
+📍 目的地：
+📅 天數：
+🎯 旅行主題：
+✨ 必去三個地方：
+🍽️ 必吃三樣東西：
+🚗 交通小提醒：
+💰 每日預算參考：
+💬 我的旅遊宣言（一句話）：
+
+風格要有個性，像是在跟朋友分享計畫一樣。</div>
+      <button class="copy-btn" onclick="cp('p4b',this)">📋 複製 Prompt（ChatGPT）</button>
+
+      <div class="links">
+        <a class="demo-link" href="https://gemini.google.com/app/fa70dbf341a66bde" target="_blank">🔗 示範：應用程式版</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 5 ── -->
+  <div class="card s5">
+    <div class="card-head">
+      <div class="stage-tag">🌏 場景 5 · 到了當地</div>
+      <div class="card-title">旅途助手：翻譯 + 導遊</div>
+      <div class="card-desc">到了當地，AI 身兼三職：即時翻譯、菜單解讀、景點導遊。<br><br><strong style="color:#b91c1c">建議把這個對話窗「釘選」在最上面，方便隨時開啟</strong></div>
+    </div>
+    <div class="card-body">
+      <div class="tip">
+        <strong>💡 三個現場使用情境</strong>
+        1. 遇到外國人，想溝通問路 → <strong>即時翻譯</strong>（輸入中文，直接拿給對方看）<br>
+        2. 進餐廳看不懂菜單 → <strong>菜單翻譯</strong>（拍照上傳）<br>
+        3. 看到有趣景點想多了解 → <strong>即時導遊</strong>（拍照或輸入地點名稱）
+      </div>
+
+      <div class="demo-img-row">
+        <div class="demo-img-block">
+          <img src="week3-assets/japanese-menu.jpg" alt="日文菜單" />
+          <div class="demo-img-tag">📷 拍照上傳 → 菜單翻譯</div>
+        </div>
+        <div class="demo-img-block">
+          <img src="week3-assets/himeji-castle.jpg" alt="姬路城" />
+          <div class="demo-img-tag">📍 拍照上傳 → 即時導遊</div>
+        </div>
+      </div>
+
+      <div class="prompt-label">📋 旅途助手 Prompt</div>
+      <div class="prompt-box" id="p5">請擔任我的【目的地】旅遊即時助手，我現在正在旅程中。
+
+請提供以下三種服務：
+
+1. 即時翻譯功能
+   - 只輸入中文時，直接翻譯成當地語言，不要任何其他文字
+   - 使用禮貌且符合當地文化的表達方式（例如日文使用敬語）
+
+2. 菜單解讀服務
+   拍照上傳菜單後：
+   - 完整翻譯菜單內容
+   - 解釋料理的特色
+   - 推薦必點菜色並說明原因
+   - 告訴我大約價格區間（換算台幣）
+   - 提醒用餐禮儀
+
+3. 即時導遊功能
+   上傳景點照片或輸入地點名稱後：
+   - 景點深度解說
+   - 詳細歷史介紹
+   - 「必看細節」提示
+
+現在開始待命，等待我的指令。</div>
+      <button class="copy-btn" onclick="cp('p5',this)">📋 複製 Prompt</button>
+    </div>
+  </div>
+
+  <!-- ── MAPPING ── -->
+  <div class="mapping-card">
+    <h3>📌 今天的核心洞察</h3>
+    <div class="map-row">
+      <div class="map-left">Think → 了解當地</div>
+      <div class="map-arrow">=</div>
+      <div class="map-right">你平時怎麼研究一件事</div>
+    </div>
+    <div class="map-row">
+      <div class="map-left">Idea → 想怎麼玩</div>
+      <div class="map-arrow">=</div>
+      <div class="map-right">你跟朋友討論旅遊的感覺</div>
+    </div>
+    <div class="map-row">
+      <div class="map-left">Create → 行程初稿</div>
+      <div class="map-arrow">=</div>
+      <div class="map-right">把想法整理成計畫的過程</div>
+    </div>
+    <div class="map-row">
+      <div class="map-left">Perfect → 深化細節</div>
+      <div class="map-arrow">=</div>
+      <div class="map-right">出發前確認所有細節</div>
+    </div>
+    <div class="map-row">
+      <div class="map-left">Exchange → 分享旅伴</div>
+      <div class="map-arrow">=</div>
+      <div class="map-right">讓身邊的人也能一起享受</div>
+    </div>
+    <div class="mapping-quote">
+      所有跟創造力有關的場景，AI 的應用邏輯都是一樣的。<br>
+      <strong>以後在任何場景下，都可以用這個方法論來使用 AI。</strong>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<footer>AI 數位生活應用課 · Week 3 · 享學教育 新式樣</footer>
+
+<script>
+  function cp(id, btn) {
+    const text = document.getElementById(id).innerText;
+    const write = () => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ 已複製！';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('ok'); }, 2000);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(write).catch(fallback);
+    } else { fallback(); }
+    function fallback() {
+      const el = document.createElement('textarea');
+      el.value = text; el.style.position = 'fixed'; el.style.opacity = '0';
+      document.body.appendChild(el); el.select();
+      document.execCommand('copy'); document.body.removeChild(el);
+      write();
+    }
+  }
+</script>
+</body>
+</html>

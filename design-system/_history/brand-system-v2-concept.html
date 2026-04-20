@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>享學 Design System — Concept v2</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --brand:        #6442A1;
+  --brand-end:    #A5B4FC;
+  --brand-grad:   linear-gradient(135deg, #6442A1, #A5B4FC);
+  --brand-dark:   #1A1440;
+  --brand-mid:    #9B87D0;
+  --brand-light:  #EEF0FF;
+  --brand-xlight: #FAFBFF;
+  --ink:          #1A1440;
+  --ink-2:        #5A5A7A;
+  --ink-3:        #9090B8;
+  --border:       #E8E8F0;
+  --bg:           #FFFFFF;
+  --bg-2:         #F8F8FC;
+  --sidebar-w:    260px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* ─────────────────── TOP BAR ─────────────────── */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  z-index: 100;
+  gap: 24px;
+}
+
+.topbar-logo {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  flex-shrink: 0;
+}
+.topbar-logo .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.topbar-logo .d { color: var(--ink); }
+
+.topbar-divider { width: 1px; height: 20px; background: var(--border); }
+
+.topbar-subtitle {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.topbar-version {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+  background: var(--brand-light);
+  color: var(--brand);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ─────────────────── SIDEBAR ─────────────────── */
+.sidebar {
+  position: fixed;
+  top: 52px;
+  left: 0;
+  width: var(--sidebar-w);
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  padding: 32px 0 40px;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.nav-section { margin-bottom: 28px; }
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 24px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  padding: 7px 24px;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color 0.1s, border-color 0.1s;
+  line-height: 1.3;
+}
+
+.nav-item:hover { color: var(--ink); }
+
+.nav-item.active {
+  color: var(--brand);
+  border-left-color: var(--brand);
+  font-weight: 600;
+}
+
+/* ─────────────────── CONTENT ─────────────────── */
+.content {
+  margin-left: var(--sidebar-w);
+  padding-top: 52px;
+  min-height: 100vh;
+}
+
+.content-inner {
+  max-width: 760px;
+  padding: 72px 64px 120px;
+}
+
+/* ─────────────────── SECTION ─────────────────── */
+.ds-section {
+  margin-bottom: 96px;
+  scroll-margin-top: 80px;
+}
+
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.section-desc {
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+
+/* ─────────────────── LOGO SECTION ─────────────────── */
+.logo-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.logo-variant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 48px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.logo-variant.on-light { background: white; }
+.logo-variant.on-dark  { background: var(--brand-dark); }
+.logo-variant.on-tint  { background: var(--brand-xlight); }
+
+.logo-wm {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.logo-wm .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.logo-wm.size-xl { font-size: 56px; }
+.logo-wm.size-lg { font-size: 36px; }
+.logo-wm.size-sm { font-size: 20px; }
+
+.logo-wm-dark .d-dark { color: white; }
+.logo-wm-dark .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-meta {
+  text-align: right;
+}
+.logo-meta-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+}
+.logo-meta-label.on-dark-meta { color: rgba(255,255,255,0.35); }
+
+.logo-tagline {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* ─────────────────── COLOR SECTION ─────────────────── */
+.color-group { margin-bottom: 40px; }
+
+.color-group-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.color-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.color-swatch {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.swatch-block {
+  height: 72px;
+  width: 100%;
+}
+
+.swatch-info {
+  padding: 12px 14px;
+  background: white;
+}
+
+.swatch-token {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.swatch-hex {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--ink-3);
+}
+
+/* ─────────────────── TYPOGRAPHY SECTION ─────────────────── */
+.type-scale { display: flex; flex-direction: column; gap: 0; }
+
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+.type-row:first-child { border-top: 1px solid var(--border); }
+
+.type-meta {
+  flex-shrink: 0;
+  width: 120px;
+  text-align: right;
+}
+
+.type-level {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.type-spec {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--ink-3);
+}
+
+.type-example { flex: 1; color: var(--ink); }
+.type-example.h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.15; }
+.type-example.h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.2; }
+.type-example.h3 { font-size: 18px; font-weight: 600; line-height: 1.3; }
+.type-example.body { font-size: 17px; font-weight: 400; line-height: 1.7; }
+.type-example.meta { font-size: 13px; font-weight: 500; color: var(--ink-2); line-height: 1.4; }
+
+/* ─────────────────── COMPONENT: BUTTONS ─────────────────── */
+.component-frame {
+  background: var(--bg-2);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 40px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.component-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s, transform 0.1s;
+  font-family: inherit;
+  text-decoration: none;
+}
+.btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: var(--brand-grad);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--brand-light);
+  color: var(--brand);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+}
+
+.btn-dark {
+  background: var(--brand-dark);
+  color: white;
+}
+
+/* ─────────────────── COMPONENT: PROMPT BOX ─────────────────── */
+.prompt-box {
+  border-radius: 12px;
+  background: var(--brand-xlight);
+  border-left: 3px solid var(--brand);
+  padding: 20px 24px;
+  margin-bottom: 0;
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.prompt-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.prompt-copy-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: var(--brand-grad);
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.prompt-text {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.65;
+}
+
+/* ─────────────────── COMPONENT: STEP ─────────────────── */
+.step-list { display: flex; flex-direction: column; }
+
+.step-item {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.step-item:first-child { padding-top: 0; }
+.step-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-num.active { background: var(--brand-grad); color: white; }
+.step-num.done { background: #28C76F; color: white; font-size: 16px; }
+.step-num.pending { background: var(--border); color: var(--ink-3); }
+
+.step-body { padding-top: 4px; }
+.step-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.step-desc { font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+
+/* ─────────────────── COMPONENT: QUIZ ─────────────────── */
+.quiz-box { border-radius: 12px; border: 1px solid var(--border); overflow: hidden; background: white; }
+
+.quiz-q {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.quiz-options { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+.quiz-opt {
+  padding: 14px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  background: white;
+  color: var(--ink);
+}
+.quiz-opt:hover { background: var(--brand-xlight); border-color: var(--brand-mid); }
+.quiz-opt.correct { background: #E2F8ED; border-color: #28C76F; color: #1a7a4a; font-weight: 600; }
+.quiz-opt.wrong { background: #FFF0F0; border-color: #FF5555; }
+
+/* ─────────────────── SPACING SECTION ─────────────────── */
+.spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.spacing-row:first-child { border-top: 1px solid var(--border); }
+
+.spacing-bar-wrap { flex: 1; display: flex; align-items: center; }
+
+.spacing-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--brand-grad);
+  flex-shrink: 0;
+}
+
+.spacing-token {
+  font-size: 12px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--ink-3);
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.spacing-px {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  width: 48px;
+  flex-shrink: 0;
+  text-align: right;
+}
+</style>
+</head>
+<body>
+
+<!-- ─── TOP BAR ─── -->
+<div class="topbar">
+  <div class="topbar-logo"><span class="g">享</span><span class="d">學</span></div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-subtitle">Design System</div>
+  <div class="topbar-version">v2 Concept</div>
+</div>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="nav-section">
+    <div class="nav-section-label">品牌 Brand</div>
+    <a class="nav-item active" href="#logo">Logo</a>
+    <a class="nav-item" href="#colors">Color System</a>
+    <a class="nav-item" href="#typography">Typography</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">基礎 Foundations</div>
+    <a class="nav-item" href="#spacing">Spacing</a>
+    <a class="nav-item" href="#radius">Radius & Shadow</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">元件 Components</div>
+    <a class="nav-item" href="#buttons">Buttons</a>
+    <a class="nav-item" href="#prompt">Prompt Box</a>
+    <a class="nav-item" href="#steps">Steps</a>
+    <a class="nav-item" href="#quiz">Quiz</a>
+  </div>
+</nav>
+
+<!-- ─── CONTENT ─── -->
+<main class="content">
+<div class="content-inner">
+
+  <!-- ══════════ LOGO ══════════ -->
+  <section class="ds-section" id="logo">
+    <div class="section-eyebrow">Brand Identity</div>
+    <div class="section-title">Logo</div>
+    <div class="section-desc">享學採用純字標（Wordmark）路線——「享」以品牌漸層呈現，「學」以深墨色錨定。字型的重量與對比即是記憶點，不需要額外符號。</div>
+
+    <div class="logo-showcase">
+      <!-- Light bg -->
+      <div class="logo-variant on-light">
+        <div>
+          <div class="logo-wm size-xl"><span class="g">享</span><span class="d" style="color:var(--ink)">學</span></div>
+          <div class="logo-tagline">享受學習 · 學習享受</div>
+        </div>
+        <div class="logo-meta">
+          <div class="logo-meta-label">Light Background</div>
+        </div>
+      </div>
+      <!-- Dark bg -->
+      <div class="logo-variant on-dark">
+        <div>
+          <div class="logo-wm logo-wm-dark size-xl"><span class="g">享</span><span class="d-dark" style="color:white">學</span></div>
+          <div class="logo-tagline" style="color:rgba(255,255,255,0.35)">享受學習 · 學習享受</div>
+        </div>
+        <div class="logo-meta">
+          <div class="logo-meta-label on-dark-meta">Dark Background</div>
+        </div>
+      </div>
+      <!-- Sizes -->
+      <div class="logo-variant on-tint" style="gap:40px; flex-wrap:wrap;">
+        <div>
+          <div class="component-label">Large · 36px</div>
+          <div class="logo-wm size-lg"><span class="g">享</span><span class="d" style="color:var(--ink)">學</span></div>
+        </div>
+        <div>
+          <div class="component-label">Small · 20px</div>
+          <div class="logo-wm size-sm"><span class="g">享</span><span class="d" style="color:var(--ink)">學</span></div>
+        </div>
+        <div>
+          <div class="component-label">With tagline</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div class="logo-wm size-lg"><span class="g">享</span><span class="d" style="color:var(--ink)">學</span></div>
+            <div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-3);font-weight:600;">享受學習 · 學習享受</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ COLORS ══════════ -->
+  <section class="ds-section" id="colors">
+    <div class="section-eyebrow">Foundations</div>
+    <div class="section-title">Color System</div>
+    <div class="section-desc">漸層只打在關鍵元素：Logo、CTA、Active 狀態。大面積用白底，所有中性色帶藍紫色溫，讓整體視覺保持品牌氣息。</div>
+
+    <!-- Brand Colors -->
+    <div class="color-group">
+      <div class="color-group-title">Brand</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:linear-gradient(135deg,#6442A1,#A5B4FC)"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand-grad</div>
+            <div class="swatch-hex">#6442A1 → #A5B4FC</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#6442A1"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand</div>
+            <div class="swatch-hex">#6442A1</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#A5B4FC"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand-end</div>
+            <div class="swatch-hex">#A5B4FC</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#9B87D0"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand-mid</div>
+            <div class="swatch-hex">#9B87D0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark / Light -->
+    <div class="color-group">
+      <div class="color-group-title">Dark & Light</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#1A1440"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand-dark</div>
+            <div class="swatch-hex">#1A1440</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#EEF0FF"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand-light</div>
+            <div class="swatch-hex">#EEF0FF</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#FAFBFF"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--brand-xlight</div>
+            <div class="swatch-hex">#FAFBFF</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#FFFFFF;border-bottom:1px solid var(--border)"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--bg</div>
+            <div class="swatch-hex">#FFFFFF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ink -->
+    <div class="color-group">
+      <div class="color-group-title">Ink (Text)</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#1A1440"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--ink</div>
+            <div class="swatch-hex">#1A1440</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#5A5A7A"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--ink-2</div>
+            <div class="swatch-hex">#5A5A7A</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#9090B8"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--ink-3</div>
+            <div class="swatch-hex">#9090B8</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#E0E4FF"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--border</div>
+            <div class="swatch-hex">#E0E4FF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Semantic -->
+    <div class="color-group">
+      <div class="color-group-title">Semantic</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#28C76F"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--green</div>
+            <div class="swatch-hex">#28C76F</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#E2F8ED"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--green-light</div>
+            <div class="swatch-hex">#E2F8ED</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#FF9F43"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--amber</div>
+            <div class="swatch-hex">#FF9F43</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#FFF3E0"></div>
+          <div class="swatch-info">
+            <div class="swatch-token">--amber-light</div>
+            <div class="swatch-hex">#FFF3E0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ TYPOGRAPHY ══════════ -->
+  <section class="ds-section" id="typography">
+    <div class="section-eyebrow">Foundations</div>
+    <div class="section-title">Typography</div>
+    <div class="section-desc">系統字體堆疊，最小內文 17px——同時照顧課堂投影與個人裝置的可讀性。</div>
+
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-level">H1</span>
+          <span class="type-spec">32px / 800</span>
+        </div>
+        <div class="type-example h1">課程標題</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-level">H2</span>
+          <span class="type-spec">24px / 700</span>
+        </div>
+        <div class="type-example h2">章節名稱</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-level">H3</span>
+          <span class="type-spec">18px / 600</span>
+        </div>
+        <div class="type-example h3">小節標題，清晰易讀</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-level">Body</span>
+          <span class="type-spec">17px / 400</span>
+        </div>
+        <div class="type-example body">課程內文採用 17px，確保學員在投影與手機上都能清楚閱讀，減少認知負擔。</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-level">Meta</span>
+          <span class="type-spec">13px / 500</span>
+        </div>
+        <div class="type-example meta">標籤 · 說明文字 · 版本資訊 · 輔助提示</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SPACING ══════════ -->
+  <section class="ds-section" id="spacing">
+    <div class="section-eyebrow">Foundations</div>
+    <div class="section-title">Spacing</div>
+    <div class="section-desc">以 4px 為基礎單位，8px 為主要模組格。</div>
+
+    <div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-1</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:4px"></div></div>
+        <div class="spacing-px">4px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-2</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:8px"></div></div>
+        <div class="spacing-px">8px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-3</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:12px"></div></div>
+        <div class="spacing-px">12px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-4</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:16px"></div></div>
+        <div class="spacing-px">16px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-6</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:24px"></div></div>
+        <div class="spacing-px">24px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-8</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:32px"></div></div>
+        <div class="spacing-px">32px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-12</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:48px"></div></div>
+        <div class="spacing-px">48px</div>
+      </div>
+      <div class="spacing-row">
+        <div class="spacing-token">space-16</div>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:64px"></div></div>
+        <div class="spacing-px">64px</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ RADIUS & SHADOW ══════════ -->
+  <section class="ds-section" id="radius">
+    <div class="section-eyebrow">Foundations</div>
+    <div class="section-title">Radius & Shadow</div>
+    <div class="section-desc">圓角保持克制。陰影帶品牌色溫，不用純黑。</div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:40px;">
+      <div style="text-align:center;">
+        <div style="width:80px;height:80px;border-radius:4px;background:var(--brand-light);border:1px solid var(--border);margin:0 auto 10px;"></div>
+        <div class="swatch-token">4px</div>
+        <div class="swatch-hex">--radius-xs</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:80px;height:80px;border-radius:8px;background:var(--brand-light);border:1px solid var(--border);margin:0 auto 10px;"></div>
+        <div class="swatch-token">8px</div>
+        <div class="swatch-hex">--radius-sm</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:80px;height:80px;border-radius:12px;background:var(--brand-light);border:1px solid var(--border);margin:0 auto 10px;"></div>
+        <div class="swatch-token">12px</div>
+        <div class="swatch-hex">--radius</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:80px;height:80px;border-radius:16px;background:var(--brand-light);border:1px solid var(--border);margin:0 auto 10px;"></div>
+        <div class="swatch-token">16px</div>
+        <div class="swatch-hex">--radius-lg</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:80px;height:80px;border-radius:40px;background:var(--brand-light);border:1px solid var(--border);margin:0 auto 10px;"></div>
+        <div class="swatch-token">pill</div>
+        <div class="swatch-hex">--radius-pill</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="width:120px;height:64px;border-radius:12px;background:white;box-shadow:0 1px 4px rgba(100,66,161,0.06);border:1px solid var(--border);margin:0 auto 10px;"></div>
+        <div class="swatch-hex">--shadow-sm</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:120px;height:64px;border-radius:12px;background:white;box-shadow:0 2px 16px rgba(100,66,161,0.09);margin:0 auto 10px;"></div>
+        <div class="swatch-hex">--shadow</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:120px;height:64px;border-radius:12px;background:white;box-shadow:0 8px 40px rgba(100,66,161,0.14);margin:0 auto 10px;"></div>
+        <div class="swatch-hex">--shadow-md</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ BUTTONS ══════════ -->
+  <section class="ds-section" id="buttons">
+    <div class="section-eyebrow">Components</div>
+    <div class="section-title">Buttons</div>
+
+    <div class="component-label">Variants</div>
+    <div class="component-frame">
+      <button class="btn btn-primary">開始學習</button>
+      <button class="btn btn-secondary">了解更多</button>
+      <button class="btn btn-ghost">取消</button>
+      <button class="btn btn-dark">上課模式</button>
+    </div>
+
+    <div class="component-frame" style="background:var(--brand-dark);">
+      <button class="btn btn-primary">開始學習</button>
+      <button class="btn" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.15)">了解更多</button>
+    </div>
+  </section>
+
+  <!-- ══════════ PROMPT BOX ══════════ -->
+  <section class="ds-section" id="prompt">
+    <div class="section-eyebrow">Components</div>
+    <div class="section-title">Prompt Box</div>
+    <div class="section-desc">學員一鍵複製 AI Prompt，降低輸入錯誤。</div>
+
+    <div class="component-frame" style="display:block;">
+      <div class="prompt-box">
+        <div class="prompt-header">
+          <div class="prompt-title">今日 Prompt</div>
+          <button class="prompt-copy-btn">複製</button>
+        </div>
+        <div class="prompt-text">
+          請幫我規劃一個為期五天的日本京都旅遊行程，我是第一次去，喜歡文化與美食，不喜歡太趕的行程。每天安排 2–3 個地點，並說明交通方式。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ STEPS ══════════ -->
+  <section class="ds-section" id="steps">
+    <div class="section-eyebrow">Components</div>
+    <div class="section-title">Step Indicator</div>
+    <div class="section-desc">引導學員依序完成操作，清楚呈現進度。</div>
+
+    <div class="component-frame" style="display:block;">
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num done">✓</div>
+          <div class="step-body">
+            <div class="step-title" style="opacity:0.5">打開 NotebookLM</div>
+            <div class="step-desc" style="opacity:0.5">前往 notebooklm.google.com 並登入 Google 帳號</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num active">2</div>
+          <div class="step-body">
+            <div class="step-title">建立新 Notebook</div>
+            <div class="step-desc">點擊右上角「+ New Notebook」，命名為「旅遊計劃」</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num pending">3</div>
+          <div class="step-body">
+            <div class="step-title" style="opacity:0.5">上傳資料來源</div>
+            <div class="step-desc" style="opacity:0.5">將旅遊相關的 PDF、網址或文字貼入</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ QUIZ ══════════ -->
+  <section class="ds-section" id="quiz">
+    <div class="section-eyebrow">Components</div>
+    <div class="section-title">Quiz</div>
+    <div class="section-desc">即時驗證學員理解。錯誤時不揭露正確答案，引導老師帶動討論。</div>
+
+    <div class="component-frame" style="display:block; padding:0; background:transparent; border:none;">
+      <div class="quiz-box">
+        <div class="quiz-q">NotebookLM 最適合用來做什麼？</div>
+        <div class="quiz-options">
+          <div class="quiz-opt">A. 寫程式碼</div>
+          <div class="quiz-opt correct">B. 分析與整合多份文件的知識</div>
+          <div class="quiz-opt">C. 製作簡報投影片</div>
+          <div class="quiz-opt wrong">D. 即時翻譯語言</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<script>
+// Scroll spy
+const navItems = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('.ds-section');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navItems.forEach(item => item.classList.remove('active'));
+      const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

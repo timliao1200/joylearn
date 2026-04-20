@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>享學 Design System v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --brand:        #6442A1;
+  --brand-end:    #A5B4FC;
+  --brand-grad:   linear-gradient(135deg, #6442A1, #A5B4FC);
+  --brand-dark:   #1A1440;
+  --brand-mid:    #9B87D0;
+  --brand-light:  #EEF0FF;
+  --brand-xlight: #FAFBFF;
+  --ink:          #1A1440;
+  --ink-2:        #5A5A7A;
+  --ink-3:        #9090B8;
+  --border:       #E8E8F0;
+  --bg:           #FFFFFF;
+  --bg-2:         #F8F8FC;
+  --shadow-sm:    0 1px 4px rgba(100,66,161,0.05), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow:       0 2px 16px rgba(100,66,161,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-md:    0 8px 40px rgba(100,66,161,0.12), 0 2px 8px rgba(0,0,0,0.04);
+  --sidebar-w:    264px;
+  --font:         'Outfit', -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════
+   TOPBAR
+═══════════════════════════════════ */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 54px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(232,232,240,0.8);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  z-index: 100;
+}
+
+.topbar-logo {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+.topbar-logo .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.topbar-logo .d { color: var(--ink); }
+
+.topbar-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 16px;
+}
+
+.topbar-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0.1px;
+}
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-ver {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--brand);
+  background: var(--brand-light);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+/* ═══════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 54px;
+  left: 0;
+  width: var(--sidebar-w);
+  height: calc(100vh - 54px);
+  overflow-y: auto;
+  padding: 36px 0 32px;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { width: 0; }
+
+.nav-group { margin-bottom: 32px; }
+
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 22px;
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  padding: 7px 22px;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  letter-spacing: 0.1px;
+}
+.nav-item:hover {
+  color: var(--ink);
+  background: var(--brand-xlight);
+}
+.nav-item.active {
+  color: var(--brand);
+  font-weight: 600;
+  background: linear-gradient(to right, rgba(100,66,161,0.06), transparent);
+  border-left: 2px solid var(--brand);
+}
+
+.nav-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: 10px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.nav-item.active .nav-dot,
+.nav-item:hover .nav-dot { opacity: 1; }
+
+/* ═══════════════════════════════════
+   CONTENT
+═══════════════════════════════════ */
+.content {
+  margin-left: var(--sidebar-w);
+  padding-top: 54px;
+}
+
+.content-inner {
+  max-width: 740px;
+  padding: 80px 72px 160px;
+}
+
+/* ═══════════════════════════════════
+   SECTION BASE — scroll-triggered reveal
+═══════════════════════════════════ */
+.ds-section {
+  margin-bottom: 112px;
+  scroll-margin-top: 80px;
+}
+
+.ds-section.reveal-ready {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1);
+}
+
+.ds-section.reveal-ready.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.section-head-left {}
+
+.section-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.section-title {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.section-num {
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -4px;
+  color: var(--ink);
+  opacity: 0.04;
+  line-height: 1;
+  user-select: none;
+  flex-shrink: 0;
+  margin-top: -8px;
+}
+
+.section-desc {
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.75;
+  max-width: 520px;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+.section-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+
+/* ═══════════════════════════════════
+   LOGO SECTION
+═══════════════════════════════════ */
+.logo-cases {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.logo-case {
+  padding: 52px 56px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  transition: background 0.2s;
+}
+.logo-case.light { background: white; }
+.logo-case.dark  { background: var(--brand-dark); }
+.logo-case.tint  { background: var(--brand-xlight); }
+
+.wm {
+  font-family: var(--font);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.wm .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.wm.xl  { font-size: 60px; }
+.wm.md  { font-size: 36px; }
+.wm.sm  { font-size: 20px; }
+
+.case-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.case-context {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.case-context.on-dark { color: rgba(255,255,255,0.28); }
+
+.wm-sizes {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 36px 56px;
+}
+
+.wm-size-item { display: flex; flex-direction: column; gap: 8px; }
+.wm-size-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ═══════════════════════════════════
+   COLOR SECTION
+═══════════════════════════════════ */
+.color-block {
+  margin-bottom: 32px;
+}
+
+.color-block-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+
+.color-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.swatch:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.swatch-face {
+  height: 88px;
+}
+
+.swatch-body {
+  padding: 12px 14px;
+  background: white;
+}
+
+.swatch-token {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.swatch-val {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hero color swatch */
+.swatch-hero {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: var(--shadow);
+  margin-bottom: 10px;
+}
+.swatch-hero .swatch-face { height: 96px; }
+.swatch-hero .swatch-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+}
+.swatch-hero .swatch-token { font-size: 13px; font-weight: 700; }
+.swatch-hero .swatch-val { font-size: 12px; }
+
+/* ═══════════════════════════════════
+   TYPOGRAPHY SECTION
+═══════════════════════════════════ */
+.type-table { border-top: 1px solid var(--border); }
+
+.type-row {
+  display: grid;
+  grid-template-columns: 136px 1fr;
+  gap: 32px;
+  align-items: center;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.type-meta-col {}
+.type-level {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 4px;
+}
+.type-spec {
+  display: block;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+
+.type-sample {}
+.ts-h1  { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; color: var(--ink); }
+.ts-h2  { font-size: 24px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.2; color: var(--ink); }
+.ts-h3  { font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.ts-body { font-size: 17px; font-weight: 400; line-height: 1.75; color: var(--ink-2); }
+.ts-meta { font-size: 13px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.1px; }
+
+/* ═══════════════════════════════════
+   SPACING SECTION
+═══════════════════════════════════ */
+.space-table { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+
+.space-row {
+  display: grid;
+  grid-template-columns: 96px auto 48px;
+  gap: 20px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.space-tok {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.space-vis {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--brand-grad);
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.space-val {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+/* ═══════════════════════════════════
+   RADIUS & SHADOW
+═══════════════════════════════════ */
+.radius-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.radius-item { text-align: center; }
+
+.radius-block {
+  width: 76px;
+  height: 76px;
+  background: var(--brand-light);
+  border: 1px solid rgba(100,66,161,0.15);
+  margin: 0 auto 10px;
+}
+
+.radius-label {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 2px;
+}
+.radius-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.shadow-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.shadow-item { text-align: center; }
+.shadow-block {
+  width: 120px;
+  height: 60px;
+  border-radius: 12px;
+  background: white;
+  margin: 0 auto 12px;
+}
+.shadow-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-3);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ═══════════════════════════════════
+   COMPONENT FRAME (Spotlight)
+═══════════════════════════════════ */
+.comp-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 12px;
+}
+.comp-frame::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(100,66,161,0.07) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  top: var(--my, -100px);
+  left: var(--mx, -100px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.comp-frame:hover::after { opacity: 1; }
+
+.comp-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* ═══════════════════════════════════
+   BUTTONS
+═══════════════════════════════════ */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  letter-spacing: 0.1px;
+  text-decoration: none;
+  transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.btn:hover   { opacity: 0.88; transform: translateY(-1px); }
+.btn:active  { transform: translateY(0) scale(0.99); opacity: 1; }
+
+.btn-primary {
+  background: var(--brand-grad);
+  color: white;
+  box-shadow: 0 2px 12px rgba(100,66,161,0.3);
+}
+.btn-primary:hover {
+  box-shadow: 0 4px 20px rgba(100,66,161,0.38);
+}
+
+.btn-secondary {
+  background: var(--brand-light);
+  color: var(--brand);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.btn-ghost:hover { background: white; }
+
+.btn-dark {
+  background: var(--brand-dark);
+  color: white;
+}
+
+/* ═══════════════════════════════════
+   PROMPT BOX
+═══════════════════════════════════ */
+.prompt-box {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand);
+  background: var(--brand-xlight);
+  overflow: hidden;
+}
+
+.prompt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.prompt-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.prompt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: var(--brand-grad);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+.prompt-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+.prompt-btn:active { transform: scale(0.98); }
+
+.prompt-body {
+  padding: 18px 20px;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════
+   TOGGLE
+═══════════════════════════════════ */
+.toggle-bar {
+  display: inline-flex;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.toggle-tab {
+  padding: 8px 20px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  color: var(--ink-3);
+  background: transparent;
+  transition: all 0.18s ease;
+  letter-spacing: 0.1px;
+}
+.toggle-tab.active {
+  background: var(--brand-grad);
+  color: white;
+  box-shadow: 0 2px 8px rgba(100,66,161,0.25);
+}
+
+.toggle-content {
+  padding: 24px;
+  background: var(--bg-2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════
+   STEPS
+═══════════════════════════════════ */
+.step-list { display: flex; flex-direction: column; }
+
+.step-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 18px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.step-row:first-child { padding-top: 0; }
+.step-row:last-child  { border-bottom: none; padding-bottom: 0; }
+
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-num.done    { background: #28C76F; color: white; }
+.step-num.active  { background: var(--brand-grad); color: white; }
+.step-num.pending { background: var(--border); color: var(--ink-3); }
+
+.step-body {}
+.step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.step-title.muted { opacity: 0.45; }
+.step-desc {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.step-desc.muted { opacity: 0.45; }
+
+/* ═══════════════════════════════════
+   QUIZ
+═══════════════════════════════════ */
+.quiz {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.quiz-q {
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.quiz-opts {
+  padding: 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.quiz-opt {
+  padding: 13px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: white;
+  color: var(--ink);
+  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+  font-family: var(--font);
+}
+.quiz-opt:hover           { background: var(--brand-xlight); border-color: var(--brand-mid); }
+.quiz-opt:active          { transform: scale(0.99); }
+.quiz-opt.correct         { background: #E2F8ED; border-color: #28C76F; color: #16673e; font-weight: 600; }
+.quiz-opt.wrong           { background: #FFF0F0; border-color: #FF5555; color: #a82323; }
+
+/* ═══════════════════════════════════
+   CALLOUT
+═══════════════════════════════════ */
+.callout {
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.callout-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+.callout-body {}
+.callout-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.callout.info {
+  background: var(--brand-xlight);
+  border-color: rgba(100,66,161,0.2);
+  color: var(--ink-2);
+}
+.callout.info .callout-title { color: var(--brand); }
+
+.callout.tip {
+  background: #E2F8ED;
+  border-color: rgba(40,199,111,0.3);
+  color: #2d5a42;
+}
+.callout.tip .callout-title { color: #16673e; }
+
+.callout.warn {
+  background: #FFF8ED;
+  border-color: rgba(255,159,67,0.3);
+  color: #6b4a1a;
+}
+.callout.warn .callout-title { color: #b06000; }
+
+/* ═══════════════════════════════════
+   SYSTEM INTRO HEADER
+═══════════════════════════════════ */
+.sys-intro {
+  padding: 64px 0 72px;
+  margin-bottom: 80px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.sys-intro::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 56px;
+  height: 2px;
+  background: var(--brand-grad);
+  border-radius: 1px;
+}
+
+.sys-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brand);
+  display: block;
+  margin-bottom: 20px;
+}
+
+.sys-title {
+  font-size: clamp(40px, 4.5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  color: var(--ink);
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+.sys-title .hi {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sys-desc {
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.75;
+  max-width: 460px;
+  font-weight: 400;
+  margin-bottom: 36px;
+}
+
+.sys-stats {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+}
+
+.sys-stat {
+  padding-right: 28px;
+  margin-right: 28px;
+  border-right: 1px solid var(--border);
+}
+.sys-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+
+.sys-stat-num {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  margin-bottom: 4px;
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sys-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════
+   MOTION SECTION
+═══════════════════════════════════ */
+.duration-list {
+  border-top: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+
+.dur-row {
+  display: grid;
+  grid-template-columns: 96px 1fr 60px;
+  gap: 20px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dur-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+}
+
+.dur-track {
+  height: 3px;
+  background: var(--bg-2);
+  border-radius: 2px;
+  overflow: visible;
+  cursor: pointer;
+  position: relative;
+}
+
+.dur-track::after {
+  content: '點擊播放';
+  position: absolute;
+  top: -22px;
+  right: 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--ink-3);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.dur-track:hover::after { opacity: 1; }
+
+.dur-fill {
+  height: 100%;
+  background: var(--brand-grad);
+  border-radius: 2px;
+  width: 0%;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dur-ms {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.easing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.ease-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 24px;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+  user-select: none;
+}
+.ease-card:hover { box-shadow: var(--shadow); }
+.ease-card:active { transform: scale(0.99); }
+
+.ease-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand);
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.ease-card-code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+}
+
+.ease-demo-track {
+  height: 28px;
+  background: var(--bg-2);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ease-demo-ball {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--brand-grad);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition-property: left;
+}
+
+.ease-card-use {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 10px;
+  line-height: 1.55;
+}
+
+.motion-rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.motion-rule {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.motion-rule:last-child { border-bottom: none; }
+
+.motion-rule-icon {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─── TOPBAR ─── -->
+<header class="topbar">
+  <div class="topbar-logo"><span class="g">享</span><span class="d">學</span></div>
+  <div class="topbar-sep"></div>
+  <span class="topbar-label">Design System</span>
+  <div class="topbar-right">
+    <span class="topbar-ver">v2.0</span>
+  </div>
+</header>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="nav-group">
+    <div class="nav-group-label">品牌</div>
+    <a class="nav-item active" href="#logo"><span class="nav-dot"></span>Logo</a>
+    <a class="nav-item" href="#colors"><span class="nav-dot"></span>Color System</a>
+    <a class="nav-item" href="#typography"><span class="nav-dot"></span>Typography</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">基礎</div>
+    <a class="nav-item" href="#spacing"><span class="nav-dot"></span>Spacing</a>
+    <a class="nav-item" href="#radius"><span class="nav-dot"></span>Radius & Shadow</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">元件</div>
+    <a class="nav-item" href="#buttons"><span class="nav-dot"></span>Buttons</a>
+    <a class="nav-item" href="#toggle"><span class="nav-dot"></span>Toggle</a>
+    <a class="nav-item" href="#prompt"><span class="nav-dot"></span>Prompt Box</a>
+    <a class="nav-item" href="#steps"><span class="nav-dot"></span>Steps</a>
+    <a class="nav-item" href="#quiz"><span class="nav-dot"></span>Quiz</a>
+    <a class="nav-item" href="#callout"><span class="nav-dot"></span>Callout</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">動效</div>
+    <a class="nav-item" href="#motion"><span class="nav-dot"></span>Motion</a>
+  </div>
+
+  <!-- ── 版本歷程 ── -->
+  <div class="nav-group" style="margin-top:auto;padding-top:24px;border-top:1px solid var(--border);">
+    <div class="nav-group-label">版本歷程</div>
+    <a class="nav-item" href="_history/brand-system-v1.html" target="_blank">
+      <span class="nav-dot"></span>DS v1 · 初版</a>
+    <a class="nav-item" href="_history/logo-directions-v1.html" target="_blank">
+      <span class="nav-dot"></span>Logo 方向探索</a>
+    <a class="nav-item" href="_history/color-directions-v1.html" target="_blank">
+      <span class="nav-dot"></span>色彩方向探索</a>
+    <a class="nav-item" href="_history/mockup-v3.html" target="_blank">
+      <span class="nav-dot"></span>Mockup v3</a>
+    <a class="nav-item" href="_history/brand-system-v2-concept.html" target="_blank">
+      <span class="nav-dot"></span>v2 概念稿</a>
+    <a class="nav-item" href="../CHANGELOG.md" target="_blank" style="margin-top:6px;">
+      <span class="nav-dot"></span>CHANGELOG →</a>
+  </div>
+</nav>
+
+<!-- ─── CONTENT ─── -->
+<main class="content">
+<div class="content-inner">
+
+  <!-- ══ SYSTEM INTRO ══ -->
+  <div class="sys-intro">
+    <span class="sys-eyebrow">享學 Design System · v2.0</span>
+    <h1 class="sys-title"><span class="hi">享</span>學<br>品牌視覺系統</h1>
+    <p class="sys-desc">以「享受學習」為核心的視覺語言，從色彩到元件，每個設計決策都指向同一個目標：讓課堂體驗令人愉悅。</p>
+    <div class="sys-stats">
+      <div class="sys-stat">
+        <div class="sys-stat-num">12</div>
+        <div class="sys-stat-label">設計章節</div>
+      </div>
+      <div class="sys-stat">
+        <div class="sys-stat-num">16</div>
+        <div class="sys-stat-label">色彩 Token</div>
+      </div>
+      <div class="sys-stat">
+        <div class="sys-stat-num">5</div>
+        <div class="sys-stat-label">字型層次</div>
+      </div>
+      <div class="sys-stat">
+        <div class="sys-stat-num">4</div>
+        <div class="sys-stat-label">動效時長</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 01 LOGO ══ -->
+  <section class="ds-section" id="logo">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">01 · Brand Identity</span>
+        <h2 class="section-title">Logo</h2>
+      </div>
+      <div class="section-num">01</div>
+    </div>
+    <p class="section-desc">純字標路線。「享」以品牌漸層為識別，「學」以深墨色錨定重量感。字型本身即記憶點——不需要額外符號。</p>
+
+    <div class="logo-cases">
+      <div class="logo-case light">
+        <div>
+          <div class="wm xl"><span class="g">享</span><span style="color:var(--ink)">學</span></div>
+          <div style="margin-top:12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-3);font-weight:600;">享受學習 · 學習享受</div>
+        </div>
+        <div class="case-meta">
+          <span class="case-context">Light</span>
+        </div>
+      </div>
+      <div class="logo-case dark">
+        <div>
+          <div class="wm xl"><span class="g">享</span><span style="color:white">學</span></div>
+          <div style="margin-top:12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:600;">享受學習 · 學習享受</div>
+        </div>
+        <div class="case-meta">
+          <span class="case-context on-dark">Dark</span>
+        </div>
+      </div>
+      <div class="logo-case tint wm-sizes">
+        <div class="wm-size-item">
+          <span class="wm-size-label">Large · 36px</span>
+          <div class="wm md"><span class="g">享</span><span style="color:var(--ink)">學</span></div>
+        </div>
+        <div class="wm-size-item">
+          <span class="wm-size-label">Small · 20px</span>
+          <div class="wm sm"><span class="g">享</span><span style="color:var(--ink)">學</span></div>
+        </div>
+        <div class="wm-size-item">
+          <span class="wm-size-label">With tagline</span>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="wm md"><span class="g">享</span><span style="color:var(--ink)">學</span></div>
+            <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-3);font-weight:700;">享受學習 · 學習享受</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 02 COLORS ══ -->
+  <section class="ds-section" id="colors">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">02 · Foundations</span>
+        <h2 class="section-title">Color System</h2>
+      </div>
+      <div class="section-num">02</div>
+    </div>
+    <p class="section-desc">漸層只打在關鍵元素：Logo、CTA 按鈕、Active 狀態、步驟數字。大面積保持白底，所有中性色帶藍紫色溫。</p>
+
+    <!-- Brand gradient hero -->
+    <div class="color-block">
+      <div class="color-block-title">Brand Gradient</div>
+      <div class="swatch-hero">
+        <div class="swatch-face" style="background:linear-gradient(135deg,#6442A1,#A5B4FC)"></div>
+        <div class="swatch-body">
+          <div>
+            <div class="swatch-token">--brand-grad</div>
+            <div class="swatch-val">linear-gradient(135deg, #6442A1, #A5B4FC)</div>
+          </div>
+          <div style="font-size:11px;color:var(--ink-3);font-weight:600;text-align:right;font-family:'SF Mono',monospace;">Logo · CTA · Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand solids -->
+    <div class="color-block">
+      <div class="color-block-title">Brand Solids</div>
+      <div class="color-strip">
+        <div class="swatch">
+          <div class="swatch-face" style="background:#6442A1"></div>
+          <div class="swatch-body"><div class="swatch-token">--brand</div><div class="swatch-val">#6442A1</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#A5B4FC"></div>
+          <div class="swatch-body"><div class="swatch-token">--brand-end</div><div class="swatch-val">#A5B4FC</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#9B87D0"></div>
+          <div class="swatch-body"><div class="swatch-token">--brand-mid</div><div class="swatch-val">#9B87D0</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#1A1440"></div>
+          <div class="swatch-body"><div class="swatch-token">--brand-dark</div><div class="swatch-val">#1A1440</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Light backgrounds -->
+    <div class="color-block">
+      <div class="color-block-title">Backgrounds</div>
+      <div class="color-strip">
+        <div class="swatch">
+          <div class="swatch-face" style="background:#EEF0FF"></div>
+          <div class="swatch-body"><div class="swatch-token">--brand-light</div><div class="swatch-val">#EEF0FF</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#FAFBFF"></div>
+          <div class="swatch-body"><div class="swatch-token">--brand-xlight</div><div class="swatch-val">#FAFBFF</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#F8F8FC;border:1px solid var(--border)"></div>
+          <div class="swatch-body"><div class="swatch-token">--bg-2</div><div class="swatch-val">#F8F8FC</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#FFFFFF;border-bottom:1px solid var(--border)"></div>
+          <div class="swatch-body"><div class="swatch-token">--bg</div><div class="swatch-val">#FFFFFF</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ink scale -->
+    <div class="color-block">
+      <div class="color-block-title">Ink · Text</div>
+      <div class="color-strip">
+        <div class="swatch">
+          <div class="swatch-face" style="background:#1A1440"></div>
+          <div class="swatch-body"><div class="swatch-token">--ink</div><div class="swatch-val">#1A1440</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#5A5A7A"></div>
+          <div class="swatch-body"><div class="swatch-token">--ink-2</div><div class="swatch-val">#5A5A7A</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#9090B8"></div>
+          <div class="swatch-body"><div class="swatch-token">--ink-3</div><div class="swatch-val">#9090B8</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#E0E4FF"></div>
+          <div class="swatch-body"><div class="swatch-token">--border</div><div class="swatch-val">#E0E4FF</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Semantic -->
+    <div class="color-block">
+      <div class="color-block-title">Semantic</div>
+      <div class="color-strip">
+        <div class="swatch">
+          <div class="swatch-face" style="background:#28C76F"></div>
+          <div class="swatch-body"><div class="swatch-token">--green</div><div class="swatch-val">#28C76F</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#E2F8ED"></div>
+          <div class="swatch-body"><div class="swatch-token">--green-light</div><div class="swatch-val">#E2F8ED</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#FF9F43"></div>
+          <div class="swatch-body"><div class="swatch-token">--amber</div><div class="swatch-val">#FF9F43</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-face" style="background:#FFF3E0"></div>
+          <div class="swatch-body"><div class="swatch-token">--amber-light</div><div class="swatch-val">#FFF3E0</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 03 TYPOGRAPHY ══ -->
+  <section class="ds-section" id="typography">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">03 · Foundations</span>
+        <h2 class="section-title">Typography</h2>
+      </div>
+      <div class="section-num">03</div>
+    </div>
+    <p class="section-desc">字體堆疊：Outfit（西文）+ Noto Sans TC（中文）。課件最小內文 17px，兼顧投影可讀與手機舒適度。</p>
+
+    <div class="type-table">
+      <div class="type-row">
+        <div class="type-meta-col">
+          <span class="type-level">H1</span>
+          <span class="type-spec">32px<br>weight 800<br>−0.5px</span>
+        </div>
+        <div class="ts-h1 type-sample">課程標題範例</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta-col">
+          <span class="type-level">H2</span>
+          <span class="type-spec">24px<br>weight 700<br>−0.2px</span>
+        </div>
+        <div class="ts-h2 type-sample">章節名稱與段落</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta-col">
+          <span class="type-level">H3</span>
+          <span class="type-spec">18px<br>weight 600<br>0px</span>
+        </div>
+        <div class="ts-h3 type-sample">小節標題，清楚標示層次</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta-col">
+          <span class="type-level">Body</span>
+          <span class="type-spec">17px<br>weight 400<br>1.75 lh</span>
+        </div>
+        <div class="ts-body type-sample">課程內文採用 17px，確保學員在投影與行動裝置上都能輕鬆閱讀。這個尺寸同時照顧中高齡視覺與課堂投影距離。</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta-col">
+          <span class="type-level">Meta</span>
+          <span class="type-spec">13px<br>weight 500<br>+0.1px</span>
+        </div>
+        <div class="ts-meta type-sample">標籤 · 說明文字 · 版本資訊 · 輔助提示 · 時間戳記</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 04 SPACING ══ -->
+  <section class="ds-section" id="spacing">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">04 · Foundations</span>
+        <h2 class="section-title">Spacing</h2>
+      </div>
+      <div class="section-num">04</div>
+    </div>
+    <p class="section-desc">以 4px 為基礎單位，8px 為主要模組格。所有間距從此尺規取值，不使用任意數字。</p>
+
+    <div class="space-table">
+      <div class="space-row"><span class="space-tok">space-1</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:4px"></div></div><span class="space-val">4px</span></div>
+      <div class="space-row"><span class="space-tok">space-2</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:8px"></div></div><span class="space-val">8px</span></div>
+      <div class="space-row"><span class="space-tok">space-3</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:12px"></div></div><span class="space-val">12px</span></div>
+      <div class="space-row"><span class="space-tok">space-4</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:16px"></div></div><span class="space-val">16px</span></div>
+      <div class="space-row"><span class="space-tok">space-6</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:24px"></div></div><span class="space-val">24px</span></div>
+      <div class="space-row"><span class="space-tok">space-8</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:32px"></div></div><span class="space-val">32px</span></div>
+      <div class="space-row"><span class="space-tok">space-12</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:48px"></div></div><span class="space-val">48px</span></div>
+      <div class="space-row"><span class="space-tok">space-16</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:64px"></div></div><span class="space-val">64px</span></div>
+      <div class="space-row"><span class="space-tok">space-24</span><div style="display:flex;align-items:center;"><div class="space-vis" style="width:96px"></div></div><span class="space-val">96px</span></div>
+    </div>
+  </section>
+
+  <!-- ══ 05 RADIUS & SHADOW ══ -->
+  <section class="ds-section" id="radius">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">05 · Foundations</span>
+        <h2 class="section-title">Radius & Shadow</h2>
+      </div>
+      <div class="section-num">05</div>
+    </div>
+    <p class="section-desc">圓角有層次但保持克制。陰影帶品牌色溫，避免冷灰黑陰影破壞整體氛圍。</p>
+
+    <div class="radius-row">
+      <div class="radius-item"><div class="radius-block" style="border-radius:4px"></div><span class="radius-label">4px</span><span class="radius-name">xs · 行內元素</span></div>
+      <div class="radius-item"><div class="radius-block" style="border-radius:8px"></div><span class="radius-label">8px</span><span class="radius-name">sm · 按鈕</span></div>
+      <div class="radius-item"><div class="radius-block" style="border-radius:12px"></div><span class="radius-label">12px</span><span class="radius-name">md · 卡片</span></div>
+      <div class="radius-item"><div class="radius-block" style="border-radius:16px"></div><span class="radius-label">16px</span><span class="radius-name">lg · 面板</span></div>
+      <div class="radius-item"><div class="radius-block" style="border-radius:40px"></div><span class="radius-label">pill</span><span class="radius-name">標籤 · 徽章</span></div>
+    </div>
+
+    <div class="shadow-row">
+      <div class="shadow-item">
+        <div class="shadow-block" style="box-shadow:0 1px 4px rgba(100,66,161,0.05),0 1px 2px rgba(0,0,0,0.04)"></div>
+        <span class="shadow-name">--shadow-sm</span>
+      </div>
+      <div class="shadow-item">
+        <div class="shadow-block" style="box-shadow:0 2px 16px rgba(100,66,161,0.08),0 1px 4px rgba(0,0,0,0.04)"></div>
+        <span class="shadow-name">--shadow</span>
+      </div>
+      <div class="shadow-item">
+        <div class="shadow-block" style="box-shadow:0 8px 40px rgba(100,66,161,0.12),0 2px 8px rgba(0,0,0,0.04)"></div>
+        <span class="shadow-name">--shadow-md</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 06 BUTTONS ══ -->
+  <section class="ds-section" id="buttons">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">06 · Components</span>
+        <h2 class="section-title">Buttons</h2>
+      </div>
+      <div class="section-num">06</div>
+    </div>
+
+    <div class="comp-frame">
+      <span class="comp-label">Light Background</span>
+      <div class="btn-row">
+        <button class="btn btn-primary">開始學習</button>
+        <button class="btn btn-secondary">了解更多</button>
+        <button class="btn btn-ghost">取消</button>
+        <button class="btn btn-dark">上課模式</button>
+      </div>
+    </div>
+
+    <div class="comp-frame" style="background:var(--brand-dark);">
+      <span class="comp-label" style="color:rgba(255,255,255,0.3)">Dark Background</span>
+      <div class="btn-row">
+        <button class="btn btn-primary">開始學習</button>
+        <button class="btn" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.12);">了解更多</button>
+        <button class="btn" style="background:transparent;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.12);">取消</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 07 TOGGLE ══ -->
+  <section class="ds-section" id="toggle">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">07 · Components</span>
+        <h2 class="section-title">Toggle</h2>
+      </div>
+      <div class="section-num">07</div>
+    </div>
+    <p class="section-desc">同一概念的「基礎／進階」深度切換。讓學員自選理解深度，不強迫所有人同步。</p>
+
+    <div class="comp-frame">
+      <div class="toggle-bar">
+        <button class="toggle-tab active" onclick="switchTab(this, 'basic')">基礎版</button>
+        <button class="toggle-tab" onclick="switchTab(this, 'adv')">進階版</button>
+      </div>
+      <div id="basic" class="toggle-content">
+        NotebookLM 就像一個「會問問題的筆記本」。你放進去什麼資料，它就幫你整理重點、找出關聯，讓你更快找到想要的資訊。
+      </div>
+      <div id="adv" class="toggle-content" style="display:none;">
+        NotebookLM 採用 RAG（Retrieval-Augmented Generation）架構，將你上傳的文件建成向量索引，每次對話時動態檢索相關段落，再交由語言模型生成有根據的回覆——避免幻覺（hallucination）同時保持內容可追溯性。
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 08 PROMPT BOX ══ -->
+  <section class="ds-section" id="prompt">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">08 · Components</span>
+        <h2 class="section-title">Prompt Box</h2>
+      </div>
+      <div class="section-num">08</div>
+    </div>
+    <p class="section-desc">學員一鍵複製 AI Prompt，降低輸入錯誤、讓操作步驟可以跟上課堂節奏。</p>
+
+    <div class="comp-frame" style="padding:32px;">
+      <div class="prompt-box">
+        <div class="prompt-head">
+          <span class="prompt-title">今日 Prompt</span>
+          <button class="prompt-btn" onclick="copyPrompt(this)">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="2" stroke="white" stroke-width="1.5"/><path d="M3 11V3a2 2 0 012-2h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+            複製
+          </button>
+        </div>
+        <div class="prompt-body" id="prompt-content">
+          請幫我規劃一個為期五天的日本京都旅遊行程，我是第一次去，喜歡文化與美食，不喜歡太趕的行程。每天安排 2–3 個地點，並說明交通方式。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 09 STEPS ══ -->
+  <section class="ds-section" id="steps">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">09 · Components</span>
+        <h2 class="section-title">Steps</h2>
+      </div>
+      <div class="section-num">09</div>
+    </div>
+    <p class="section-desc">引導學員依序完成操作。三種狀態：已完成、進行中、尚未開始。視覺清楚區分，不需要閱讀文字才能判斷進度。</p>
+
+    <div class="comp-frame">
+      <div class="step-list">
+        <div class="step-row">
+          <div class="step-num done">✓</div>
+          <div class="step-body">
+            <div class="step-title muted">打開 NotebookLM</div>
+            <div class="step-desc muted">前往 notebooklm.google.com 並登入 Google 帳號</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num active">2</div>
+          <div class="step-body">
+            <div class="step-title">建立新 Notebook</div>
+            <div class="step-desc">點擊右上角「+ New Notebook」，命名為「旅遊計劃」</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num pending">3</div>
+          <div class="step-body">
+            <div class="step-title muted">上傳資料來源</div>
+            <div class="step-desc muted">將旅遊相關的 PDF、網址或文字貼入</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 10 QUIZ ══ -->
+  <section class="ds-section" id="quiz">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">10 · Components</span>
+        <h2 class="section-title">Quiz</h2>
+      </div>
+      <div class="section-num">10</div>
+    </div>
+    <p class="section-desc">即時驗證理解。選錯時不揭露正確答案——保留給老師帶動課堂討論。</p>
+
+    <div class="comp-frame" style="padding:0;background:transparent;border:none;">
+      <div class="quiz">
+        <div class="quiz-q">NotebookLM 最適合用來做什麼？</div>
+        <div class="quiz-opts">
+          <div class="quiz-opt">A. 寫程式碼</div>
+          <div class="quiz-opt correct">B. 分析與整合多份文件的知識</div>
+          <div class="quiz-opt">C. 製作簡報投影片</div>
+          <div class="quiz-opt wrong">D. 即時翻譯語言</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 11 CALLOUT ══ -->
+  <section class="ds-section" id="callout">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">11 · Components</span>
+        <h2 class="section-title">Callout</h2>
+      </div>
+      <div class="section-num">11</div>
+    </div>
+    <p class="section-desc">課件中用於重要提示、小技巧、注意事項。三種語意層次：資訊、建議、警示。</p>
+
+    <div class="comp-frame" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="callout info">
+        <svg class="callout-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#6442A1" stroke-width="1.5"/><path d="M9 8v5M9 6v.5" stroke="#6442A1" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="callout-body">
+          <div class="callout-title">提示</div>
+          第一次使用 NotebookLM 建議先用簡短的文件測試，確認 AI 回應品質後再上傳大量資料。
+        </div>
+      </div>
+      <div class="callout tip">
+        <svg class="callout-icon" viewBox="0 0 18 18" fill="none"><path d="M9 2l1.5 4h4l-3.3 2.4 1.3 4L9 10l-3.5 2.4 1.3-4L3.5 6h4L9 2z" stroke="#28C76F" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <div class="callout-body">
+          <div class="callout-title">小技巧</div>
+          在問題裡加上「請用條列方式整理」，NotebookLM 的回覆會更容易閱讀與複製。
+        </div>
+      </div>
+      <div class="callout warn">
+        <svg class="callout-icon" viewBox="0 0 18 18" fill="none"><path d="M9 2L16 15H2L9 2z" stroke="#FF9F43" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 7v4M9 12.5v.5" stroke="#FF9F43" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="callout-body">
+          <div class="callout-title">注意</div>
+          上傳的文件不要包含個人隱私資訊，NotebookLM 的資料可能用於模型訓練。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 12 MOTION ══ -->
+  <section class="ds-section" id="motion">
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-eyebrow">12 · Motion</span>
+        <h2 class="section-title">Motion</h2>
+      </div>
+      <div class="section-num">12</div>
+    </div>
+    <p class="section-desc">動效服務於理解，不追求炫耀。所有動畫採用同一條緩動曲線，讓整體介面有一致的「彈性」手感。點擊各項目可預覽動效。</p>
+
+    <!-- Duration scale -->
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;">Duration Scale</div>
+    <div class="duration-list">
+      <div class="dur-row" data-ms="100">
+        <span class="dur-name">Instant</span>
+        <div class="dur-track"><div class="dur-fill"></div></div>
+        <span class="dur-ms">100ms</span>
+      </div>
+      <div class="dur-row" data-ms="200">
+        <span class="dur-name">Fast</span>
+        <div class="dur-track"><div class="dur-fill"></div></div>
+        <span class="dur-ms">200ms</span>
+      </div>
+      <div class="dur-row" data-ms="350">
+        <span class="dur-name">Normal</span>
+        <div class="dur-track"><div class="dur-fill"></div></div>
+        <span class="dur-ms">350ms</span>
+      </div>
+      <div class="dur-row" data-ms="600">
+        <span class="dur-name">Deliberate</span>
+        <div class="dur-track"><div class="dur-fill"></div></div>
+        <span class="dur-ms">600ms</span>
+      </div>
+    </div>
+
+    <!-- Easing curves -->
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;">Easing Curves</div>
+    <div class="easing-grid">
+      <div class="ease-card" data-ease="cubic-bezier(0.16,1,0.3,1)">
+        <div class="ease-card-name">Ease Out Expo</div>
+        <div class="ease-card-code">cubic-bezier(0.16, 1, 0.3, 1)</div>
+        <div class="ease-demo-track"><div class="ease-demo-ball"></div></div>
+        <div class="ease-card-use">主要緩動 — 所有 UI 進場、hover、modal 展開</div>
+      </div>
+      <div class="ease-card" data-ease="cubic-bezier(0.4,0,1,1)">
+        <div class="ease-card-name">Ease In</div>
+        <div class="ease-card-code">cubic-bezier(0.4, 0, 1, 1)</div>
+        <div class="ease-demo-track"><div class="ease-demo-ball"></div></div>
+        <div class="ease-card-use">退場 — 元素離開畫面、modal 關閉</div>
+      </div>
+      <div class="ease-card" data-ease="linear">
+        <div class="ease-card-name">Linear</div>
+        <div class="ease-card-code">linear</div>
+        <div class="ease-demo-track"><div class="ease-demo-ball"></div></div>
+        <div class="ease-card-use">進度條、載入狀態等持續性動畫</div>
+      </div>
+      <div class="ease-card" data-ease="cubic-bezier(0.34,1.56,0.64,1)">
+        <div class="ease-card-name">Spring Bounce</div>
+        <div class="ease-card-code">cubic-bezier(0.34, 1.56, 0.64, 1)</div>
+        <div class="ease-demo-track"><div class="ease-demo-ball"></div></div>
+        <div class="ease-card-use">Quiz 正解、通知出現等正向回饋</div>
+      </div>
+    </div>
+
+    <!-- Motion rules -->
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;">Motion Rules</div>
+    <div class="motion-rule-list">
+      <div class="motion-rule">
+        <span class="motion-rule-icon">DO</span>
+        <span>只動 <code style="font-size:12px;background:var(--bg-2);padding:1px 6px;border-radius:4px;">transform</code> 和 <code style="font-size:12px;background:var(--bg-2);padding:1px 6px;border-radius:4px;">opacity</code>，避免觸發 layout reflow</span>
+      </div>
+      <div class="motion-rule">
+        <span class="motion-rule-icon">DO</span>
+        <span>Hover/Active 回饋 100ms 以內完成，讓介面有即時感</span>
+      </div>
+      <div class="motion-rule">
+        <span class="motion-rule-icon">DO</span>
+        <span>頁面內容進場採用 Deliberate（600ms），讓學員有時間感知視覺層次</span>
+      </div>
+      <div class="motion-rule">
+        <span class="motion-rule-icon" style="color:#FF4444;">NO</span>
+        <span>不做無目的的裝飾性動畫，每個動效都要有資訊或操作意義</span>
+      </div>
+      <div class="motion-rule">
+        <span class="motion-rule-icon" style="color:#FF4444;">NO</span>
+        <span>不動 <code style="font-size:12px;background:var(--bg-2);padding:1px 6px;border-radius:4px;">width</code>、<code style="font-size:12px;background:var(--bg-2);padding:1px 6px;border-radius:4px;">height</code>、<code style="font-size:12px;background:var(--bg-2);padding:1px 6px;border-radius:4px;">top</code>、<code style="font-size:12px;background:var(--bg-2);padding:1px 6px;border-radius:4px;">left</code>，效能差</span>
+      </div>
+      <div class="motion-rule">
+        <span class="motion-rule-icon" style="color:#FF4444;">NO</span>
+        <span>不使用超過 600ms 的動畫，課件需要保持流暢的課堂節奏</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<script>
+// ── Scroll-triggered section reveals ──
+const allSections = document.querySelectorAll('.ds-section');
+allSections.forEach(s => s.classList.add('reveal-ready'));
+
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('revealed');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -32px 0px' });
+allSections.forEach(s => revealObs.observe(s));
+
+// ── Scroll spy → sidebar active ──
+const navLinks = document.querySelectorAll('.nav-item');
+
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const t = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if (t) t.classList.add('active');
+    }
+  });
+}, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+allSections.forEach(s => spy.observe(s));
+
+// ── Spotlight on component frames ──
+document.querySelectorAll('.comp-frame').forEach(frame => {
+  frame.addEventListener('mousemove', e => {
+    const r = frame.getBoundingClientRect();
+    frame.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    frame.style.setProperty('--my', `${e.clientY - r.top}px`);
+  });
+});
+
+// ── Toggle tabs ──
+function switchTab(btn, id) {
+  const frame = btn.closest('.comp-frame');
+  frame.querySelectorAll('.toggle-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  frame.querySelectorAll('.toggle-content').forEach(c => c.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+// ── Copy prompt ──
+function copyPrompt(btn) {
+  const text = document.getElementById('prompt-content').innerText.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '已複製';
+    btn.style.background = 'linear-gradient(135deg,#28C76F,#6fcf97)';
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="2" stroke="white" stroke-width="1.5"/><path d="M3 11V3a2 2 0 012-2h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> 複製`;
+      btn.style.background = '';
+    }, 2000);
+  });
+}
+
+// ── Motion: duration bars ──
+document.querySelectorAll('.dur-row').forEach(row => {
+  const fill = row.querySelector('.dur-fill');
+  const ms   = parseInt(row.dataset.ms);
+  row.querySelector('.dur-track').addEventListener('click', () => {
+    fill.style.transitionDuration = '0ms';
+    fill.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      fill.style.transitionDuration = ms + 'ms';
+      fill.style.width = '100%';
+      setTimeout(() => {
+        fill.style.transitionDuration = Math.round(ms * 0.6) + 'ms';
+        fill.style.width = '0%';
+      }, ms + 150);
+    }));
+  });
+});
+
+// ── Motion: easing card demos ──
+document.querySelectorAll('.ease-card').forEach(card => {
+  const ball  = card.querySelector('.ease-demo-ball');
+  const track = card.querySelector('.ease-demo-track');
+  const ease  = card.dataset.ease;
+  let running = false;
+
+  card.addEventListener('click', () => {
+    if (running) return;
+    running = true;
+    const maxLeft = track.clientWidth - 26;
+
+    ball.style.transition = 'none';
+    ball.style.left = '2px';
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ball.style.transition = `left 600ms ${ease}`;
+      ball.style.left = maxLeft + 'px';
+
+      setTimeout(() => {
+        ball.style.transition = 'left 400ms cubic-bezier(0.4,0,1,1)';
+        ball.style.left = '2px';
+        setTimeout(() => { running = false; }, 500);
+      }, 800);
+    }));
+  });
+});
+</script>
+</body>
+</html>

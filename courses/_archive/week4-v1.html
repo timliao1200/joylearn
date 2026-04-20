@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>享學 · Week 4 · NotebookLM — 打造你的 AI 旅遊顧問</title>
+  <style>
+    :root {
+      /* 品牌色 — 漸層只用在 logo mark */
+      --brand:        #6442A1;
+      --brand-grad:   linear-gradient(135deg, #6442A1, #A5B4FC);
+      --brand-dark:   #0F0C1E;
+      --brand-light:  #F0ECFA;
+      --brand-xlight: #FAF9FD;
+
+      /* 中性色 */
+      --ink:    #0F0C1E;
+      --ink-2:  #4A4A6A;
+      --ink-3:  #9898B8;
+      --bg:     #FFFFFF;
+      --bg-2:   #F8F8FB;
+      --border: #EAEAF0;
+
+      /* 功能色 */
+      --green:       #16A34A;
+      --green-light: #DCFCE7;
+      --amber:       #D97706;
+      --amber-light: #FEF3C7;
+      --red:         #DC2626;
+      --red-light:   #FEE2E2;
+
+      --radius:    8px;
+      --shadow:    0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', sans-serif;
+      background: var(--brand-dark);
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.65;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ══ SHELL ══ */
+    .course-shell { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--brand-dark);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid rgba(255,255,255,.06);
+      transition: width .25s ease;
+    }
+    .sidebar-brand {
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .sidebar-logo-mark {
+      width: 30px; height: 30px;
+      background: var(--brand-grad);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; color: #fff;
+      flex-shrink: 0;
+    }
+    .sidebar-logo-text { color: #fff; font-size: 15px; font-weight: 700; }
+    .sidebar-logo-sub  { font-size: 10px; color: rgba(255,255,255,.3); margin-top: 1px; }
+
+    .sidebar-week-info {
+      padding: 14px 18px 10px; flex-shrink: 0;
+    }
+    .week-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.06);
+      border-radius: 5px;
+      padding: 4px 10px; margin-bottom: 8px;
+    }
+    .week-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(165,180,252,.7); }
+    .week-badge span { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.55); }
+    .week-title { font-size: 11px; color: rgba(255,255,255,.3); line-height: 1.5; }
+
+    .sidebar-label {
+      padding: 16px 18px 5px;
+      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(255,255,255,.2);
+      flex-shrink: 0;
+    }
+    .sidebar-nav {
+      flex: 1; overflow-y: auto; padding: 2px 8px 16px;
+    }
+    .sidebar-nav::-webkit-scrollbar { width: 3px; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 2px; }
+
+    .nav-item {
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px; color: rgba(255,255,255,.38);
+      cursor: pointer; margin-bottom: 1px;
+      line-height: 1.4; transition: color .12s, background .12s;
+      border-left: 2px solid transparent;
+    }
+    .nav-item:hover { color: rgba(255,255,255,.72); background: rgba(255,255,255,.05); }
+    .nav-item.active {
+      color: #fff; font-weight: 600;
+      border-left-color: var(--brand);
+      background: rgba(100,66,161,.25);
+    }
+    .nav-item.done { color: rgba(255,255,255,.2); }
+
+    .sidebar-footer {
+      padding: 12px 18px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      font-size: 11px; color: rgba(255,255,255,.18);
+      flex-shrink: 0;
+    }
+
+    /* ══ PROGRESS BAR ══ */
+    .progress-bar { height: 2px; background: var(--border); flex-shrink: 0; }
+    .progress-fill {
+      height: 100%; background: var(--brand);
+      width: 0%; transition: width .1s linear;
+    }
+
+    /* ══ CONTENT ══ */
+    .content {
+      flex: 1; background: var(--bg);
+      overflow-y: auto; display: flex; flex-direction: column;
+    }
+    .content::-webkit-scrollbar { width: 5px; }
+    .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    .content-inner {
+      max-width: 740px; margin: 0 auto;
+      padding: 44px 56px 120px; width: 100%;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 12px; color: var(--ink-3);
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .breadcrumb .sep { opacity: .4; }
+    .breadcrumb .crumb-active { color: var(--brand); font-weight: 500; }
+
+    /* Page header */
+    .page-header { margin-bottom: 44px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--brand);
+      margin-bottom: 12px;
+    }
+    .page-h1 {
+      font-size: 36px; font-weight: 800; color: var(--ink);
+      line-height: 1.15; margin-bottom: 14px;
+      letter-spacing: -.5px;
+    }
+    .page-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--ink-3);
+    }
+    .meta-badge {
+      background: var(--brand-light); color: var(--brand);
+      font-size: 11px; font-weight: 600; letter-spacing: .3px;
+      padding: 3px 10px; border-radius: 4px;
+    }
+
+    /* Section title — editorial label style */
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--ink-3);
+      margin: 48px 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Body text */
+    .body-text {
+      font-size: 17px; color: var(--ink-2); line-height: 1.8;
+      margin-bottom: 18px;
+    }
+    .body-text strong { color: var(--ink); font-weight: 600; }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 44px 0; }
+
+    /* ══ TOGGLE ══ */
+    .toggle-wrap { margin: 20px 0; }
+    .toggle-tabs {
+      display: flex; width: fit-content;
+      border: 1px solid var(--border);
+      border-radius: var(--radius) var(--radius) 0 0;
+      overflow: hidden; border-bottom: none;
+    }
+    .toggle-tab {
+      padding: 8px 20px; font-size: 13px; font-weight: 500;
+      cursor: pointer; background: var(--bg-2); color: var(--ink-3);
+      border: none; transition: all .12s;
+    }
+    .toggle-tab.active { background: var(--brand); color: #fff; font-weight: 600; }
+    .toggle-body {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius) var(--radius) var(--radius);
+      padding: 20px 22px;
+      font-size: 16px; color: var(--ink-2); line-height: 1.8;
+    }
+    .toggle-body strong { color: var(--ink); font-weight: 600; }
+
+    /* ══ STEPS — timeline style ══ */
+    .steps { margin: 20px 0; position: relative; padding-left: 4px; }
+    .step-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 14px 16px 14px 0;
+      border-bottom: 1px solid var(--border);
+      transition: all .12s;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bg-2); border: 1.5px solid var(--border);
+      color: var(--ink-3); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .step-item.active .step-num {
+      background: var(--brand); border-color: var(--brand); color: #fff;
+    }
+    .step-item.done .step-num {
+      background: var(--green); border-color: var(--green); color: #fff;
+    }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .step-desc  { font-size: 13px; color: var(--ink-3); }
+    .step-item.done .step-title { color: var(--ink-3); }
+
+    /* ══ PROMPT BOX ══ */
+    .prompt-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--brand);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      position: relative; margin: 20px 0;
+      box-shadow: var(--shadow);
+    }
+    .prompt-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      color: var(--brand); text-transform: uppercase; margin-bottom: 10px;
+    }
+    .prompt-text {
+      font-size: 15px; color: var(--ink-2); line-height: 1.75;
+      padding-right: 88px;
+    }
+    .copy-btn {
+      position: absolute; top: 14px; right: 14px;
+      background: var(--brand); color: #fff;
+      border: none; cursor: pointer;
+      font-size: 12px; font-weight: 600;
+      padding: 7px 14px; border-radius: 6px;
+      transition: opacity .12s;
+    }
+    .copy-btn:hover { opacity: .82; }
+    .copy-btn.copied { background: var(--green); }
+
+    /* ══ IMAGE BLOCK ══ */
+    .img-block {
+      background: var(--bg-2);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      min-height: 180px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; color: var(--ink-3);
+      font-size: 13px; margin: 20px 0;
+    }
+    .img-block-icon { font-size: 28px; opacity: .4; }
+    .img-caption {
+      font-size: 12px; color: var(--ink-3);
+      text-align: center; font-style: italic;
+      margin-top: -8px; margin-bottom: 16px;
+    }
+
+    /* ══ CALLOUT — minimal inline note ══ */
+    .callout {
+      padding: 14px 18px; margin: 20px 0;
+      border-radius: var(--radius);
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 14px; line-height: 1.7;
+      border: 1px solid transparent;
+    }
+    .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; opacity: .7; }
+    .callout.tip  { background: var(--brand-light); border-color: rgba(100,66,161,.15); color: var(--ink-2); }
+    .callout.note { background: var(--amber-light); border-color: rgba(217,119,6,.2); color: var(--ink-2); }
+    .callout.good { background: var(--green-light); border-color: rgba(22,163,74,.2); color: var(--ink-2); }
+    .callout strong { color: var(--ink); }
+
+    /* ══ QUIZ ══ */
+    .quiz-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 26px;
+      margin: 32px 0; box-shadow: var(--shadow);
+    }
+    .quiz-header { margin-bottom: 16px; }
+    .quiz-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--brand);
+    }
+    .quiz-q { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 18px; line-height: 1.45; }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option {
+      padding: 13px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      font-size: 15px; color: var(--ink-2);
+      cursor: pointer; background: var(--bg);
+      display: flex; align-items: center; gap: 12px;
+      transition: all .12s;
+    }
+    .quiz-option:hover { border-color: var(--brand); background: var(--brand-light); }
+    .quiz-option.correct { border-color: var(--green); background: var(--green-light); }
+    .quiz-option.wrong   { border-color: var(--red); background: var(--red-light); }
+    .opt-key {
+      width: 24px; height: 24px; border-radius: 5px;
+      background: var(--bg-2); border: 1px solid var(--border);
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--ink-3);
+    }
+    .quiz-option.correct .opt-key { background: var(--green); border-color: var(--green); color: #fff; }
+    .quiz-option.wrong   .opt-key { background: var(--red); border-color: var(--red); color: #fff; }
+    .quiz-feedback {
+      margin-top: 14px; padding: 12px 14px;
+      border-radius: var(--radius);
+      font-size: 14px; display: none; line-height: 1.6;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { background: var(--green-light); color: #14532D; }
+    .quiz-feedback.wrong   { background: var(--red-light);   color: #7F1D1D; }
+
+    /* ══ HOMEWORK ══ */
+    .homework-box {
+      background: var(--brand-dark);
+      border-radius: var(--radius);
+      padding: 28px 30px; margin-top: 44px;
+    }
+    .hw-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(165,180,252,.6);
+      margin-bottom: 10px;
+    }
+    .hw-title { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .hw-desc  { font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.7; margin-bottom: 20px; }
+    .hw-steps { display: flex; flex-direction: column; gap: 6px; }
+    .hw-step  {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 11px 14px; border-radius: 6px;
+      background: rgba(255,255,255,.04);
+      font-size: 14px; color: rgba(255,255,255,.6);
+      border-left: 2px solid rgba(100,66,161,.5);
+    }
+    .hw-num {
+      font-size: 11px; font-weight: 700; color: rgba(165,180,252,.5);
+      flex-shrink: 0; padding-top: 1px; min-width: 16px;
+    }
+
+    /* ══ 上課模式按鈕 ══ */
+    .teach-btn {
+      position: fixed; top: 14px; right: 18px; z-index: 100;
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 16px;
+      background: var(--brand); color: #fff;
+      border: none; border-radius: 6px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; box-shadow: 0 2px 12px rgba(100,66,161,.3);
+      transition: opacity .15s;
+    }
+    .teach-btn:hover { opacity: .85; }
+
+    /* ══ 上課模式狀態 ══ */
+    body.teach-mode .sidebar   { width: 0; overflow: hidden; border: none; }
+    body.teach-mode .content-inner { max-width: 860px; padding: 52px 80px 120px; }
+    body.teach-mode .body-text  { font-size: 20px; }
+    body.teach-mode .toggle-body { font-size: 19px; }
+    body.teach-mode .step-title { font-size: 18px; }
+    body.teach-mode .step-desc  { font-size: 15px; }
+    body.teach-mode .prompt-text { font-size: 18px; }
+    body.teach-mode .callout    { font-size: 16px; }
+    body.teach-mode .quiz-q     { font-size: 20px; }
+    body.teach-mode .quiz-option { font-size: 17px; padding: 15px 18px; }
+    body.teach-mode .page-h1    { font-size: 44px; }
+    body.teach-mode .teach-btn  { background: var(--bg-2); color: var(--ink); box-shadow: var(--shadow); }
+  </style>
+</head>
+<body>
+
+<!-- 上課模式按鈕 -->
+<button class="teach-btn" onclick="toggleTeachMode()" id="teachBtn">
+  <span class="teach-btn-icon">🎓</span>
+  <span id="teachBtnLabel">上課模式</span>
+</button>
+
+<div class="course-shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo-mark">享</div>
+      <div>
+        <div class="sidebar-logo-text">享學</div>
+        <div class="sidebar-logo-sub">享受學習・學習享受</div>
+      </div>
+    </div>
+
+    <div class="sidebar-week-info">
+      <div class="week-badge">
+        <div class="week-dot"></div>
+        <span>Week 4 · 第四週</span>
+      </div>
+      <div class="week-title">AI 數位生活應用課<br>NotebookLM 旅遊規劃</div>
+    </div>
+
+    <div class="sidebar-label">今日課程</div>
+
+    <div class="sidebar-nav">
+      <div class="nav-item done" onclick="scrollTo('sec-intro')">
+        什麼是 NotebookLM？
+      </div>
+      <div class="nav-item active" onclick="scrollTo('sec-scenario')">
+        打造 AI 旅遊顧問
+      </div>
+      <div class="nav-item" onclick="scrollTo('sec-step1')">
+        Step 1：收集資料
+      </div>
+      <div class="nav-item" onclick="scrollTo('sec-step2')">
+        Step 2：建立筆記本
+      </div>
+      <div class="nav-item" onclick="scrollTo('sec-step3')">
+        Step 3：問你的顧問
+      </div>
+      <div class="nav-item" onclick="scrollTo('sec-studio')">
+        Studio 功能
+      </div>
+      <div class="nav-item" onclick="scrollTo('sec-quiz')">
+        隨堂測驗
+      </div>
+      <div class="nav-item" onclick="scrollTo('sec-homework')">
+        今日作業
+      </div>
+    </div>
+
+    <div class="sidebar-footer">3 小時 · 共 8 個單元</div>
+  </nav>
+
+  <!-- ══ CONTENT ══ -->
+  <main class="content">
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="content-inner">
+
+      <div class="breadcrumb">
+        AI 數位生活應用課 › Week 4 › <span class="crumb-active">打造 AI 旅遊顧問</span>
+      </div>
+
+      <!-- ─── PAGE HEADER ─── -->
+      <div class="page-header">
+        <div class="page-eyebrow">Week 4 · NotebookLM</div>
+        <div class="page-h1">打造你的<br>AI 旅遊顧問</div>
+        <div class="page-meta">
+          <span class="meta-badge">場景實戰</span>
+          <span>本單元約 40 分鐘</span>
+          <span>·</span>
+          <span>芝加哥旅遊計畫</span>
+        </div>
+      </div>
+
+      <!-- ─── WHAT IS NOTEBOOKLM ─── -->
+      <div class="section-title" id="sec-intro">什麼是 NotebookLM？</div>
+
+      <div class="toggle-wrap">
+        <div class="toggle-tabs">
+          <button class="toggle-tab active" onclick="switchTab(this, 'basic-nb')">白話版</button>
+          <button class="toggle-tab" onclick="switchTab(this, 'adv-nb')">進階版</button>
+        </div>
+        <div class="toggle-body" id="basic-nb">
+          想像你有一個<strong>超級助理</strong>，他本來就讀過世界上大部分的書——但今天你請他進你的<strong>私人書房</strong>，說：「你只能根據這裡的資料回答我的問題。」<br><br>
+          這就是 NotebookLM。你把資料放進去，它就只根據<strong>你的資料</strong>回答你——不亂猜、不胡說。
+        </div>
+        <div class="toggle-body" id="adv-nb" style="display:none">
+          NotebookLM 使用 RAG（檢索增強生成）技術。AI 語言模型本身已預先訓練了大量知識，但 RAG 讓模型在回答時<strong>先檢索你上傳的文件</strong>，再結合自身能力生成答案。<br><br>
+          這意味著：回答的依據是你的資料，而不是模型的隨機聯想。適合處理特定主題的深度研究、文件問答、知識整理。
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>NotebookLM 是 <strong>Google 免費</strong>提供的工具，用 Google 帳號登入即可使用。今天的練習大家一起跟著做！</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ─── SCENARIO ─── -->
+      <div class="section-title" id="sec-scenario">今日場景：芝加哥旅遊計畫</div>
+
+      <p class="body-text">
+        假設你準備去美國<strong>芝加哥</strong>旅遊，但完全不知道從哪裡開始。今天我們用 NotebookLM 打造一個專屬的「芝加哥旅遊顧問」，讓它幫你規劃行程。
+      </p>
+
+      <div class="steps">
+        <div class="step-item done">
+          <div class="step-num">✓</div>
+          <div class="step-content">
+            <div class="step-title">Step 1：用 Gemini 收集 15 個旅遊資訊來源</div>
+            <div class="step-desc">請 Gemini 找出可信賴的網站連結，作為筆記本的原料</div>
+          </div>
+        </div>
+        <div class="step-item active">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Step 2：建立 NotebookLM 筆記本，匯入來源</div>
+            <div class="step-desc">把連結一個個貼進筆記本，讓 AI 學習這些資料</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Step 3：問你的旅遊顧問，產出企劃書</div>
+            <div class="step-desc">用問答和報告功能，請它為你規劃 5 天行程</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ─── STEP 1 ─── -->
+      <div class="section-title" id="sec-step1">Step 1：用 Gemini 收集資料</div>
+
+      <p class="body-text">
+        先回到上週學的 Gemini，請它幫你找 <strong>15 個芝加哥旅遊的可信資訊來源</strong>，並附上完整網址。複製下面的 Prompt，貼到 Gemini。
+      </p>
+
+      <div class="prompt-box">
+        <div class="prompt-label">📋 Prompt — 貼到 Gemini</div>
+        <div class="prompt-text" id="prompt1-text">
+          我計畫去美國芝加哥旅遊，請給我 15 個跟芝加哥旅行相關的資訊來源，要有可信度的官方或知名旅遊網站，並附上完整的網頁連結（URL）。
+        </div>
+        <button class="copy-btn" onclick="copyPrompt('prompt1-text', this)">複製</button>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-icon">⚠️</span>
+        <div>Gemini 給你的連結，請先<strong>點開確認網頁真的存在</strong>，再放進 NotebookLM。AI 偶爾會給出不存在的網址。</div>
+      </div>
+
+      <div class="img-block">
+        <div class="img-block-icon">📸</div>
+        <div>Gemini 回覆截圖（老師示範）</div>
+      </div>
+      <div class="img-caption">老師示範：Gemini 給出 15 個芝加哥旅遊網站連結</div>
+
+      <div class="divider"></div>
+
+      <!-- ─── STEP 2 ─── -->
+      <div class="section-title" id="sec-step2">Step 2：建立 NotebookLM 筆記本</div>
+
+      <p class="body-text">
+        打開 <strong>notebooklm.google.com</strong>，用 Google 帳號登入，然後建立一個新筆記本。
+      </p>
+
+      <div class="steps">
+        <div class="step-item done">
+          <div class="step-num">✓</div>
+          <div class="step-content">
+            <div class="step-title">前往 notebooklm.google.com</div>
+            <div class="step-desc">點「+ 新增筆記本」，名稱可以取「芝加哥旅遊計畫」</div>
+          </div>
+        </div>
+        <div class="step-item active">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">新增來源 → 選「網站」</div>
+            <div class="step-desc">把 Gemini 給你的連結，一個個貼進來（或貼多個）</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">等候處理完成</div>
+            <div class="step-desc">每個來源處理需要 10–30 秒，等到「✓」出現再繼續</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="img-block">
+        <div class="img-block-icon">📸</div>
+        <div>NotebookLM 介面截圖（新增來源畫面）</div>
+      </div>
+      <div class="img-caption">把連結貼入「新增網站來源」的欄位</div>
+
+      <div class="callout good">
+        <span class="callout-icon">✅</span>
+        <div>來源處理完成後，左側會出現 <strong>15 個打勾的圓圈</strong>。這代表 AI 已經讀完你的資料，可以開始提問了！</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ─── STEP 3 ─── -->
+      <div class="section-title" id="sec-step3">Step 3：問你的旅遊顧問</div>
+
+      <p class="body-text">
+        來源都上傳好了！現在在右側的聊天框開始問問題。試試下面幾個 Prompt：
+      </p>
+
+      <div class="prompt-box">
+        <div class="prompt-label">📋 Prompt 1 — 行程規劃</div>
+        <div class="prompt-text" id="prompt2-text">
+          我有 5 天時間，請根據你學到的資料，幫我規劃一份芝加哥 5 日旅遊行程，包含每天的景點、大概的時間分配，以及建議的交通方式。
+        </div>
+        <button class="copy-btn" onclick="copyPrompt('prompt2-text', this)">複製</button>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-label">📋 Prompt 2 — 飲食推薦</div>
+        <div class="prompt-text" id="prompt3-text">
+          芝加哥有哪些必吃的在地食物？請列出 5 種，並說明在哪裡可以吃到。
+        </div>
+        <button class="copy-btn" onclick="copyPrompt('prompt3-text', this)">複製</button>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-label">📋 Prompt 3 — 注意事項</div>
+        <div class="prompt-text" id="prompt4-text">
+          第一次去芝加哥旅遊，有什麼需要特別注意的事情？例如治安、交通、氣候、小費習慣等。
+        </div>
+        <button class="copy-btn" onclick="copyPrompt('prompt4-text', this)">複製</button>
+      </div>
+
+      <div class="toggle-wrap">
+        <div class="toggle-tabs">
+          <button class="toggle-tab active" onclick="switchTab(this, 'basic-cite')">為什麼要上傳資料？</button>
+          <button class="toggle-tab" onclick="switchTab(this, 'adv-cite')">關於引用來源</button>
+        </div>
+        <div class="toggle-body" id="basic-cite">
+          直接問 Gemini 也會給你答案，但那是 AI「自己覺得」對的資訊，可能已經過時或不準確。<br><br>
+          把你指定的網站放進 NotebookLM，AI 就只根據<strong>你選的資料</strong>回答——更可靠、更可控。
+        </div>
+        <div class="toggle-body" id="adv-cite" style="display:none">
+          NotebookLM 的每個答案旁邊都有<strong>引用標記</strong>（數字標籤）。點擊標記可以看到原始資料的出處，讓你驗證答案是否正確。這是 RAG 系統的核心優勢——答案可被追蹤和查核。
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ─── STUDIO ─── -->
+      <div class="section-title" id="sec-studio">Studio 功能：一鍵生成音頻和簡報</div>
+
+      <p class="body-text">
+        除了問答，NotebookLM 的 <strong>Studio</strong> 功能可以把你的筆記本變成其他格式。
+      </p>
+
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">🎧</div>
+          <div class="step-content">
+            <div class="step-title">Audio Overview（音頻總覽）</div>
+            <div class="step-desc">生成兩個 AI 主持人的 Podcast 對談，用說的方式解釋你的資料</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">📊</div>
+          <div class="step-content">
+            <div class="step-title">Study Guide（學習指南）</div>
+            <div class="step-desc">自動生成摘要、重點整理和練習題</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">📄</div>
+          <div class="step-content">
+            <div class="step-title">Briefing Doc（簡報文件）</div>
+            <div class="step-desc">一份結構完整的主題報告，可以直接下載使用</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">🎯</span>
+        <div><strong>現在試試看：</strong>點選 Studio，生成一份「芝加哥旅遊 Audio Overview」，播出來聽聽看！</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ─── QUIZ ─── -->
+      <div id="sec-quiz"></div>
+      <div class="quiz-wrap">
+        <div class="quiz-header">
+          <span class="quiz-badge">隨堂測驗</span>
+        </div>
+        <div class="quiz-q">NotebookLM 和直接問 Gemini 最主要的差別是什麼？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="answerQuiz(this, false)">
+            <div class="opt-key">A</div>
+            NotebookLM 比較快，Gemini 比較慢
+          </div>
+          <div class="quiz-option" onclick="answerQuiz(this, true)">
+            <div class="opt-key">B</div>
+            NotebookLM 只根據你上傳的資料回答，Gemini 根據全部網路資料回答
+          </div>
+          <div class="quiz-option" onclick="answerQuiz(this, false)">
+            <div class="opt-key">C</div>
+            NotebookLM 要付費，Gemini 免費
+          </div>
+          <div class="quiz-option" onclick="answerQuiz(this, false)">
+            <div class="opt-key">D</div>
+            兩個完全一樣，只是介面不同
+          </div>
+        </div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+      </div>
+
+      <!-- ─── HOMEWORK ─── -->
+      <div id="sec-homework"></div>
+      <div class="homework-box">
+        <div class="hw-label">今日作業</div>
+        <div class="hw-title">打造你自己的 AI 旅遊顧問</div>
+        <div class="hw-desc">選一個你最近想去的城市，用今天學的方法建立你自己的旅遊筆記本。</div>
+        <div class="hw-steps">
+          <div class="hw-step">
+            <div class="hw-num">01</div>
+            <div>用 Gemini 找 10 個以上關於你選擇城市的旅遊資訊網站</div>
+          </div>
+          <div class="hw-step">
+            <div class="hw-num">02</div>
+            <div>在 NotebookLM 建立新筆記本，匯入所有來源</div>
+          </div>
+          <div class="hw-step">
+            <div class="hw-num">03</div>
+            <div>詢問 3 個問題，截圖 AI 的回答</div>
+          </div>
+          <div class="hw-step">
+            <div class="hw-num">04</div>
+            <div>加分題：試用 Studio，生成一份 Audio Overview</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-inner -->
+  </main><!-- /content -->
+
+</div><!-- /course-shell -->
+
+<script>
+  // ── Copy Prompt ──
+  function copyPrompt(textId, btn) {
+    const text = document.getElementById(textId).innerText.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ 已複製';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '複製';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ── Basic / Advanced Toggle ──
+  function switchTab(btn, contentId) {
+    const wrap = btn.closest('.toggle-wrap');
+    wrap.querySelectorAll('.toggle-tab').forEach(t => t.classList.remove('active'));
+    wrap.querySelectorAll('.toggle-body').forEach(b => b.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById(contentId).style.display = 'block';
+  }
+
+  // ── Quiz ──
+  function answerQuiz(el, isCorrect) {
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(o => {
+      o.onclick = null;
+      o.style.cursor = 'default';
+    });
+    const feedback = document.getElementById('quiz-feedback');
+    if (isCorrect) {
+      el.classList.add('correct');
+      feedback.className = 'quiz-feedback show correct';
+      feedback.innerHTML = '✅ 答對了！NotebookLM 的核心概念就是「私人書房」——只根據你指定的資料回答，讓答案更可靠、可追蹤。';
+    } else {
+      el.classList.add('wrong');
+      feedback.className = 'quiz-feedback show wrong';
+      feedback.innerHTML = '❌ 再想想看。提示：今天我們說 NotebookLM 像一個「私人書房」，關鍵在於它只看哪些資料？';
+    }
+  }
+
+  // ── Scroll Progress Bar ──
+  const contentEl = document.querySelector('.content');
+  const progressFill = document.querySelector('.progress-fill');
+  contentEl.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = contentEl;
+    const pct = scrollHeight <= clientHeight ? 100 : (scrollTop / (scrollHeight - clientHeight)) * 100;
+    progressFill.style.width = pct + '%';
+  });
+
+  // ── Sidebar Anchor Nav ──
+  function scrollTo(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── Active nav on scroll (scroll spy) ──
+  const sections = ['sec-intro','sec-scenario','sec-step1','sec-step2','sec-step3','sec-studio','sec-quiz','sec-homework'];
+  const navItems = document.querySelectorAll('.nav-item');
+  contentEl.addEventListener('scroll', () => {
+    let current = 0;
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < 160) current = i;
+    });
+    navItems.forEach((n, i) => n.classList.toggle('active', i === current));
+  });
+
+  // ── 上課模式 ──
+  function toggleTeachMode() {
+    const isTeach = document.body.classList.toggle('teach-mode');
+    document.getElementById('teachBtnLabel').textContent = isTeach ? '退出上課' : '上課模式';
+    document.querySelector('.teach-btn-icon').textContent = isTeach ? '✕' : '🎓';
+  }
+</script>
+
+</body>
+</html>

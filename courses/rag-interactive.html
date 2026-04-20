@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG 互動體驗</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Outfit', 'Noto Sans TC', system-ui, sans-serif; background: #f8fafc; }
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
+  #loading { display:flex;align-items:center;justify-content:center;min-height:400px;color:#94a3b8;font-size:14px;gap:8px; }
+</style>
+<script>tailwind.config = { corePlugins: { preflight: false } }</script>
+</head>
+<body>
+<div id="root"><div id="loading"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><style>@keyframes spin{to{transform:rotate(360deg)}}</style></svg> 載入互動模組中…</div></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+// ── Inline SVG Icons ──
+const Icon = ({ d, size = 24, className = "", extra = null, strokeW = 2 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth={strokeW} strokeLinecap="round" strokeLinejoin="round"
+    className={className}>
+    {typeof d === 'string' ? <path d={d} /> : d}
+    {extra}
+  </svg>
+);
+
+const DatabaseIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+  </>}/>
+);
+const SearchIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+  </>}/>
+);
+const CpuIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <rect x="4" y="4" width="16" height="16" rx="2"/>
+    <rect x="9" y="9" width="6" height="6"/>
+    <path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/>
+  </>}/>
+);
+const UserIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </>}/>
+);
+const FileTextIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+  </>}/>
+);
+const ArrowDownIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <polyline points="19 12 12 19 5 12"/>
+  </>}/>
+);
+const MessageIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+);
+const PlayIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <circle cx="12" cy="12" r="10"/>
+    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/>
+  </>}/>
+);
+const RefreshIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <polyline points="23 4 23 10 17 10"/>
+    <polyline points="1 20 1 14 7 14"/>
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+  </>}/>
+);
+const ToggleOnIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <rect x="1" y="5" width="22" height="14" rx="7" ry="7"/>
+    <circle cx="16" cy="12" r="3"/>
+  </>}/>
+);
+const ToggleOffIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <rect x="1" y="5" width="22" height="14" rx="7" ry="7"/>
+    <circle cx="8" cy="12" r="3"/>
+  </>}/>
+);
+const WarnIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </>}/>
+);
+const CheckIcon = ({ size, className }) => (
+  <Icon size={size} className={className} d={null} extra={<>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </>}/>
+);
+
+// ── Data ──
+const KNOWLEDGE_BASE = [
+  { id: 1, keyword: "休假", content: "公司休假政策（2024版）：本公司員工每年享有 15 天特休，並可申請每週兩天遠距辦公。" },
+  { id: 2, keyword: "星際盃", content: "2024年星際盃大賽最新快訊：火星代表隊在決賽中以 3:2 擊敗地球隊奪得本屆冠軍。" },
+  { id: 3, keyword: "RAG", content: "內部技術手冊：RAG（檢索增強生成）結合了資訊檢索系統和 LLM，透過外部知識庫提供 AI 精確的背景資訊，可大幅降低企業 AI 的幻覺風險。" }
+];
+
+const QUESTIONS = [
+  { text: "公司規定每年有幾天特休？", matchId: 1,
+    ragAnswer: "根據公司 2024 年的政策，員工每年享有 15 天的特休，還可以申請每週兩天的遠距辦公！",
+    noRagAnswer: "特休天數依勞動法規及各公司福利政策而定，我無法取得您公司的內部人事規定，建議向 HR 部門查詢。" },
+  { text: "今年星際盃是誰獲得冠軍？", matchId: 2,
+    ragAnswer: "根據最新快訊，今年星際盃冠軍是「火星代表隊」，以 3:2 擊敗了地球隊！",
+    noRagAnswer: "我的訓練資料中沒有名為「星際盃」的跨星球體育賽事，您能提供更多脈絡嗎？" },
+  { text: "什麼是 RAG 技術？", matchId: 3,
+    ragAnswer: "依據內部技術手冊，RAG（檢索增強生成）結合檢索系統和語言模型，透過外部知識庫提供 AI 精確背景資訊，大幅降低幻覺風險。",
+    noRagAnswer: "RAG（Retrieval-Augmented Generation）結合資訊檢索與文本生成，讓語言模型在回答前先參考外部資料庫，以提高準確性。" },
+  { text: "蘋果的股價今天是多少？", matchId: null,
+    ragAnswer: "抱歉，目前知識庫中沒有即時股價資訊，無法為您解答。",
+    noRagAnswer: "我無法連上網際網路取得即時金融數據，建議開啟 Yahoo 財經或您的證券軟體查看蘋果（AAPL）即時股價。" }
+];
+
+// ── Main App ──
+function App() {
+  const [useRag, setUseRag] = useState(true);
+  const [step, setStep] = useState(0);
+  const [currentQuery, setCurrentQuery] = useState("");
+  const [currentQ, setCurrentQ] = useState(null);
+  const [retrieved, setRetrieved] = useState(null);
+  const [answer, setAnswer] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  const run = async (q) => {
+    if (busy) return;
+    setBusy(true);
+    setStep(0); setCurrentQuery(""); setRetrieved(null); setAnswer(""); setCurrentQ(q);
+    await wait(400);
+    setStep(1); setCurrentQuery(q.text);
+    if (useRag) {
+      await wait(1400); setStep(2);
+      setRetrieved(KNOWLEDGE_BASE.find(d => d.id === q.matchId) || { content: "（找不到相關資料）" });
+      await wait(1400); setStep(3);
+    } else {
+      await wait(900);
+    }
+    await wait(1400); setStep(4);
+    await wait(1400); setStep(5);
+    setAnswer(useRag ? q.ragAnswer : q.noRagAnswer);
+    setBusy(false);
+  };
+
+  const reset = () => {
+    setStep(0); setCurrentQuery(""); setRetrieved(null); setAnswer(""); setCurrentQ(null); setBusy(false);
+  };
+
+  const stepClass = (s) => {
+    if (!useRag && (s === 2 || s === 3)) return "border-gray-200 bg-gray-100 opacity-40 grayscale";
+    if (step === s) return "ring-4 ring-blue-500 shadow-xl scale-[1.02] border-blue-500 bg-blue-50 transition-all duration-300";
+    if (step > s) return "border-green-400 bg-green-50 opacity-80 transition-all duration-300";
+    return "border-gray-200 bg-white opacity-60";
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-3 font-sans text-gray-800">
+      {/* Header */}
+      <div className="max-w-5xl mx-auto text-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1 flex items-center justify-center gap-3">
+          <DatabaseIcon className="text-blue-600" size={28}/>
+          AI 知識大對決：有 RAG vs 無 RAG
+          <CpuIcon className="text-purple-600" size={28}/>
+        </h1>
+        <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto">
+          切換模式，親眼見證 AI「純靠記憶猜測」與「先翻閱最新資料」時，回答的精準度差異。
+        </p>
+      </div>
+
+      <div className="max-w-5xl mx-auto grid grid-cols-12 gap-3">
+        {/* Left Panel */}
+        <div className="col-span-5 flex flex-col gap-3">
+          {/* Mode Toggle */}
+          <div className={`p-3 rounded-2xl shadow-sm border-2 transition-colors duration-300 ${useRag ? 'bg-blue-50 border-blue-200' : 'bg-orange-50 border-orange-200'}`}>
+            <h2 className="text-base font-bold mb-3 flex items-center justify-between">
+              <span>當前模式</span>
+              {useRag
+                ? <span className="text-blue-600 text-xs flex items-center gap-1 bg-blue-100 px-2 py-1 rounded-full"><CheckIcon size={13}/> 開卷考試（精準）</span>
+                : <span className="text-orange-600 text-xs flex items-center gap-1 bg-orange-100 px-2 py-1 rounded-full"><WarnIcon size={13}/> 閉卷考試（易幻覺）</span>
+              }
+            </h2>
+            <button
+              onClick={() => { if (!busy) { setUseRag(v => !v); reset(); } }}
+              disabled={busy}
+              className={`w-full py-2.5 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all text-sm ${busy ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-95'} ${useRag ? 'bg-blue-600 text-white shadow-blue-200 shadow-lg' : 'bg-orange-500 text-white shadow-orange-200 shadow-lg'}`}
+            >
+              {useRag ? <ToggleOnIcon size={22}/> : <ToggleOffIcon size={22}/>}
+              {useRag ? '已啟用 RAG 模式' : '純 LLM 模式（無外部資料）'}
+            </button>
+            <p className="mt-3 text-xs text-slate-500 leading-relaxed">
+              {useRag
+                ? "AI 先去「企業知識庫」尋找相關資料，再整理給使用者。"
+                : "AI 跳過知識庫，單憑訓練記憶回答，可能給出錯誤或過時的資訊。"}
+            </p>
+          </div>
+
+          {/* Question Buttons */}
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-slate-700">
+              <UserIcon size={16}/> 點擊發問測試
+            </h2>
+            <div className="flex flex-col gap-2">
+              {QUESTIONS.map((q, i) => (
+                <button key={i} disabled={busy} onClick={() => run(q)}
+                  className={`text-left px-2 py-2 bg-slate-50 hover:bg-slate-100 border rounded-lg text-sm transition-all disabled:opacity-50 flex justify-between items-center gap-2 group ${currentQ?.text === q.text && step > 0 ? 'border-slate-400 font-semibold' : 'border-slate-200'}`}>
+                  <span>{q.text}</span>
+                  <PlayIcon size={14} className={currentQ?.text === q.text && step > 0 ? 'text-slate-600 flex-shrink-0' : 'text-slate-300 group-hover:text-slate-500 flex-shrink-0'}/>
+                </button>
+              ))}
+            </div>
+            {step === 5 && (
+              <button onClick={reset} className="mt-3 w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-xs font-semibold">
+                <RefreshIcon size={13}/> 清除對話
+              </button>
+            )}
+          </div>
+
+          {/* Knowledge Base */}
+          <div className={`p-3 rounded-2xl shadow-sm border transition-all duration-300 ${!useRag ? 'opacity-40 grayscale pointer-events-none' : ''} ${step === 2 && useRag ? 'ring-4 ring-green-400 border-green-500 bg-green-50 scale-[1.01]' : 'border-slate-200 bg-white'}`}>
+            <h2 className="text-sm font-semibold mb-3 flex items-center justify-between text-slate-700">
+              <span className="flex items-center gap-2"><DatabaseIcon size={15} className="text-green-600"/> 企業知識庫</span>
+              {!useRag && <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-bold">已斷開</span>}
+            </h2>
+            <div className="flex flex-col gap-1.5">
+              {KNOWLEDGE_BASE.map(doc => (
+                <div key={doc.id} className={`p-2 text-xs rounded-lg border ${step >= 2 && useRag && retrieved?.id === doc.id ? 'bg-green-100 border-green-400 text-green-900 font-semibold' : 'bg-slate-50 border-slate-100 text-slate-500'}`}>
+                  <div className="font-bold text-slate-700 mb-0.5">【{doc.keyword}】</div>
+                  <div className="line-clamp-2">{doc.content}</div>
+                </div>
+              ))}
+            </div>
+            {step === 2 && useRag && (
+              <div className="mt-2 text-xs text-green-600 font-bold flex items-center gap-1.5 animate-pulse">
+                <SearchIcon size={12}/> 精準比對相關資料中…
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right: Flow Diagram */}
+        <div className="col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 p-4 flex flex-col">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+            <h2 className="text-lg font-bold text-slate-800">AI 思考路徑視覺化</h2>
+            <div className="text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-600">
+              {useRag ? 'RAG 增強模式' : '純淨 LLM 模式'}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-3">
+            {/* Step 1 */}
+            <div className={`w-full max-w-lg p-4 rounded-xl border-2 flex items-center gap-3 ${stepClass(1)}`}>
+              <div className="bg-blue-100 p-2.5 rounded-full text-blue-600 flex-shrink-0"><UserIcon size={20}/></div>
+              <div className="flex-1">
+                <div className="text-xs text-slate-500 font-bold tracking-wider mb-1">使用者提問</div>
+                <div className="font-medium text-slate-800 text-sm min-h-[1.25rem]">
+                  {currentQuery || <span className="text-slate-400 italic">請從左側點擊問題…</span>}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              {useRag
+                ? <ArrowDownIcon size={20} className={step >= 1 ? 'text-blue-400 animate-bounce' : 'text-slate-300'}/>
+                : <div className={`flex flex-col items-center ${step >= 1 ? 'text-orange-400' : 'text-slate-300'}`}>
+                    <ArrowDownIcon size={20} className={step >= 1 && step < 4 ? 'animate-bounce' : ''}/>
+                    <span className="text-xs font-bold bg-white px-2 mt-0.5">直接發送給 AI</span>
+                  </div>
+              }
+            </div>
+
+            {/* RAG Steps */}
+            <div className={`w-full max-w-lg flex flex-col items-center gap-3 transition-all duration-500 relative ${!useRag ? 'h-20 overflow-hidden opacity-30 grayscale pointer-events-none' : ''}`}>
+              {!useRag && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center">
+                  <div className="bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-lg shadow-lg -rotate-3">已跳過此階段</div>
+                </div>
+              )}
+
+              {/* Step 2 */}
+              <div className={`w-full p-4 rounded-xl border-2 flex items-center gap-3 ${stepClass(2)}`}>
+                <div className="bg-green-100 p-2.5 rounded-full text-green-600 flex-shrink-0"><SearchIcon size={20}/></div>
+                <div className="flex-1">
+                  <div className="text-xs text-slate-500 font-bold tracking-wider mb-1">系統檢索知識庫（Retriever）</div>
+                  <div className="text-xs text-slate-700 bg-white/60 rounded p-2 min-h-[2rem] border border-slate-100">
+                    {step >= 2 ? (retrieved?.content || "未找到相關資料") : <span className="text-slate-400 italic">等待檢索…</span>}
+                  </div>
+                </div>
+              </div>
+
+              <ArrowDownIcon size={18} className={step >= 2 && useRag ? 'text-green-400 animate-bounce' : 'text-slate-300'}/>
+
+              {/* Step 3 */}
+              <div className={`w-full p-4 rounded-xl border-2 border-dashed ${stepClass(3)}`}>
+                <div className="flex items-center gap-2 mb-2 text-orange-600 font-bold text-xs">
+                  <FileTextIcon size={15}/> 組合「增強提示詞」（Prompt Augmentation）
+                </div>
+                <div className="bg-slate-900 text-green-400 font-mono text-xs p-3 rounded-lg overflow-x-auto whitespace-pre-wrap leading-relaxed">
+                  {step >= 3 ? (<>
+                    <span className="text-blue-300">系統指令：</span>請根據以下【背景知識】回答【問題】。{"\n"}
+                    <span className="text-blue-300">【背景知識】：</span><span className="text-slate-200">{retrieved?.content}</span>{"\n"}
+                    <span className="text-blue-300">【問題】：</span><span className="text-yellow-300">{currentQuery}</span>
+                  </>) : (
+                    <span className="text-slate-500 italic">等待組合提示詞…</span>
+                  )}
+                </div>
+              </div>
+
+              <ArrowDownIcon size={18} className={step >= 3 && useRag ? 'text-orange-400 animate-bounce' : 'text-slate-300'}/>
+            </div>
+
+            {/* Step 4 & 5 */}
+            <div className={`w-full max-w-lg p-5 rounded-xl border-2 flex flex-col gap-3 mt-1 ${step >= 4 ? (step === 5 ? (useRag ? 'border-purple-400 bg-purple-50 ring-2 ring-purple-200' : 'border-orange-400 bg-orange-50 ring-2 ring-orange-200') : stepClass(4)) : 'border-slate-200 bg-white opacity-60'}`}>
+              <div className="flex items-center gap-3">
+                <div className={`p-2.5 rounded-full flex-shrink-0 ${useRag ? 'bg-purple-100 text-purple-600' : 'bg-orange-100 text-orange-600'}`}>
+                  <CpuIcon size={22}/>
+                </div>
+                <div>
+                  <div className={`text-xs font-bold tracking-wider mb-0.5 ${useRag ? 'text-purple-600' : 'text-orange-600'}`}>大型語言模型（LLM）生成</div>
+                  <div className="font-semibold text-slate-800 text-xs">
+                    {useRag ? '✅ 基於增強提示詞回答' : '⚠️ 單憑預訓練記憶回答（容易出錯）'}
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white border border-slate-100 rounded-lg p-4 shadow-sm relative">
+                <div className={`absolute -top-3 left-4 text-xs px-2.5 py-0.5 rounded-full font-bold shadow-sm ${useRag ? 'bg-purple-600 text-white' : 'bg-orange-500 text-white'}`}>
+                  最終回答
+                </div>
+                <div className="text-slate-800 min-h-[2.5rem] mt-2 text-sm leading-relaxed flex items-center">
+                  {step === 4 && <span className="flex items-center gap-2 text-slate-500 animate-pulse text-sm"><MessageIcon size={16}/> 努力生成中…</span>}
+                  {step >= 5 && <span>{answer}</span>}
+                  {step < 4 && <span className="text-slate-400 italic text-xs">等待輸入…</span>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

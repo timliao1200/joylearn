@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>享學 Logo Directions v1</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --brand:        #6442A1;
+  --brand-end:    #A5B4FC;
+  --brand-grad:   linear-gradient(135deg, #6442A1, #A5B4FC);
+  --brand-dark:   #1A1440;
+  --brand-mid:    #9B87D0;
+  --brand-light:  #EEF0FF;
+  --brand-xlight: #FAFBFF;
+  --ink:          #1A1440;
+  --ink-2:        #5A5A7A;
+  --ink-3:        #9090B8;
+  --border:       #E0E4FF;
+  --bg:           #FFFFFF;
+  --bg-2:         #FAFBFF;
+  --radius:       12px;
+  --shadow:       0 2px 16px rgba(100,66,161,0.07);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', sans-serif;
+  background: var(--bg-2);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 64px 48px 96px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.overline {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+.page-desc {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ——— Direction Card ——— */
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 8px 40px rgba(100,66,161,0.12);
+}
+
+.card-header {
+  padding: 22px 26px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.direction-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--brand);
+  background: var(--brand-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.direction-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.direction-concept {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+
+/* ——— Preview Sections ——— */
+.preview-light {
+  background: white;
+  padding: 40px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.preview-dark {
+  background: var(--brand-dark);
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+/* Size containers */
+.logo-xl { display: flex; align-items: center; justify-content: center; }
+.logo-xl svg { width: 72px; height: auto; }
+.logo-xl .wm-wrap svg { width: 52px; height: auto; }
+
+.logo-combo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo-combo svg { width: 36px; height: auto; }
+.logo-combo .wm-text {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.logo-combo .wm-text .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.logo-combo .wm-text .d { color: var(--ink); }
+.logo-combo .wm-text.on-dark .d { color: white; }
+
+.logo-sm { display: flex; align-items: center; justify-content: center; }
+.logo-sm svg { width: 24px; height: auto; }
+
+.size-strip {
+  padding: 10px 26px;
+  display: flex;
+  gap: 24px;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+  border-top: 1px solid var(--border);
+}
+
+/* ——— Wordmark-only Direction ——— */
+.wm-only-xl {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.wm-only-md {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.wm-only-sm {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+.wm-only-xl .g,
+.wm-only-md .g,
+.wm-only-sm .g {
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.wm-only-xl .d,
+.wm-only-md .d,
+.wm-only-sm .d { color: var(--ink); }
+.on-dark-text .d { color: white !important; }
+
+/* ——— Footnote ——— */
+.footer-note {
+  text-align: center;
+  margin-top: 56px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="overline">Brand Identity · 享學</div>
+  <div class="page-title">Logo Directions v1</div>
+  <div class="page-desc">四個方向，各有不同性格。左欄偏符號，右欄偏文字。</div>
+</div>
+
+<div class="grid">
+
+  <!-- ========== DIRECTION A: 享 字符號化 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <div class="direction-tag">Direction A</div>
+      <div class="direction-name">享 字符號化</div>
+      <div class="direction-concept">從「享」字萃取幾何語言：頂部圓點（亠）、中段橫條（口）、底部弧線（子）。中文字根即 mark，視覺上乾淨、有根據、有記憶點。</div>
+    </div>
+
+    <div class="preview-light">
+      <!-- XL standalone mark -->
+      <div class="logo-xl">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="5.5" r="4.5" fill="url(#gA1)"/>
+          <rect x="5" y="16" width="30" height="5" rx="2.5" fill="url(#gA1)"/>
+          <path d="M10 26 L10 37 Q20 44 30 37 L30 26" stroke="url(#gA1)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <!-- Combo: mark + wordmark -->
+      <div class="logo-combo">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="5.5" r="4.5" fill="url(#gA2)"/>
+          <rect x="5" y="16" width="30" height="5" rx="2.5" fill="url(#gA2)"/>
+          <path d="M10 26 L10 37 Q20 44 30 37 L30 26" stroke="url(#gA2)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="wm-text"><span class="g">享</span><span class="d">學</span></div>
+      </div>
+      <!-- SM icon -->
+      <div class="logo-sm">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="5.5" r="4.5" fill="url(#gA3)"/>
+          <rect x="5" y="16" width="30" height="5" rx="2.5" fill="url(#gA3)"/>
+          <path d="M10 26 L10 37 Q20 44 30 37 L30 26" stroke="url(#gA3)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-dark">
+      <div class="logo-xl">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA4" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="5.5" r="4.5" fill="url(#gA4)"/>
+          <rect x="5" y="16" width="30" height="5" rx="2.5" fill="url(#gA4)"/>
+          <path d="M10 26 L10 37 Q20 44 30 37 L30 26" stroke="url(#gA4)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="logo-combo">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA5" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="5.5" r="4.5" fill="url(#gA5)"/>
+          <rect x="5" y="16" width="30" height="5" rx="2.5" fill="url(#gA5)"/>
+          <path d="M10 26 L10 37 Q20 44 30 37 L30 26" stroke="url(#gA5)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="wm-text on-dark"><span class="g">享</span><span class="d">學</span></div>
+      </div>
+    </div>
+
+    <div class="size-strip">
+      <span>72px 獨立符號</span>
+      <span>36px 符號 + 字標</span>
+      <span>24px 小圖示</span>
+    </div>
+  </div>
+
+  <!-- ========== DIRECTION B: 學習漣漪 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <div class="direction-tag">Direction B</div>
+      <div class="direction-name">學習漣漪</div>
+      <div class="direction-concept">三道向上展開的弧線，源自同一個中心點，象徵知識漣漪與洞見擴散。抽象、現代、方向感強——「一個想法，向外無限漣漪」。</div>
+    </div>
+
+    <div class="preview-light">
+      <div class="logo-xl">
+        <svg viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gB1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="26" r="2.5" fill="url(#gB1)"/>
+          <path d="M12,26 A8,8 0 0,1 28,26" stroke="url(#gB1)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M6,26 A14,14 0 0,1 34,26" stroke="url(#gB1)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.75"/>
+          <path d="M1,26 A19,19 0 0,1 39,26" stroke="url(#gB1)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="logo-combo">
+        <svg viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gB2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="26" r="2.5" fill="url(#gB2)"/>
+          <path d="M12,26 A8,8 0 0,1 28,26" stroke="url(#gB2)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M6,26 A14,14 0 0,1 34,26" stroke="url(#gB2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.75"/>
+          <path d="M1,26 A19,19 0 0,1 39,26" stroke="url(#gB2)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="wm-text"><span class="g">享</span><span class="d">學</span></div>
+      </div>
+      <div class="logo-sm">
+        <svg viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gB3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="26" r="2.5" fill="url(#gB3)"/>
+          <path d="M12,26 A8,8 0 0,1 28,26" stroke="url(#gB3)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M6,26 A14,14 0 0,1 34,26" stroke="url(#gB3)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.75"/>
+          <path d="M1,26 A19,19 0 0,1 39,26" stroke="url(#gB3)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-dark">
+      <div class="logo-xl">
+        <svg viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gB4" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="26" r="2.5" fill="url(#gB4)"/>
+          <path d="M12,26 A8,8 0 0,1 28,26" stroke="url(#gB4)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M6,26 A14,14 0 0,1 34,26" stroke="url(#gB4)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/>
+          <path d="M1,26 A19,19 0 0,1 39,26" stroke="url(#gB4)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="logo-combo">
+        <svg viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gB5" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="26" r="2.5" fill="url(#gB5)"/>
+          <path d="M12,26 A8,8 0 0,1 28,26" stroke="url(#gB5)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M6,26 A14,14 0 0,1 34,26" stroke="url(#gB5)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/>
+          <path d="M1,26 A19,19 0 0,1 39,26" stroke="url(#gB5)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+        </svg>
+        <div class="wm-text on-dark"><span class="g">享</span><span class="d">學</span></div>
+      </div>
+    </div>
+
+    <div class="size-strip">
+      <span>72px 獨立符號</span>
+      <span>36px 符號 + 字標</span>
+      <span>24px 小圖示</span>
+    </div>
+  </div>
+
+  <!-- ========== DIRECTION C: 純文字標誌 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <div class="direction-tag">Direction C</div>
+      <div class="direction-name">享學 純字標</div>
+      <div class="direction-concept">無符號、純文字。「享」用品牌漸層，「學」用墨色。依靠字型重量與色彩對比建立記憶。Apple / Arc / Linear 都走這條路——信任自己的名字夠強。</div>
+    </div>
+
+    <div class="preview-light" style="flex-direction:column; gap: 28px;">
+      <!-- XL -->
+      <div class="wm-only-xl"><span class="g">享</span><span class="d">學</span></div>
+      <!-- MD with tagline -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div class="wm-only-md"><span class="g">享</span><span class="d">學</span></div>
+        <div style="font-size:11px; letter-spacing:3px; font-weight:600; color:var(--ink-3); text-transform:uppercase;">享受學習 · 學習享受</div>
+      </div>
+      <!-- SM -->
+      <div class="wm-only-sm"><span class="g">享</span><span class="d">學</span></div>
+    </div>
+
+    <div class="preview-dark" style="flex-direction:column; gap: 24px;">
+      <div class="wm-only-xl on-dark-text"><span class="g">享</span><span class="d">學</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div class="wm-only-md on-dark-text"><span class="g">享</span><span class="d">學</span></div>
+        <div style="font-size:11px; letter-spacing:3px; font-weight:600; color:rgba(255,255,255,0.4); text-transform:uppercase;">享受學習 · 學習享受</div>
+      </div>
+      <div class="wm-only-sm on-dark-text"><span class="g">享</span><span class="d">學</span></div>
+    </div>
+
+    <div class="size-strip">
+      <span>48px 主標</span>
+      <span>30px 含 tagline</span>
+      <span>16px 小尺寸</span>
+    </div>
+  </div>
+
+  <!-- ========== DIRECTION D: 電影序幕 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <div class="direction-tag">Direction D</div>
+      <div class="direction-name">電影序幕</div>
+      <div class="direction-concept">兩道弧線從頂端分開，向下收斂匯聚，如戲幕拉開、聚光燈聚焦。底部的星光象徵「頓悟瞬間」。直接對應品牌人格：開課即是電影開場。</div>
+    </div>
+
+    <div class="preview-light">
+      <div class="logo-xl">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gD1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <!-- Left curtain curve -->
+          <path d="M4,3 C4,12 8,26 18.5,41" stroke="url(#gD1)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <!-- Right curtain curve -->
+          <path d="M36,3 C36,12 32,26 21.5,41" stroke="url(#gD1)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <!-- Top horizontal connector -->
+          <path d="M4,3 Q20,0 36,3" stroke="url(#gD1)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+          <!-- Sparkle at convergence -->
+          <circle cx="20" cy="41" r="2" fill="url(#gD1)"/>
+          <circle cx="20" cy="41" r="4" stroke="url(#gD1)" stroke-width="1" fill="none" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="logo-combo">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gD2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <path d="M4,3 C4,12 8,26 18.5,41" stroke="url(#gD2)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M36,3 C36,12 32,26 21.5,41" stroke="url(#gD2)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M4,3 Q20,0 36,3" stroke="url(#gD2)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+          <circle cx="20" cy="41" r="2" fill="url(#gD2)"/>
+          <circle cx="20" cy="41" r="4" stroke="url(#gD2)" stroke-width="1" fill="none" opacity="0.4"/>
+        </svg>
+        <div class="wm-text"><span class="g">享</span><span class="d">學</span></div>
+      </div>
+      <div class="logo-sm">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gD3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <path d="M4,3 C4,12 8,26 18.5,41" stroke="url(#gD3)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M36,3 C36,12 32,26 21.5,41" stroke="url(#gD3)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="20" cy="41" r="2.5" fill="url(#gD3)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="preview-dark">
+      <div class="logo-xl">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gD4" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <path d="M4,3 C4,12 8,26 18.5,41" stroke="url(#gD4)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M36,3 C36,12 32,26 21.5,41" stroke="url(#gD4)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M4,3 Q20,0 36,3" stroke="url(#gD4)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+          <circle cx="20" cy="41" r="2" fill="url(#gD4)"/>
+          <circle cx="20" cy="41" r="4" stroke="url(#gD4)" stroke-width="1" fill="none" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="logo-combo">
+        <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gD5" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6442A1"/>
+              <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+          </defs>
+          <path d="M4,3 C4,12 8,26 18.5,41" stroke="url(#gD5)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M36,3 C36,12 32,26 21.5,41" stroke="url(#gD5)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M4,3 Q20,0 36,3" stroke="url(#gD5)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+          <circle cx="20" cy="41" r="2" fill="url(#gD5)"/>
+          <circle cx="20" cy="41" r="4" stroke="url(#gD5)" stroke-width="1" fill="none" opacity="0.4"/>
+        </svg>
+        <div class="wm-text on-dark"><span class="g">享</span><span class="d">學</span></div>
+      </div>
+    </div>
+
+    <div class="size-strip">
+      <span>72px 獨立符號</span>
+      <span>36px 符號 + 字標</span>
+      <span>24px 小圖示</span>
+    </div>
+  </div>
+
+</div><!-- end grid -->
+
+<div class="footer-note">
+  享學 Logo Directions v1 · 2026-04-20 · 選定後深化至完整品牌系統
+</div>
+
+</body>
+</html>
