@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>享學 · Week 5 · 你說，AI 畫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --brand:#6442A1;--brand-end:#A5B4FC;
+  --brand-grad:linear-gradient(135deg,#6442A1,#A5B4FC);
+  --brand-dark:#1A1440;--brand-mid:#9B87D0;
+  --brand-light:#EEF0FF;--brand-xlight:#FAFBFF;
+  --ink:#1A1440;--ink-2:#5A5A7A;--ink-3:#9090B8;
+  --border:#E8E8F0;--bg:#FFFFFF;--bg-2:#F7F7FB;
+  --green:#28C76F;--green-light:#E2F8ED;
+  --amber:#FF9F43;--amber-light:#FFF3E0;
+  --shadow-sm:0 1px 4px rgba(100,66,161,.06),0 1px 2px rgba(0,0,0,.03);
+  --shadow:0 2px 16px rgba(100,66,161,.09),0 1px 4px rgba(0,0,0,.04);
+  --shadow-md:0 8px 40px rgba(100,66,161,.12),0 2px 8px rgba(0,0,0,.04);
+  --font:'Outfit',-apple-system,BlinkMacSystemFont,'Noto Sans TC','PingFang TC',sans-serif;
+  --z1:#FF9A3C;--z2:#FF6B9D;--z3:#2E86AB;--z4:#28C76F;--z5:#FFBA08;--z6:#00B4D8;
+}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── STICKY NAV ── */
+.snav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(26,20,64,.94);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);display:flex;align-items:center;padding:0 28px;gap:16px;z-index:200;transform:translateY(-100%);transition:transform .3s cubic-bezier(.16,1,.3,1);border-bottom:1px solid rgba(255,255,255,.07);}
+.snav.vis{transform:translateY(0);}
+.snav-logo{font-size:15px;font-weight:800;letter-spacing:-.3px;text-decoration:none;flex-shrink:0;}
+.snav-logo .g{background:var(--brand-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.snav-logo .d{color:white;}
+.snav-sep{width:1px;height:16px;background:rgba(255,255,255,.15);flex-shrink:0;}
+.snav-lbl{font-size:13px;font-weight:500;color:rgba(255,255,255,.45);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.snav-prog{width:100px;height:3px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.snav-prog-fill{height:100%;background:var(--brand-grad);width:0;transition:width .1s linear;border-radius:2px;}
+
+/* ── HERO ── */
+.hero{min-height:75dvh;background:var(--brand-dark);display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 80px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:900px;height:700px;background:radial-gradient(ellipse,rgba(100,66,161,.4) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;padding:0 40px;width:100%;position:relative;z-index:1;}
+.hero-eye{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(165,180,252,.65);margin-bottom:20px;}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--brand-grad);flex-shrink:0;}
+.hero-title{font-size:clamp(52px,7vw,80px);font-weight:900;color:white;line-height:1.05;letter-spacing:-2.5px;margin-bottom:8px;}
+.hero-title span{background:var(--brand-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub-tag{display:inline-block;font-size:16px;font-weight:600;color:rgba(165,180,252,.7);letter-spacing:.5px;margin-bottom:20px;}
+.hero-desc{font-size:17px;color:rgba(255,255,255,.42);line-height:1.7;max-width:500px;margin-bottom:40px;}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--brand-grad);color:white;font-family:var(--font);font-size:14px;font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;border:none;cursor:pointer;transition:opacity .15s,transform .1s;box-shadow:0 4px 20px rgba(100,66,161,.4);}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.65);font-family:var(--font);font-size:14px;font-weight:600;padding:13px 26px;border-radius:10px;text-decoration:none;border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:all .15s;}
+.btn-ghost:hover{background:rgba(255,255,255,.12);color:white;}
+
+/* ── SECTION SHELL ── */
+.sec{padding:88px 0;scroll-margin-top:52px;}
+.sec.dark{background:var(--brand-dark);}
+.sec.tint{background:var(--bg-2);}
+.sec.light{background:var(--bg);}
+.sec-inner{max-width:860px;margin:0 auto;padding:0 40px;}
+.sec-eye{display:block;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--brand);margin-bottom:10px;}
+.sec-eye.on-dark{color:rgba(165,180,252,.55);}
+.sec-title{font-size:clamp(28px,4vw,38px);font-weight:800;letter-spacing:-.6px;line-height:1.15;color:var(--ink);}
+.sec-title.on-dark{color:white;}
+.sec-lead{margin-top:14px;font-size:17px;color:var(--ink-2);line-height:1.75;max-width:600px;}
+.sec-lead.on-dark{color:rgba(255,255,255,.42);}
+.sec-head{margin-bottom:52px;}
+
+/* ── STORY CARDS (Journey) ── */
+.story-cards{display:flex;flex-direction:column;gap:0;}
+.story-card{display:grid;grid-template-columns:60px 1fr;gap:28px;padding:40px 0;border-bottom:1px solid rgba(255,255,255,.07);position:relative;}
+.story-card:last-child{border-bottom:none;}
+.story-num{font-size:48px;font-weight:900;letter-spacing:-3px;line-height:1;background:var(--brand-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.35;padding-top:2px;flex-shrink:0;}
+.story-body{}
+.story-time{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(165,180,252,.5);background:rgba(165,180,252,.08);border:1px solid rgba(165,180,252,.12);padding:3px 10px;border-radius:100px;margin-bottom:12px;}
+.story-title{font-size:20px;font-weight:700;color:white;margin-bottom:10px;line-height:1.3;}
+.story-desc{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:20px;}
+.story-insight{display:flex;gap:10px;padding:14px 18px;border-radius:10px;background:rgba(100,66,161,.2);border:1px solid rgba(165,180,252,.12);font-size:14px;color:rgba(165,180,252,.8);line-height:1.6;}
+.story-insight::before{content:'💡';flex-shrink:0;}
+
+/* Prompt block (dark) */
+.prompt-dark{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px 28px;margin:16px 0;position:relative;}
+.prompt-dark-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(165,180,252,.4);margin-bottom:12px;display:block;}
+.prompt-dark-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.75;font-weight:400;}
+.prompt-dark-footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px;flex-wrap:wrap;}
+.prompt-zh-toggle{font-size:12px;font-weight:600;color:rgba(165,180,252,.5);background:none;border:1px solid rgba(165,180,252,.15);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.prompt-zh-toggle:hover{color:rgba(165,180,252,.8);border-color:rgba(165,180,252,.3);}
+.prompt-zh-panel{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:14px;color:rgba(255,255,255,.38);line-height:1.75;display:none;}
+.prompt-zh-panel.open{display:block;}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:white;background:var(--brand-grad);border:none;padding:8px 18px;border-radius:7px;cursor:pointer;font-family:var(--font);transition:opacity .15s,transform .1s;flex-shrink:0;}
+.copy-btn:hover{opacity:.85;transform:translateY(-1px);}
+.copy-btn.copied{background:var(--green);}
+
+/* ── ZONE MAP ── */
+.zone-map{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+@media(max-width:640px){.zone-map{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:400px){.zone-map{grid-template-columns:1fr;}}
+.zone-card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:24px 20px;cursor:pointer;transition:all .2s cubic-bezier(.16,1,.3,1);text-decoration:none;display:block;position:relative;overflow:hidden;}
+.zone-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--zc, var(--brand));}
+.zone-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:transparent;}
+.zone-icon{font-size:32px;margin-bottom:12px;display:block;}
+.zone-name{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:6px;}
+.zone-desc{font-size:13px;color:var(--ink-3);line-height:1.55;}
+.zone-count{display:inline-block;margin-top:14px;font-size:11px;font-weight:700;color:var(--zc, var(--brand));background:color-mix(in srgb, var(--zc, var(--brand)) 12%, transparent);padding:3px 10px;border-radius:100px;}
+
+/* ── CATEGORY SECTION ── */
+.cat-sec{padding:64px 0;border-top:2px solid var(--border);scroll-margin-top:60px;}
+.cat-sec:first-child{border-top:none;}
+.cat-header{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
+.cat-icon{font-size:36px;}
+.cat-name{font-size:26px;font-weight:800;color:var(--ink);}
+.cat-bar{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:2px;background:var(--zc, var(--brand));}
+
+/* Prompt cards grid */
+.prompt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;}
+@media(max-width:640px){.prompt-grid{grid-template-columns:1fr;}}
+.prompt-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;transition:box-shadow .2s;}
+.prompt-card:hover{box-shadow:var(--shadow);}
+.prompt-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px;}
+.prompt-card-name{font-size:14px;font-weight:700;color:var(--ink);}
+.photo-badge{font-size:10px;font-weight:700;background:var(--brand-light);color:var(--brand);padding:2px 8px;border-radius:100px;white-space:nowrap;flex-shrink:0;}
+.prompt-card-text{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:14px;}
+.prompt-card-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.copy-btn-sm{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:white;background:var(--brand-grad);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:opacity .15s;}
+.copy-btn-sm:hover{opacity:.85;}
+.copy-btn-sm.copied{background:var(--green);}
+.zh-toggle-sm{font-size:11px;font-weight:600;color:var(--ink-3);background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.zh-toggle-sm:hover{border-color:var(--brand);color:var(--brand);}
+.prompt-zh-sm{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--ink-3);line-height:1.65;display:none;}
+.prompt-zh-sm.open{display:block;}
+
+/* Challenge card */
+.challenge-card{background:linear-gradient(135deg,#1A1440 0%,#2E1D6A 100%);border-radius:16px;padding:28px 32px;display:flex;gap:20px;align-items:flex-start;margin-top:8px;}
+.challenge-icon{font-size:40px;flex-shrink:0;}
+.challenge-body{}
+.challenge-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,186,8,.8);background:rgba(255,186,8,.12);border:1px solid rgba(255,186,8,.2);padding:3px 10px;border-radius:100px;margin-bottom:10px;}
+.challenge-title{font-size:18px;font-weight:700;color:white;line-height:1.35;margin-bottom:6px;}
+.challenge-desc{font-size:14px;color:rgba(255,255,255,.45);line-height:1.65;}
+.challenge-cta{margin-top:16px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:rgba(255,186,8,.9);background:rgba(255,186,8,.1);border:1px solid rgba(255,186,8,.2);padding:7px 16px;border-radius:7px;cursor:pointer;transition:all .15s;font-family:var(--font);}
+.challenge-cta:hover{background:rgba(255,186,8,.18);}
+
+/* ── GALLERY ── */
+.gallery-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px;}
+.upload-btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand-grad);color:white;font-family:var(--font);font-size:14px;font-weight:700;padding:12px 24px;border-radius:10px;border:none;cursor:pointer;transition:opacity .15s,transform .1s;box-shadow:0 4px 16px rgba(100,66,161,.35);}
+.upload-btn:hover{opacity:.9;transform:translateY(-1px);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:640px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:12px;}}
+@media(max-width:380px){.gallery-grid{grid-template-columns:1fr;}}
+.gallery-item{background:white;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s;}
+.gallery-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.gallery-img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--bg-2);}
+.gallery-info{padding:12px 14px;}
+.gallery-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.gallery-cat{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--brand-light);color:var(--brand);}
+.gallery-reflection{font-size:12px;color:var(--ink-3);line-height:1.55;margin-top:6px;}
+.gallery-empty{grid-column:1/-1;text-align:center;padding:80px 20px;}
+.gallery-empty-icon{font-size:48px;margin-bottom:16px;display:block;opacity:.4;}
+.gallery-empty-txt{font-size:16px;color:var(--ink-3);}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,20,64,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:20px;width:100%;max-width:500px;max-height:90dvh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.25);}
+.modal-head{padding:28px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.modal-title{font-size:22px;font-weight:800;color:var(--ink);}
+.modal-close{background:none;border:none;font-size:24px;color:var(--ink-3);cursor:pointer;padding:4px;line-height:1;transition:color .15s;flex-shrink:0;}
+.modal-close:hover{color:var(--ink);}
+.modal-body{padding:24px 28px 28px;}
+.form-field{margin-bottom:20px;}
+.form-label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.form-label span{font-weight:400;color:var(--ink-3);}
+.form-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:var(--font);color:var(--ink);background:white;transition:border-color .15s;outline:none;}
+.form-input:focus{border-color:var(--brand);}
+.form-select{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:var(--font);color:var(--ink);background:white;appearance:none;-webkit-appearance:none;cursor:pointer;outline:none;transition:border-color .15s;}
+.form-select:focus{border-color:var(--brand);}
+.form-textarea{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:var(--font);color:var(--ink);resize:vertical;min-height:90px;background:white;transition:border-color .15s;outline:none;}
+.form-textarea:focus{border-color:var(--brand);}
+.upload-area{border:2px dashed var(--border);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.upload-area:hover,.upload-area.drag{border-color:var(--brand);background:var(--brand-xlight);}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-area-icon{font-size:32px;margin-bottom:10px;}
+.upload-area-txt{font-size:14px;color:var(--ink-2);line-height:1.55;}
+.upload-area-sub{font-size:12px;color:var(--ink-3);margin-top:4px;}
+.upload-preview{width:100%;border-radius:10px;margin-top:14px;display:none;max-height:200px;object-fit:cover;}
+.form-submit{width:100%;padding:15px;background:var(--brand-grad);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;transition:opacity .15s;margin-top:8px;}
+.form-submit:hover{opacity:.9;}
+.form-submit:disabled{opacity:.5;cursor:not-allowed;}
+.form-error{font-size:13px;color:#e53e3e;margin-top:8px;display:none;}
+.form-error.show{display:block;}
+
+/* ── SUCCESS STATE ── */
+.success-state{text-align:center;padding:40px 20px;display:none;}
+.success-state.show{display:block;}
+.success-icon{font-size:56px;margin-bottom:16px;}
+.success-title{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:8px;}
+.success-desc{font-size:15px;color:var(--ink-2);}
+.success-back{margin-top:24px;display:inline-flex;align-items:center;gap:8px;background:var(--brand-light);color:var(--brand);font-family:var(--font);font-size:14px;font-weight:700;padding:11px 22px;border-radius:9px;border:none;cursor:pointer;}
+
+/* ── FOOTER ── */
+.footer{padding:40px;text-align:center;border-top:1px solid var(--border);}
+.footer-txt{font-size:13px;color:var(--ink-3);line-height:1.8;}
+.footer-brand{font-weight:700;background:var(--brand-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hero-inner,.sec-inner{padding:0 20px;}
+  .hero{padding:0 0 60px;}
+  .sec{padding:60px 0;}
+  .sec-head{margin-bottom:36px;}
+  .story-card{grid-template-columns:44px 1fr;gap:16px;padding:28px 0;}
+  .story-num{font-size:36px;}
+  .prompt-dark{padding:18px 20px;}
+  .challenge-card{padding:22px 20px;}
+  .modal{border-radius:14px;}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp .5s ease both;}
+</style>
+</head>
+<body>
+
+<!-- ════ STICKY NAV ════ -->
+<nav class="snav" id="snav">
+  <a class="snav-logo" href="#">
+    <span class="g">享</span><span class="d">學</span>
+  </a>
+  <div class="snav-sep"></div>
+  <span class="snav-lbl">Week 5 · 你說，AI 畫</span>
+  <div class="snav-prog"><div class="snav-prog-fill" id="progFill"></div></div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-eye"><div class="hero-dot"></div> WEEK 5 · 終身教育 AI 課 · 2026.04.29</div>
+    <h1 class="hero-title">你說，<span>AI 畫</span></h1>
+    <div class="hero-sub-tag">🎪 圖像遊樂園 × ChatGPT Images 2.0</div>
+    <p class="hero-desc">一句話，一張圖。今天我們從一場改變世界的發布會出發，帶你親身體驗圖像生成的魔法，並在遊樂園裡自由探索創作。</p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="#journey">📖 進入發布會旅程</a>
+      <a class="btn-ghost" href="#playground">🎪 直接玩遊樂園</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ SECTION 1: STORY JOURNEY ════ -->
+<section class="sec dark" id="journey">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <span class="sec-eye on-dark">上半場 · 故事線</span>
+      <h2 class="sec-title on-dark">從一場發布會，看懂<br>圖像生成的新紀元</h2>
+      <p class="sec-lead on-dark">2026 年 4 月 22 日，OpenAI 發布了 ChatGPT Images 2.0。Sam Altman 說：「這就像從 GPT-3 直接跳到 GPT-5。」以下是那場發布會的五個關鍵時刻，我們一起看。</p>
+    </div>
+    <div class="story-cards">
+
+      <!-- Story 1 -->
+      <div class="story-card">
+        <div class="story-num">01</div>
+        <div class="story-body">
+          <span class="story-time">影片 4:00</span>
+          <h3 class="story-title">一張普通合照，變成 90 年代好萊塢雜誌封面</h3>
+          <p class="story-desc">發布會第一個演示：工程師 Gabe 把自己和 Sam Altman 的合照上傳，寫了一句話，60 秒後——一本真實感十足的雜誌出現了。</p>
+          <div class="prompt-dark">
+            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-text" id="s1p">create a magazine cover - editorial, fashion style from the 90s - called PIXEL PERFECTION with the headline 'chatgpt images 2.0 is here' and put these guys on the cover in a candid casual style like they are hollywood stars. make up other story headlines to tease on the cover. make it look like a real magazine! Make sure to change their wardrobe and lighting to match the vibe of the magazine.</p>
+            <div class="prompt-dark-footer">
+              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
+              <button class="copy-btn" onclick="copyPrompt('s1p',this)">📋 複製提示詞</button>
+            </div>
+            <div class="prompt-zh-panel">
+              製作一個雜誌封面——採用 90 年代編輯時尚風格——名稱為「PIXEL PERFECTION」，主標題為「chatgpt images 2.0 is here」，把上傳的人物放在封面，以隨性風格呈現，就像好萊塢明星一樣。同時加上其他故事標題作為封面吸引點，讓整體看起來像一本真正的雜誌！請調整他們的服裝與燈光以符合雜誌氛圍。
+            </div>
+          </div>
+          <div class="story-insight">描述「媒體形式」（雜誌封面），不只描述畫面——這是讓 AI 生出高品質圖片的關鍵</div>
+        </div>
+      </div>
+
+      <!-- Story 2 -->
+      <div class="story-card">
+        <div class="story-num">02</div>
+        <div class="story-body">
+          <span class="story-time">影片 6:00</span>
+          <h3 class="story-title">同一張臉，8 套完整夏日造型——AI 記住你</h3>
+          <p class="story-desc">工程師 Kwan 上傳自己的照片，要求 AI 生成 8 套不同穿搭。神奇的是，每一套裡的臉都是同一個人。</p>
+          <div class="prompt-dark">
+            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-text" id="s2p">Freeform fashion-editorial collage of me in 8 distinct full-body summer outfits, arranged organically on a clean cream studio background. Keep my face consistent across all 8 looks. Add neat handwritten arrows and labels for the key clothing pieces. No grid, border, or boxed panels. Keep all 8 full-body figures at the same visual scale. Arrange them in a balanced two-row layout. Use a portrait 2:3 composition.</p>
+            <div class="prompt-dark-footer">
+              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
+              <button class="copy-btn" onclick="copyPrompt('s2p',this)">📋 複製提示詞</button>
+            </div>
+            <div class="prompt-zh-panel">
+              以我為主角，創作一張自由形式的時尚編輯拼貼圖，包含 8 套不同的全身夏季穿搭，自然排列在乾淨的米色攝影棚背景上。保持我在這 8 個造型中的臉部一致性。為關鍵服裝單品加上手寫箭頭與標註。不要使用網格或邊框。讓 8 個人物在比例與鏡頭距離上一致，平衡兩排排列，2:3 直式構圖。
+            </div>
+          </div>
+          <div class="story-insight">「Keep my face consistent」= 告訴 AI 什麼需要保留，剩下的才是它發揮的空間</div>
+        </div>
+      </div>
+
+      <!-- Story 3 -->
+      <div class="story-card">
+        <div class="story-num">03</div>
+        <div class="story-body">
+          <span class="story-time">影片 11:20</span>
+          <h3 class="story-title">AI 搜尋網路、設計海報、生成真實可掃描的 QR Code</h3>
+          <p class="story-desc">這一段是全場最震撼的演示。Kenji 要求 AI 去搜尋某個話題，整理成海報，還加上一個連結到 ChatGPT 的 QR Code——掃下去，真的能開！</p>
+          <div class="prompt-dark">
+            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-text" id="s3p">Search for the "duct tape image model" and make a playful poster of various information and quoted opinions from social media about it, highlighting its strengths. Only cite the platform to protect privacy. You are the model, so put your own generations as advertising in the poster. Put a big QR code to chatgpt.com/images somewhere that makes sense. At the end, unveil that it's actually GPT-Image-2 and that people can try it today!</p>
+            <div class="prompt-dark-footer">
+              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
+              <button class="copy-btn" onclick="copyPrompt('s3p',this)">📋 複製提示詞</button>
+            </div>
+            <div class="prompt-zh-panel">
+              搜尋「duct tape image model」，製作一張有趣的海報，包含來自社群媒體的各種資訊與引用評論，突顯它的優勢。為保護隱私只標註來源平台。你就是這個模型，所以可以把你自己生成的圖片作為海報中的廣告素材。在合適位置放上連結到 chatgpt.com/images 的大型 QR Code。最後揭示這其實是 GPT-Image-2，並告訴大家現在就可以試用！
+            </div>
+          </div>
+          <div class="story-insight">AI 不只是畫圖——它可以搜尋資訊、設計版面、生成真實可掃描的 QR Code，把資料轉成「可以被人使用的產品」</div>
+        </div>
+      </div>
+
+      <!-- Story 4 -->
+      <div class="story-card">
+        <div class="story-num">04</div>
+        <div class="story-body">
+          <span class="story-time">影片 13:30</span>
+          <h3 class="story-title">讓 AI 抓住你的靈魂，然後重新設計你</h3>
+          <p class="story-desc">Boyuan 的一句話改變了大家對「AI 生圖」的理解：「不要讓 AI 照著畫你——讓 AI 抓住你，然後重新設計你。」</p>
+          <div class="prompt-dark">
+            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-text" id="s4p">Use my photo only for identity. Redraw me as a very simple surreal Japanese sticker-style caricature: long thin neck, small deadpan face, minimal black outline, flat light coloring, almost no shading, very few facial details, simplified hair shape, lots of white space, plain white background, slightly awkward and funny. Ultratall 1:3 image.</p>
+            <div class="prompt-dark-footer">
+              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
+              <button class="copy-btn" onclick="copyPrompt('s4p',this)">📋 複製提示詞</button>
+            </div>
+            <div class="prompt-zh-panel">
+              只將我的照片用於辨識身份。把我重新繪製成非常簡單、帶點超現實的日式貼圖風格漫畫形象：細長的脖子、小而面無表情的臉、極簡黑色外框、平面且輕淡的上色、幾乎沒有陰影、極少的臉部細節、簡化的髮型、大量留白、純白背景，整體帶點微妙尷尬又有趣的感覺。使用超高比例 1:3 的構圖。
+            </div>
+          </div>
+          <div class="story-insight">Prompt 的核心思維 = 定義「什麼該保留」＋「什麼該被改寫」——這是讓 AI 真正替你創作的方法</div>
+        </div>
+      </div>
+
+      <!-- Story 5 -->
+      <div class="story-card">
+        <div class="story-num">05</div>
+        <div class="story-body">
+          <span class="story-time">影片 16:00</span>
+          <h3 class="story-title">中文、日文、阿拉伯文——AI 在一張圖裡全部寫對</h3>
+          <p class="story-desc">過去 AI 生圖的最大弱點是「文字一定會寫錯」。現在這個問題幾乎解決了。這張日文麵包店海報，連語氣都對了。</p>
+          <div class="prompt-dark">
+            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-text" id="s5p">Make an artistic marketing poster for a fictional "OpenAI bakery". The poster should be in Japanese language. Use a warm, minimalist aesthetic inspired by Japanese stationery brands like MUJI.</p>
+            <div class="prompt-dark-footer">
+              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
+              <button class="copy-btn" onclick="copyPrompt('s5p',this)">📋 複製提示詞</button>
+            </div>
+            <div class="prompt-zh-panel">
+              為一間虛構的「OpenAI 麵包店」製作一張具有藝術感的行銷海報。海報應使用日文呈現。風格採用溫暖、簡約的美學，靈感來自 MUJI 這類日本文具品牌。
+            </div>
+          </div>
+          <div class="story-insight">AI 不只「寫對語言」，而是「寫對語氣」——MUJI 的日文海報語感，和一般翻譯截然不同</div>
+        </div>
+      </div>
+
+    </div><!-- /story-cards -->
+  </div>
+</section>
+
+<!-- ════ SECTION 2: PLAYGROUND ════ -->
+<section class="sec light" id="playground">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <span class="sec-eye">下半場 · 圖像遊樂園</span>
+      <h2 class="sec-title">選一個你想玩的景點，<br>開始創作吧</h2>
+      <p class="sec-lead">六大創作場景，每個都有可以直接複製的提示詞。帶 📷 的提示詞需要你上傳一張自己的照片。</p>
+    </div>
+    <!-- Zone Map -->
+    <div class="zone-map">
+      <a class="zone-card" href="#z1" style="--zc:var(--z1)">
+        <span class="zone-icon">🎨</span>
+        <div class="zone-name">藝術風格館</div>
+        <div class="zone-desc">把你的照片變成各種藝術大師的畫作</div>
+        <span class="zone-count">7 個提示詞</span>
+      </a>
+      <a class="zone-card" href="#z2" style="--zc:var(--z2)">
+        <span class="zone-icon">🧸</span>
+        <div class="zone-name">玩具工廠</div>
+        <div class="zone-desc">把自己變成公仔、卡牌、貼圖</div>
+        <span class="zone-count">6 個提示詞</span>
+      </a>
+      <a class="zone-card" href="#z3" style="--zc:var(--z3)">
+        <span class="zone-icon">🎬</span>
+        <div class="zone-name">電影攝影棚</div>
+        <div class="zone-desc">用電影感重新詮釋你的日常</div>
+        <span class="zone-count">5 個提示詞</span>
+      </a>
+      <a class="zone-card" href="#z4" style="--zc:var(--z4)">
+        <span class="zone-icon">💼</span>
+        <div class="zone-name">商業設計院</div>
+        <div class="zone-desc">海報、Logo、產品圖、食譜</div>
+        <span class="zone-count">6 個提示詞</span>
+      </a>
+      <a class="zone-card" href="#z5" style="--zc:var(--z5)">
+        <span class="zone-icon">🤪</span>
+        <div class="zone-name">趣味社群區</div>
+        <div class="zone-desc">和動漫角色合照、穿越到影視世界</div>
+        <span class="zone-count">5 個提示詞</span>
+      </a>
+      <a class="zone-card" href="#z6" style="--zc:var(--z6)">
+        <span class="zone-icon">🖼️</span>
+        <div class="zone-name">照片修圖室</div>
+        <div class="zone-desc">移除背景、換場景、修圖、調色</div>
+        <span class="zone-count">5 個提示詞</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CATEGORIES ════ -->
+<section class="sec tint" id="categories">
+  <div class="sec-inner">
+
+    <!-- Z1: 藝術風格館 -->
+    <div class="cat-sec" id="z1">
+      <div class="cat-header">
+        <span class="cat-icon">🎨</span>
+        <h3 class="cat-name" style="color:var(--z1)">藝術風格館</h3>
+        <div class="cat-bar"><div class="cat-bar-fill" style="background:var(--z1);width:100%"></div></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">Studio Ghibli 吉卜力</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p1">Convert my photo into a Studio Ghibli scene with soft watercolor textures, pastel colors, dreamy background, and a warm nostalgic mood.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p1',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把我的照片轉換成吉卜力工作室風格，帶有柔和水彩質感、粉彩色調、夢幻背景，以及溫暖懷舊的氛圍。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">3D Pixar 皮克斯</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p2">Transform this photo into a 3D Pixar-style character with slightly exaggerated, expressive facial features, smooth skin, warm studio lighting, and a clean background.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p2',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這張照片轉換成 3D 皮克斯風格角色，帶有略微誇張但富有表情的面部特徵、光滑的皮膚、溫暖的攝影棚燈光和乾淨的背景。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">梵谷 Van Gogh</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p3">Convert this photo into a Van Gogh oil painting style, with expressive swirling brushstrokes, bold vivid colors, and thick impasto paint texture.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p3',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這張照片轉換成梵谷油畫風格，帶有充滿表情的旋轉筆觸、大膽鮮豔的色彩，以及厚重的油畫質感。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">水彩畫 Watercolor</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p4">Transform this image into a soft watercolor painting with gentle flowing brushstrokes, delicate colors that bleed into each other, and a hand-painted feel on textured paper.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p4',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這張圖轉換成柔和水彩畫，帶有輕柔流動的筆觸、互相暈染的淡雅色彩，以及在有紋理紙張上的手繪感。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">漫畫風 Comic Book</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p5">Transform this photo into a bold comic book style with thick black outlines, halftone dot shading, vibrant flat colors, and a dynamic cinematic composition.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p5',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這張照片轉換成粗獷的漫畫風格，帶有粗黑輪廓線、半調點狀陰影、鮮豔的平塗色彩，以及動態的電影感構圖。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">黏土動畫 Claymation</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p6">Turn this photo into a Claymation-style character. Use soft, rounded modeling clay textures with visible sculpting marks, appearing as if made from colorful clay. Warm studio lighting.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p6',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這張照片轉換成黏土動畫風格角色。使用柔軟圓潤的建模黏土質感，帶有可見的塑形痕跡，看起來像是由彩色黏土製成的。溫暖的攝影棚燈光。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">像素藝術 Pixel Art</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z1p7">Convert this photo into pixel art with a retro 16-bit aesthetic, vibrant colors, and a neon sunset background. Each pixel clearly visible.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z1p7',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這張照片轉換成像素藝術，帶有復古 16 位元風格、鮮豔的色彩，以及霓虹日落背景。每個像素清晰可見。</div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon">🏆</span>
+        <div class="challenge-body">
+          <span class="challenge-tag">挑戰任務</span>
+          <div class="challenge-title">把你最喜歡的一張照片，轉成你最想「住進去」的藝術世界</div>
+          <div class="challenge-desc">選一個你最有共鳴的風格，上傳你的照片試試看。生成完成後，截圖並上傳到成果牆，讓大家看看你選的是哪個世界。</div>
+          <button class="challenge-cta" onclick="openUpload()">完成了！上傳到成果牆 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Z2: 玩具工廠 -->
+    <div class="cat-sec" id="z2">
+      <div class="cat-header">
+        <span class="cat-icon">🧸</span>
+        <h3 class="cat-name" style="color:var(--z2)">玩具工廠</h3>
+        <div class="cat-bar"><div class="cat-bar-fill" style="background:var(--z2);width:100%"></div></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">玩具人偶包裝 Action Figure</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z2p1">Design a highly detailed 3D-rendered action figure inside a classic toy blister pack. Use the uploaded photo to model the character's face. Name the figure at the top. Include 4-5 mini accessories in separate compartments (e.g., laptop, coffee cup, book, headphones). Cardboard backing color: deep blue. Retro-modern collectible toy style. Ultra-realistic product shot.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z2p1',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">設計一個高度詳細的 3D 渲染玩具人偶，放在經典玩具泡殼包裝內。用上傳的照片為角色建模。頂部標上人偶名稱，配件區放 4-5 個迷你配件（例如筆電、咖啡杯、書、耳機）。紙卡背景顏色：深藍。復古現代收藏玩具風格，超寫實產品照。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">Funko Pop 公仔</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z2p2">Create a Funko Pop vinyl figure of the person in this photo. Classic Funko style: large square head, small body, big round black eyes. Place it in an official white Funko Pop box with a clear plastic window. Show the POP! logo, figure name at bottom, number in a black circle top right. Professional product photography, full box visible, slightly angled view, studio lighting.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z2p2',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">為這張照片中的人物創作一個 Funko Pop 黑膠公仔。經典 Funko 風格：大方形頭、小身體、圓形大黑眼睛。放在官方白色 Funko Pop 盒子內，透明塑料視窗。顯示 POP! 標誌、底部名字、右上角黑色圓圈內的編號。專業產品攝影，全盒可見，略微傾斜視角，攝影棚燈光。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">寶可夢集換式卡牌</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z2p3">Generate a Pokémon-style trading card. Vertical close-up held between thumb and finger, classic 1999 gold holo-foil frame. Three-quarter portrait with rim lighting. Include HP value, one ability with effect description, one attack with damage, weakness, resistance, and retreat cost. Render card and fingers sharp, background softly blurred, studio lighting sparkling on the foil.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z2p3',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">生成一張寶可夢風格的集換式卡牌。直式特寫，被拇指和食指夾住，經典 1999 年金色全息閃亮邊框。四分之三角度肖像配合邊緣光。包含 HP 值、一個特技描述、一個攻擊傷害、弱點、抗性和退場費用。卡牌和手指清晰，背景柔化，閃亮箔面上的攝影棚燈光。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">Q 版貼圖組 Sticker Sheet</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z2p4">Create a sticker sheet of the person in this photo featuring 8 different expressions and poses. Cute chibi Q-version art style, thick white border on each sticker, transparent background. Arrange as a neat sticker sheet grid. Include emotions like happy, surprised, sleepy, laughing, thinking, cool, sad, heart-eyes.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z2p4',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">為這張照片中的人物製作一組貼圖，包含 8 種不同的表情和姿勢。可愛的 Q 版 chibi 藝術風格，每個貼圖有白色厚邊框，透明背景。整齊排列成貼圖格。包含情緒：開心、驚訝、想睡、大笑、思考、酷、傷心、愛心眼。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">辛普森家族 The Simpsons</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z2p5">Turn this person into a Simpsons character. Classic Springfield resident style: yellow skin, slight overbite, 4 fingers, simple round eyes. Place them in a typical Springfield setting like a couch, Kwik-E-Mart, or Moe's Tavern. Match the original TV show's flat animation style.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z2p5',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這個人變成辛普森家族角色。經典春田鎮居民風格：黃色皮膚、略帶暴牙、4 根手指、簡單的圓眼睛。放在典型的春田鎮場景，如沙發、Kwik-E-Mart 或 Moe 酒吧。符合原版電視節目的平面動畫風格。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">3D 毛絨圖標</div></div>
+          <p class="prompt-card-text" id="z2p6">Transform a simple flat icon of [描述一個物品，例如：a coffee cup / a book / a camera] into a soft, 3D fluffy object. Fully covered in plush fur or velvet texture, hyperrealistic hair texture. Studio lighting on a clean pastel background. High-resolution render.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z2p6',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把一個簡單的平面圖標（[描述一個物品，例如：咖啡杯 / 書本 / 相機]）轉換成柔軟的 3D 毛絨物體。完全覆蓋著毛絨或天鵝絨質感，超寫實毛髮紋理。在乾淨的粉彩背景上的攝影棚燈光。高解析度渲染。</div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon">🏆</span>
+        <div class="challenge-body">
+          <span class="challenge-tag">挑戰任務</span>
+          <div class="challenge-title">把自己變成一個玩具人偶，配件是你生命中最重要的三樣東西</div>
+          <div class="challenge-desc">你是哪一種人偶？你的三個「人生配件」是什麼？用 Action Figure 提示詞，把配件改成你自己的。</div>
+          <button class="challenge-cta" onclick="openUpload()">完成了！上傳到成果牆 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Z3: 電影攝影棚 -->
+    <div class="cat-sec" id="z3">
+      <div class="cat-header">
+        <span class="cat-icon">🎬</span>
+        <h3 class="cat-name" style="color:var(--z3)">電影攝影棚</h3>
+        <div class="cat-bar"><div class="cat-bar-fill" style="background:var(--z3);width:100%"></div></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">賽博龐克夜景 Cyberpunk</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z3p1">Cinematic shot of me walking against a rushing cyber city crowd, all others blurred with motion trails. I'm in sharp focus, side profile, serious expression. It's raining and I'm soaked. Wearing a long trench coat. Neon cyberpunk tones, 35mm film look. Ratio 9:16.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z3p1',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">我在賽博龐克風格的城市人群中逆向而行的電影感鏡頭，其他人帶有動態模糊殘影。我的側臉清晰對焦，表情嚴肅，在大雨中被淋濕，穿著長風衣。霓虹賽博龐克色調，35mm 膠片風格，9:16 比例。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">車內霓虹夜 Neo-Noir</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z3p2">Sitting inside a car at night, bathed in moody neon lighting. Deep blue and magenta illuminating the interior. Rain droplets streak the car window. Grip the steering wheel with a serious expression. Replace the driver's face with the uploaded photo. Neo-noir thriller vibe, ultra-realistic. Text at the bottom reads "IN THE NIGHT".</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z3p2',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">在夜晚的車內，沐浴在迷幻的霓虹燈光中。深藍和品紅色照亮車內空間。雨滴劃過車窗。雙手握住方向盤，表情嚴肅。把駕駛的臉換成上傳的照片。黑色電影驚悚片氛圍，超寫實。底部文字寫「IN THE NIGHT」。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">人群中靜止 Still in the Crowd</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z3p3">Cinematic overhead shot of me standing perfectly still on a brick city sidewalk, wearing a dark oversized blazer. Motion-blurred crowd rushes past around me. Moody lighting, 35mm film look, shallow depth of field, sharp focus on me. Portrait 4:3 ratio.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z3p3',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">俯拍電影感鏡頭：我靜靜站在磚砌城市人行道上，穿著深色寬大西裝外套。四周人群帶著動態模糊匆匆而過。迷幻光線，35mm 膠片風格，淺景深，我清晰對焦。4:3 直式比例。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">黑白戲劇肖像 B&amp;W Drama</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z3p4">A dramatic black and white portrait of a confident person sitting on a wooden stool against a dark studio background. All-black outfit, small silver chain, silver watch. Posture is relaxed yet dominant. Moody, powerful aura. Rembrandt lighting technique.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z3p4',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">一張戲劇性的黑白肖像，自信的人坐在深色攝影棚背景前的木凳上。全黑服裝，小銀項鍊，銀錶。姿態放鬆但有氣場。迷幻有力的氣質。鐫布朗特打光技術。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">復古 90 年代臥室</div></div>
+          <p class="prompt-card-text" id="z3p5">Grungy analog photo of a teenager playing PlayStation 1 on a 90s CRT TV in a dimly lit bedroom. Warm nostalgic tones, VHS scan lines, posters on walls, unmade bed, soda cans. Candid flash photography, raw and unedited feel.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z3p5',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">昏暗臥室中的骯髒類比照片：青少年在 90 年代 CRT 電視前玩 PlayStation 1。溫暖懷舊色調，VHS 掃描線，牆上貼滿海報，凌亂的床，汽水罐。隨機閃光攝影，原始未修圖的感覺。</div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon">🏆</span>
+        <div class="challenge-body">
+          <span class="challenge-tag">挑戰任務</span>
+          <div class="challenge-title">用最帥氣的電影感，呈現你日常中的一個平凡瞬間</div>
+          <div class="challenge-desc">通勤、喝咖啡、走路、等電梯——任何日常時刻，加上電影感提示詞，都可以變成大銀幕場景。</div>
+          <button class="challenge-cta" onclick="openUpload()">完成了！上傳到成果牆 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Z4: 商業設計院 -->
+    <div class="cat-sec" id="z4">
+      <div class="cat-header">
+        <span class="cat-icon">💼</span>
+        <h3 class="cat-name" style="color:var(--z4)">商業設計院</h3>
+        <div class="cat-bar"><div class="cat-bar-fill" style="background:var(--z4);width:100%"></div></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">活動海報 Event Poster</div></div>
+          <p class="prompt-card-text" id="z4p1">A vibrant music festival poster, large bold text "SUMMER SOUND 2026" centered, dates "AUG 15–17" below, neon synthwave color palette with purple and cyan gradients, abstract sound waves in the background, dynamic layout.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z4p1',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">充滿活力的音樂節海報，大型粗體文字「SUMMER SOUND 2026」置中，日期「AUG 15–17」在下方，紫色和青色漸變的霓虹合成波色調，背景有抽象聲波，動態排版。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">品牌 Logo 設計</div></div>
+          <p class="prompt-card-text" id="z4p2">A modern minimalist logo for a brand called "[你的品牌名稱]". Clean sans-serif wordmark paired with a simple geometric symbol. Color palette: deep navy and warm gold. White background. Professional brand identity style.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z4p2',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">一個名為「[你的品牌名稱]」的現代簡約 Logo。乾淨的無襯線字標與簡單幾何符號配對。色調：深海軍藍與暖金。白色背景。專業品牌識別風格。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">產品攝影 Product Shot</div></div>
+          <p class="prompt-card-text" id="z4p3">A glass of fresh orange juice on white marble surface, condensation droplets on the glass, mint leaf on top as garnish, soft diffused side lighting, professional food photography composition, top-tier commercial aesthetic.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z4p3',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">一杯新鮮柳橙汁放在白色大理石表面，玻璃杯上有水滴凝結，頂部裝飾薄荷葉，柔和散射的側面燈光，專業食品攝影構圖，頂級商業美學。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">YouTube 縮圖 Thumbnail</div></div>
+          <p class="prompt-card-text" id="z4p4">YouTube thumbnail design: exaggerated shocked expression on the left side of the frame, large bold red text "我嘗試了這個 24 小時" on the right, high-contrast yellow background, dramatic studio lighting, eye-catching viral thumbnail style.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z4p4',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">YouTube 縮圖設計：畫面左側誇張的震驚表情，右側大型粗體紅字「我嘗試了這個 24 小時」，高對比黃色背景，戲劇性攝影棚燈光，吸睛的病毒式縮圖風格。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">食譜步驟圖 Recipe Card</div></div>
+          <p class="prompt-card-text" id="z4p5">Create a recipe visual guide for "[料理名稱]". Show 4 steps with small ingredient photos for each step. Clean minimalist design, warm cream background tones, hand-written style labels, appetizing food photography aesthetic.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z4p5',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">為「[料理名稱]」製作一張食譜視覺指南。顯示 4 個步驟，每個步驟有小型食材圖片。乾淨簡約的設計，溫暖米色背景色調，手寫風格標籤，令人食慾大開的食品攝影美學。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">咖啡包裝設計</div></div>
+          <p class="prompt-card-text" id="z4p6">Premium coffee bag packaging design. "TAIWAN ALISHAN" in elegant serif typography. "Single Origin · Medium Roast · 250g" subtitle. Natural kraft paper texture, top-down flat lay product shot, studio lighting with soft shadows.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z4p6',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">高端咖啡袋包裝設計。「TAIWAN ALISHAN」以優雅的襯線字體呈現。副標題「Single Origin · Medium Roast · 250g」。天然牛皮紙質感，俯拍平鋪產品照，帶柔和陰影的攝影棚燈光。</div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon">🏆</span>
+        <div class="challenge-body">
+          <span class="challenge-tag">挑戰任務</span>
+          <div class="challenge-title">為你的品牌、興趣或事業，設計一張讓人想轉發的宣傳圖</div>
+          <div class="challenge-desc">把 Logo、海報或產品圖的提示詞改成你自己的品牌名稱或產品，生成你的第一張 AI 宣傳素材。</div>
+          <button class="challenge-cta" onclick="openUpload()">完成了！上傳到成果牆 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Z5: 趣味社群區 -->
+    <div class="cat-sec" id="z5">
+      <div class="cat-header">
+        <span class="cat-icon">🤪</span>
+        <h3 class="cat-name" style="color:var(--z5)">趣味社群區</h3>
+        <div class="cat-bar"><div class="cat-bar-fill" style="background:var(--z5);width:100%"></div></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">與動漫角色合照</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z5p1">Ultra-realistic 9:16 vertical format fisheye selfie of me with Naruto, Goku, and Doraemon. We're all making silly, exaggerated faces. Set in a small bright living room with white tones. High camera angle. Extreme fisheye distortion.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z5p1',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">我與鳴人、悟空和哆啦 A 夢的超寫實 9:16 直式魚眼自拍。我們都做著誇張搞笑的表情。場景設在明亮白色調的小客廳。高角度攝影，極度魚眼扭曲效果。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">魷魚遊戲場景</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z5p2">Transform this person into a scene from the Squid Game TV series. Keep the face exactly the same. Add a green tracksuit with a white number tag, dim indoor lighting, dramatic atmosphere. Make it look like a cinematic shot from the survival game show, keeping facial expression and identity unchanged.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z5p2',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">把這個人變換到魷魚遊戲電視劇的場景中。臉部完全保持不變。加上綠色運動服和白色號碼牌，昏暗的室內燈光，戲劇性氛圍。讓它看起來像是生存遊戲節目的電影感鏡頭，保持面部表情和身份不變。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">寵物變人類 Pet to Human</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z5p3">Show me what my pet would look like as a human. Keep the same fur color patterns, personality energy, and expression. Realistic human with subtle pet-like facial features. Dressed in clothing that matches their animal personality.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z5p3',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">讓我看看我的寵物如果是人類會長什麼樣子。保持相同的毛色花紋、性格能量和表情。寫實的人類形象，帶有微妙的寵物臉部特徵。穿著符合牠們動物個性的服裝。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">雙重曝光藝術</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z5p4">A cinematic double exposure of me in side profile, with a mountain forest landscape blended inside the silhouette. The inner scene shows sunlight filtering through tall pine trees, mist floating between branches. Moody atmospheric lighting, dark cinematic tones, 8K resolution.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z5p4',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">我的側臉電影感雙重曝光，輪廓內融合了山林景觀。內部場景展現陽光穿透高聳松樹，薄霧在枝間飄浮。迷幻大氣燈光，深沉電影色調，8K 解析度。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">誇張漫畫大頭貼 Caricature</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z5p5">Create a fun exaggerated caricature of the person in this photo. Hugely enlarged head, tiny body, emphasize their most distinctive facial feature (smile, eyes, or hairstyle). Colorful cartoon style, white background, friendly and humorous tone.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z5p5',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">為這張照片中的人物創作一幅有趣誇張的漫畫大頭貼。超大的頭，小小的身體，強調他們最有特色的臉部特徵（微笑、眼睛或髮型）。色彩繽紛的卡通風格，白色背景，友善幽默的語氣。</div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon">🏆</span>
+        <div class="challenge-body">
+          <span class="challenge-tag">挑戰任務</span>
+          <div class="challenge-title">把你和家人或朋友的合照，帶進一個奇幻或電影世界</div>
+          <div class="challenge-desc">選一張你最喜歡的合照，選一個場景（魷魚遊戲、動漫合照、或自己發揮），讓大家一起穿越。</div>
+          <button class="challenge-cta" onclick="openUpload()">完成了！上傳到成果牆 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Z6: 照片修圖室 -->
+    <div class="cat-sec" id="z6">
+      <div class="cat-header">
+        <span class="cat-icon">🖼️</span>
+        <h3 class="cat-name" style="color:var(--z6)">照片修圖室</h3>
+        <div class="cat-bar"><div class="cat-bar-fill" style="background:var(--z6);width:100%"></div></div>
+      </div>
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">移除背景</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z6p1">Keep the main subject in the foreground and remove all background elements completely. Replace with a clean pure white background. Preserve all fine details including hair strands and fabric edges.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z6p1',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">保留前景的主要主體，完全移除所有背景元素。換成乾淨的純白背景。保留所有細節，包括髮絲和布料邊緣。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">自然修圖 Natural Retouching</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z6p2">Enhance this portrait naturally. Improve clarity, sharpen details, slightly boost contrast. Preserve ALL natural skin texture, pores, and character. Do not over-smooth or create an artificial plastic look. Keep it real.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z6p2',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">自然地增強這張肖像。提高清晰度，銳化細節，略微提升對比度。保留所有自然的皮膚質感、毛孔和特點。不要過度柔化或造成人工塑料感。保持真實。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">更換背景</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z6p3">Keep the subject exactly as they are. Replace the background with a professional office environment with large windows, city view, soft natural light. Maintain the original light direction and color temperature on the subject.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z6p3',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">完全保持主體不變。把背景換成有大窗戶的專業辦公環境，城市景觀，柔和的自然光。保持原始光線方向和主體上的色溫。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">電影調色 Cinematic Grade</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z6p4">Apply a cinematic color grade to this photo. Lift the shadows slightly to a cool blue-teal tone, warm orange mid-tones, slightly desaturate the skin. Add subtle film grain. Keep composition unchanged. Hollywood blockbuster aesthetic.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z6p4',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">為這張照片進行電影調色。略微提亮陰影至冷藍青色調，暖橘色的中間調，略微降低皮膚飽和度。加入微妙的膠片顆粒。保持構圖不變。好萊塢大片美學。</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-card-top"><div class="prompt-card-name">LinkedIn 商務照</div><span class="photo-badge">📷 需要照片</span></div>
+          <p class="prompt-card-text" id="z6p5">Create a studio-quality LinkedIn profile headshot based on this photo. Clean neutral light grey background, confident and approachable expression, soft professional studio lighting from slightly above. Maintain the person's natural appearance. Square 1:1 format.</p>
+          <div class="prompt-card-footer">
+            <button class="copy-btn-sm" onclick="copyPrompt('z6p5',this)">📋 複製</button>
+            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+          </div>
+          <div class="prompt-zh-sm">根據這張照片製作一張攝影棚品質的 LinkedIn 個人頭像。乾淨的中性淺灰背景，自信而平易近人的表情，從略高位置的柔和專業攝影棚燈光。保持人物自然外貌。1:1 正方形格式。</div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon">🏆</span>
+        <div class="challenge-body">
+          <span class="challenge-tag">挑戰任務</span>
+          <div class="challenge-title">拿出你覺得「差一點點就很好」的一張照片，讓 AI 幫你完成它</div>
+          <div class="challenge-desc">可能是背景雜亂、光線不好、皮膚狀態不佳——選最符合你需求的提示詞，讓 AI 修好它。</div>
+          <button class="challenge-cta" onclick="openUpload()">完成了！上傳到成果牆 →</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sec-inner -->
+</section>
+
+<!-- ════ SECTION 3: GALLERY ════ -->
+<section class="sec light" id="gallery">
+  <div class="sec-inner">
+    <div class="gallery-head">
+      <div>
+        <span class="sec-eye" style="margin-bottom:8px;">成果牆</span>
+        <h2 class="sec-title">今天的創作</h2>
+      </div>
+      <button class="upload-btn" onclick="openUpload()">
+        ＋ 上傳我的作品
+      </button>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-empty">
+        <span class="gallery-empty-icon">🎨</span>
+        <p class="gallery-empty-txt">成果牆等著你的第一件作品！<br>完成任何一個提示詞挑戰後，上傳到這裡。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer class="footer">
+  <p class="footer-txt">
+    <span class="footer-brand">享學</span> × AI 數位生活應用課 · Week 5 · 你說，AI 畫<br>
+    由 Tim 設計 · 2026.04.29
+  </p>
+</footer>
+
+<!-- ════ UPLOAD MODAL ════ -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 class="modal-title">上傳我的作品 🎨</h3>
+      <button class="modal-close" onclick="closeUpload()">×</button>
+    </div>
+    <div class="modal-body" id="uploadForm">
+      <div class="form-field">
+        <label class="form-label" for="nameInput">你的名字 <span>（讓大家認識你）</span></label>
+        <input class="form-input" type="text" id="nameInput" placeholder="例：小明、阿嬤、Tim..." maxlength="20">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="catSelect">這張圖屬於哪個景點？</label>
+        <select class="form-select" id="catSelect">
+          <option value="">選擇類別...</option>
+          <option value="藝術風格館">🎨 藝術風格館</option>
+          <option value="玩具工廠">🧸 玩具工廠</option>
+          <option value="電影攝影棚">🎬 電影攝影棚</option>
+          <option value="商業設計院">💼 商業設計院</option>
+          <option value="趣味社群區">🤪 趣味社群區</option>
+          <option value="照片修圖室">🖼️ 照片修圖室</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">上傳你的作品截圖</label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="imageInput" accept="image/*" onchange="previewImage(this)">
+          <div class="upload-area-icon">📁</div>
+          <div class="upload-area-txt">點擊選擇圖片，或把圖片拖到這裡</div>
+          <div class="upload-area-sub">支援 JPG、PNG、WEBP，最大 5MB</div>
+        </div>
+        <img class="upload-preview" id="uploadPreview" alt="預覽">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="reflInput">你的感想 <span>（選填）</span></label>
+        <textarea class="form-textarea" id="reflInput" placeholder="這張圖讓你有什麼感受？你改了什麼讓它更好？..." rows="3"></textarea>
+      </div>
+      <div class="form-error" id="formError"></div>
+      <button class="form-submit" id="submitBtn" onclick="submitWork()">🚀 發布到成果牆</button>
+    </div>
+    <!-- Success State -->
+    <div class="success-state" id="successState">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">作品已上牆！</div>
+      <p class="success-desc">你的創作現在在成果牆上了，<br>大家都可以看到你的作品。</p>
+      <button class="success-back" onclick="closeUpload()">回到遊樂園</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SUPABASE ──
+const { createClient } = supabase;
+const sb = createClient(
+  'https://nyvptaklqujfaqnjueku.supabase.co',
+  'sb_publishable_EXaSn3GVNXsQCIyoorDEqg_Vocy1bm6'
+);
+
+// ── SCROLL: sticky nav + progress bar ──
+const snav = document.getElementById('snav');
+const progFill = document.getElementById('progFill');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  if (scrolled > 80) snav.classList.add('vis');
+  else snav.classList.remove('vis');
+  const total = document.body.scrollHeight - window.innerHeight;
+  progFill.style.width = (scrolled / total * 100) + '%';
+});
+
+// ── COPY PROMPT ──
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id)?.innerText || '';
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ 已複製！';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ 已複製！';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── TOGGLE ZH TRANSLATION ──
+function toggleZH(btn) {
+  const panel = btn.parentElement.nextElementSibling;
+  if (!panel) return;
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '收起翻譯' : (btn.classList.contains('prompt-zh-toggle') ? '看中文翻譯' : '中文');
+}
+
+// ── MODAL ──
+function openUpload() {
+  document.getElementById('uploadModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeUpload() {
+  document.getElementById('uploadModal').classList.remove('open');
+  document.body.style.overflow = '';
+  // Reset form
+  document.getElementById('nameInput').value = '';
+  document.getElementById('catSelect').value = '';
+  document.getElementById('reflInput').value = '';
+  document.getElementById('imageInput').value = '';
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.getElementById('formError').classList.remove('show');
+  document.getElementById('uploadForm').style.display = 'block';
+  document.getElementById('successState').classList.remove('show');
+  document.getElementById('submitBtn').disabled = false;
+}
+document.getElementById('uploadModal').addEventListener('click', function(e) {
+  if (e.target === this) closeUpload();
+});
+
+// ── IMAGE PREVIEW ──
+function previewImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('uploadPreview');
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// Drag-drop
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    document.getElementById('imageInput').files = e.dataTransfer.files;
+    previewImage({ files: [file] });
+  }
+});
+
+// ── SUBMIT WORK ──
+async function submitWork() {
+  const name = document.getElementById('nameInput').value.trim();
+  const category = document.getElementById('catSelect').value;
+  const imageFile = document.getElementById('imageInput').files[0];
+  const reflection = document.getElementById('reflInput').value.trim();
+  const errEl = document.getElementById('formError');
+
+  errEl.classList.remove('show');
+  if (!name) { showError('請填寫你的名字'); return; }
+  if (!category) { showError('請選擇景點類別'); return; }
+  if (!imageFile) { showError('請上傳一張作品截圖'); return; }
+  if (imageFile.size > 5 * 1024 * 1024) { showError('圖片太大，請選擇 5MB 以下的圖片'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '上傳中...';
+
+  try {
+    // Upload image to Supabase Storage
+    const ext = imageFile.name.split('.').pop() || 'jpg';
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error: upErr } = await sb.storage.from('artwork').upload(filename, imageFile, { cacheControl: '3600', upsert: false });
+    if (upErr) throw upErr;
+
+    const { data: { publicUrl } } = sb.storage.from('artwork').getPublicUrl(filename);
+
+    // Save to database
+    const { error: dbErr } = await sb.from('submissions').insert([{ name, category, image_url: publicUrl, reflection }]);
+    if (dbErr) throw dbErr;
+
+    // Show success
+    document.getElementById('uploadForm').style.display = 'none';
+    document.getElementById('successState').classList.add('show');
+    loadGallery();
+
+  } catch (err) {
+    console.error(err);
+    showError('上傳失敗，請再試一次（' + (err.message || '未知錯誤') + '）');
+    btn.disabled = false;
+    btn.textContent = '🚀 發布到成果牆';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('formError');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+// ── LOAD GALLERY ──
+async function loadGallery() {
+  const grid = document.getElementById('galleryGrid');
+  try {
+    const { data, error } = await sb.from('submissions').select('*').order('created_at', { ascending: false }).limit(60);
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      grid.innerHTML = `<div class="gallery-empty"><span class="gallery-empty-icon">🎨</span><p class="gallery-empty-txt">成果牆等著你的第一件作品！<br>完成任何一個提示詞挑戰後，上傳到這裡。</p></div>`;
+      return;
+    }
+    grid.innerHTML = data.map(item => `
+      <div class="gallery-item">
+        <img class="gallery-img" src="${item.image_url}" alt="${item.name}的作品" loading="lazy" onerror="this.style.display='none'">
+        <div class="gallery-info">
+          <div class="gallery-name">${escHtml(item.name)}</div>
+          <span class="gallery-cat">${escHtml(item.category)}</span>
+          ${item.reflection ? `<p class="gallery-reflection">${escHtml(item.reflection)}</p>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Gallery load error:', err);
+  }
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Auto-load gallery on page load
+loadGallery();
+</script>
+</body>
+</html>
