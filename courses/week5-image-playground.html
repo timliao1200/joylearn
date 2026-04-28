@@ -165,9 +165,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 @media(max-width:640px){.gallery-grid{grid-template-columns:repeat(2,1fr);gap:12px;}}
 @media(max-width:380px){.gallery-grid{grid-template-columns:1fr;}}
-.gallery-item{background:white;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s;}
+.gallery-item{background:white;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s;cursor:pointer;}
 .gallery-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.gallery-img-wrap{position:relative;overflow:hidden;}
 .gallery-img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--bg-2);}
+.ba-badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;background:var(--brand-grad);color:white;padding:2px 8px;border-radius:100px;letter-spacing:.5px;}
 .gallery-info{padding:12px 14px;}
 .gallery-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;}
 .gallery-cat{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--brand-light);color:var(--brand);}
@@ -175,6 +177,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 .gallery-empty{grid-column:1/-1;text-align:center;padding:80px 20px;}
 .gallery-empty-icon{font-size:48px;margin-bottom:16px;display:block;opacity:.4;}
 .gallery-empty-txt{font-size:16px;color:var(--ink-3);}
+
+/* ── LIGHTBOX ── */
+.lb-modal{background:var(--brand-dark);border-radius:20px;width:100%;max-width:860px;max-height:92dvh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.5);position:relative;}
+.lb-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.12);border:none;color:white;font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .15s;}
+.lb-close:hover{background:rgba(255,255,255,.25);}
+.ba-grid{display:grid;gap:2px;background:rgba(255,255,255,.04);}
+.ba-grid.has-before{grid-template-columns:1fr 1fr;}
+.ba-grid.no-before{grid-template-columns:1fr;}
+.ba-col{position:relative;}
+.ba-col img{width:100%;display:block;max-height:60dvh;object-fit:contain;background:#0a0620;}
+.ba-col-lbl{position:absolute;bottom:0;left:0;right:0;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white;text-align:center;}
+.ba-col-lbl.before{background:linear-gradient(transparent,rgba(0,0,0,.6));}
+.ba-col-lbl.after{background:linear-gradient(transparent,rgba(100,66,161,.7));}
+.lb-info{padding:18px 24px 24px;display:flex;flex-direction:column;gap:8px;}
+.lb-meta{display:flex;align-items:center;gap:10px;}
+.lb-name{font-size:16px;font-weight:700;color:white;}
+.lb-reflection{font-size:13px;color:rgba(255,255,255,.45);line-height:1.65;}
+@media(max-width:600px){.ba-grid.has-before{grid-template-columns:1fr;}.ba-col img{max-height:45dvh;}}
+
+/* ── UPLOAD TWO IMAGES ── */
+.upload-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.upload-pair{grid-template-columns:1fr;}}
+.upload-pair-item{}
+.upload-pair-label{font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:6px;display:block;}
+.upload-pair-label .badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.badge-opt{background:var(--bg-2);color:var(--ink-3);}
+.badge-req{background:var(--brand-light);color:var(--brand);}
+.upload-area-sm{border:2px dashed var(--border);border-radius:10px;padding:20px 12px;text-align:center;cursor:pointer;transition:all .2s;position:relative;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.upload-area-sm:hover{border-color:var(--brand);background:var(--brand-xlight);}
+.upload-area-sm input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-area-sm-icon{font-size:22px;margin-bottom:4px;}
+.upload-area-sm-txt{font-size:11px;color:var(--ink-3);line-height:1.45;}
+.upload-preview-sm{width:100%;border-radius:8px;margin-top:8px;display:none;max-height:120px;object-fit:cover;}
 
 /* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(26,20,64,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
@@ -1068,6 +1103,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
   </p>
 </footer>
 
+<!-- ════ LIGHTBOX MODAL ════ -->
+<div class="modal-overlay" id="lightboxModal">
+  <div class="lb-modal">
+    <button class="lb-close" onclick="closeLightbox()">×</button>
+    <div class="ba-grid" id="lbGrid">
+      <div class="ba-col" id="lbBeforeCol">
+        <img id="lbBeforeImg" src="" alt="Before">
+        <div class="ba-col-lbl before">BEFORE</div>
+      </div>
+      <div class="ba-col">
+        <img id="lbAfterImg" src="" alt="After">
+        <div class="ba-col-lbl after">AFTER ✨</div>
+      </div>
+    </div>
+    <div class="lb-info">
+      <div class="lb-meta">
+        <span class="lb-name" id="lbName"></span>
+        <span class="gallery-cat" id="lbCat"></span>
+      </div>
+      <p class="lb-reflection" id="lbRefl"></p>
+    </div>
+  </div>
+</div>
+
 <!-- ════ UPLOAD MODAL ════ -->
 <div class="modal-overlay" id="uploadModal">
   <div class="modal">
@@ -1094,14 +1153,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
         </select>
       </div>
       <div class="form-field">
-        <label class="form-label">上傳你的作品截圖</label>
-        <div class="upload-area" id="uploadArea">
-          <input type="file" id="imageInput" accept="image/*" onchange="previewImage(this)">
-          <div class="upload-area-icon">📁</div>
-          <div class="upload-area-txt">點擊選擇圖片，或把圖片拖到這裡</div>
-          <div class="upload-area-sub">支援 JPG、PNG、WEBP，最大 5MB</div>
+        <label class="form-label">上傳作品圖片</label>
+        <div class="upload-pair">
+          <div class="upload-pair-item">
+            <span class="upload-pair-label">原始照片 <span class="badge badge-opt">選填</span></span>
+            <div class="upload-area-sm" id="uploadAreaBefore">
+              <input type="file" id="imageInputBefore" accept="image/*" onchange="previewImg('imageInputBefore','uploadPreviewBefore')">
+              <div class="upload-area-sm-icon">📷</div>
+              <div class="upload-area-sm-txt">Before<br>（原圖）</div>
+            </div>
+            <img class="upload-preview-sm" id="uploadPreviewBefore" alt="Before 預覽">
+          </div>
+          <div class="upload-pair-item">
+            <span class="upload-pair-label">AI 成果圖 <span class="badge badge-req">必填</span></span>
+            <div class="upload-area-sm" id="uploadArea">
+              <input type="file" id="imageInput" accept="image/*" onchange="previewImg('imageInput','uploadPreview')">
+              <div class="upload-area-sm-icon">✨</div>
+              <div class="upload-area-sm-txt">After<br>（AI 生成）</div>
+            </div>
+            <img class="upload-preview-sm" id="uploadPreview" alt="After 預覽">
+          </div>
         </div>
-        <img class="upload-preview" id="uploadPreview" alt="預覽">
+        <p style="font-size:11px;color:var(--ink-3);margin-top:8px;">兩張都上傳的話，點擊作品可以看 Before/After 對比 ✨</p>
       </div>
       <div class="form-field">
         <label class="form-label" for="reflInput">你的感想 <span>（選填）</span></label>
@@ -1169,7 +1242,7 @@ function toggleOriginal(btn) {
   if (enBtn) enBtn.style.display = isOpen ? 'inline-flex' : 'none';
 }
 
-// ── Modal ──
+// ── Upload modal ──
 function openUpload() {
   document.getElementById('uploadModal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1177,59 +1250,64 @@ function openUpload() {
 function closeUpload() {
   document.getElementById('uploadModal').classList.remove('open');
   document.body.style.overflow = '';
-  document.getElementById('nameInput').value = '';
+  ['nameInput','reflInput'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('catSelect').value = '';
-  document.getElementById('reflInput').value = '';
-  document.getElementById('imageInput').value = '';
-  document.getElementById('uploadPreview').style.display = 'none';
+  ['imageInput','imageInputBefore'].forEach(id => document.getElementById(id).value = '');
+  ['uploadPreview','uploadPreviewBefore'].forEach(id => { document.getElementById(id).style.display = 'none'; });
   document.getElementById('formError').classList.remove('show');
   document.getElementById('uploadForm').style.display = 'block';
   document.getElementById('successState').classList.remove('show');
   document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').textContent = '🚀 發布到成果牆';
 }
 document.getElementById('uploadModal').addEventListener('click', function(e) {
   if (e.target === this) closeUpload();
 });
 
-// ── Image preview ──
-function previewImage(input) {
-  const file = input.files[0];
+// ── Image preview (shared) ──
+function previewImg(inputId, previewId) {
+  const file = document.getElementById(inputId).files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => { const p = document.getElementById('uploadPreview'); p.src = e.target.result; p.style.display = 'block'; };
+  reader.onload = e => { const p = document.getElementById(previewId); p.src = e.target.result; p.style.display = 'block'; };
   reader.readAsDataURL(file);
 }
 
-const uploadArea = document.getElementById('uploadArea');
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag'); });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
-uploadArea.addEventListener('drop', e => {
-  e.preventDefault(); uploadArea.classList.remove('drag');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) { document.getElementById('imageInput').files = e.dataTransfer.files; previewImage({ files: [file] }); }
-});
+// ── Upload helper ──
+async function uploadFile(file, suffix) {
+  const ext = file.name.split('.').pop() || 'jpg';
+  const filename = `${Date.now()}-${suffix}.${ext}`;
+  const { error } = await sb.storage.from('artwork').upload(filename, file, { cacheControl: '3600', upsert: false });
+  if (error) throw error;
+  return sb.storage.from('artwork').getPublicUrl(filename).data.publicUrl;
+}
 
 // ── Submit ──
 async function submitWork() {
   const name = document.getElementById('nameInput').value.trim();
   const category = document.getElementById('catSelect').value;
-  const imageFile = document.getElementById('imageInput').files[0];
+  const afterFile = document.getElementById('imageInput').files[0];
+  const beforeFile = document.getElementById('imageInputBefore').files[0];
   const reflection = document.getElementById('reflInput').value.trim();
-  const errEl = document.getElementById('formError');
-  errEl.classList.remove('show');
+  document.getElementById('formError').classList.remove('show');
   if (!name) { showError('請填寫你的名字'); return; }
   if (!category) { showError('請選擇景點類別'); return; }
-  if (!imageFile) { showError('請上傳一張作品截圖'); return; }
-  if (imageFile.size > 5 * 1024 * 1024) { showError('圖片太大，請選擇 5MB 以下的圖片'); return; }
+  if (!afterFile) { showError('請上傳 AI 成果圖（After）'); return; }
+  if (afterFile.size > 5 * 1024 * 1024) { showError('成果圖太大，請選 5MB 以下'); return; }
+  if (beforeFile && beforeFile.size > 5 * 1024 * 1024) { showError('原始照片太大，請選 5MB 以下'); return; }
+
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = '上傳中...';
   try {
-    const ext = imageFile.name.split('.').pop() || 'jpg';
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error: upErr } = await sb.storage.from('artwork').upload(filename, imageFile, { cacheControl: '3600', upsert: false });
-    if (upErr) throw upErr;
-    const { data: { publicUrl } } = sb.storage.from('artwork').getPublicUrl(filename);
-    const { error: dbErr } = await sb.from('submissions').insert([{ name, category, image_url: publicUrl, reflection }]);
+    const imageUrl = await uploadFile(afterFile, 'after');
+    let originalUrl = null;
+    if (beforeFile) {
+      btn.textContent = '上傳中（2/2）...';
+      originalUrl = await uploadFile(beforeFile, 'before');
+    }
+    const row = { name, category, image_url: imageUrl, reflection };
+    if (originalUrl) row.original_url = originalUrl;
+    const { error: dbErr } = await sb.from('submissions').insert([row]);
     if (dbErr) throw dbErr;
     document.getElementById('uploadForm').style.display = 'none';
     document.getElementById('successState').classList.add('show');
@@ -1247,6 +1325,7 @@ function showError(msg) {
 }
 
 // ── Gallery ──
+let galleryData = [];
 async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
   try {
@@ -1256,9 +1335,13 @@ async function loadGallery() {
       grid.innerHTML = `<div class="gallery-empty"><span class="gallery-empty-icon">🎨</span><p class="gallery-empty-txt">成果牆等著你的第一件作品！<br>完成任何一個提示詞挑戰後，上傳到這裡。</p></div>`;
       return;
     }
-    grid.innerHTML = data.map(item => `
-      <div class="gallery-item">
-        <img class="gallery-img" src="${item.image_url}" alt="${escHtml(item.name)}的作品" loading="lazy" onerror="this.style.display='none'">
+    galleryData = data;
+    grid.innerHTML = data.map((item, i) => `
+      <div class="gallery-item" onclick="openLightbox(${i})">
+        <div class="gallery-img-wrap">
+          <img class="gallery-img" src="${item.image_url}" alt="${escHtml(item.name)}的作品" loading="lazy" onerror="this.style.display='none'">
+          ${item.original_url ? '<span class="ba-badge">B&A</span>' : ''}
+        </div>
         <div class="gallery-info">
           <div class="gallery-name">${escHtml(item.name)}</div>
           <span class="gallery-cat">${escHtml(item.category)}</span>
@@ -1268,6 +1351,32 @@ async function loadGallery() {
     `).join('');
   } catch (err) { console.error('Gallery load error:', err); }
 }
+
+// ── Lightbox ──
+function openLightbox(index) {
+  const item = galleryData[index];
+  if (!item) return;
+  const hasBefore = !!item.original_url;
+  const grid = document.getElementById('lbGrid');
+  grid.className = 'ba-grid ' + (hasBefore ? 'has-before' : 'no-before');
+  document.getElementById('lbBeforeCol').style.display = hasBefore ? 'block' : 'none';
+  if (hasBefore) document.getElementById('lbBeforeImg').src = item.original_url;
+  document.getElementById('lbAfterImg').src = item.image_url;
+  document.getElementById('lbName').textContent = item.name;
+  document.getElementById('lbCat').textContent = item.category;
+  const refl = document.getElementById('lbRefl');
+  refl.textContent = item.reflection || '';
+  refl.style.display = item.reflection ? 'block' : 'none';
+  document.getElementById('lightboxModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightboxModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightboxModal').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
 
 function escHtml(str) {
   return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
