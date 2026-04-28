@@ -70,7 +70,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 .sec-lead.on-dark{color:rgba(255,255,255,.42);}
 .sec-head{margin-bottom:52px;}
 
-/* ── STORY CARDS (Journey) ── */
+/* ── STORY CARDS ── */
 .story-cards{display:flex;flex-direction:column;gap:0;}
 .story-card{display:grid;grid-template-columns:60px 1fr;gap:28px;padding:40px 0;border-bottom:1px solid rgba(255,255,255,.07);position:relative;}
 .story-card:last-child{border-bottom:none;}
@@ -78,22 +78,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 .story-body{}
 .story-time{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(165,180,252,.5);background:rgba(165,180,252,.08);border:1px solid rgba(165,180,252,.12);padding:3px 10px;border-radius:100px;margin-bottom:12px;}
 .story-title{font-size:20px;font-weight:700;color:white;margin-bottom:10px;line-height:1.3;}
-.story-desc{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:20px;}
+.story-desc{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:16px;}
+.story-img{width:100%;border-radius:12px;margin-bottom:16px;object-fit:cover;max-height:240px;display:block;}
 .story-insight{display:flex;gap:10px;padding:14px 18px;border-radius:10px;background:rgba(100,66,161,.2);border:1px solid rgba(165,180,252,.12);font-size:14px;color:rgba(165,180,252,.8);line-height:1.6;}
 .story-insight::before{content:'💡';flex-shrink:0;}
 
-/* Prompt block (dark) */
-.prompt-dark{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px 28px;margin:16px 0;position:relative;}
+/* ── PROMPT BLOCK (dark, in story cards) ── */
+.prompt-dark{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px 28px;margin:0 0 16px;position:relative;}
 .prompt-dark-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(165,180,252,.4);margin-bottom:12px;display:block;}
-.prompt-dark-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.75;font-weight:400;}
+.prompt-dark-zh{font-size:14px;color:rgba(255,255,255,.75);line-height:1.75;font-weight:400;}
+.prompt-dark-en{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);display:none;}
+.prompt-dark-en.open{display:block;}
+.prompt-dark-en p{font-size:13px;color:rgba(255,255,255,.38);line-height:1.75;}
 .prompt-dark-footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px;flex-wrap:wrap;}
-.prompt-zh-toggle{font-size:12px;font-weight:600;color:rgba(165,180,252,.5);background:none;border:1px solid rgba(165,180,252,.15);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--font);transition:all .15s;}
-.prompt-zh-toggle:hover{color:rgba(165,180,252,.8);border-color:rgba(165,180,252,.3);}
-.prompt-zh-panel{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:14px;color:rgba(255,255,255,.38);line-height:1.75;display:none;}
-.prompt-zh-panel.open{display:block;}
-.copy-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:white;background:var(--brand-grad);border:none;padding:8px 18px;border-radius:7px;cursor:pointer;font-family:var(--font);transition:opacity .15s,transform .1s;flex-shrink:0;}
+.copy-btn-group{display:flex;gap:8px;align-items:center;}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:white;background:var(--brand-grad);border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-family:var(--font);transition:opacity .15s,transform .1s;flex-shrink:0;}
 .copy-btn:hover{opacity:.85;transform:translateY(-1px);}
 .copy-btn.copied{background:var(--green);}
+.copy-en-btn{display:none;}
+.view-orig-btn{font-size:12px;font-weight:600;color:rgba(165,180,252,.5);background:none;border:1px solid rgba(165,180,252,.15);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap;}
+.view-orig-btn:hover{color:rgba(165,180,252,.8);border-color:rgba(165,180,252,.3);}
 
 /* ── ZONE MAP ── */
 .zone-map{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
@@ -107,6 +111,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 .zone-desc{font-size:13px;color:var(--ink-3);line-height:1.55;}
 .zone-count{display:inline-block;margin-top:14px;font-size:11px;font-weight:700;color:var(--zc, var(--brand));background:color-mix(in srgb, var(--zc, var(--brand)) 12%, transparent);padding:3px 10px;border-radius:100px;}
 
+/* ── TIPS SECTION ── */
+.tips-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+@media(max-width:640px){.tips-grid{grid-template-columns:1fr;}}
+.tip-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;display:flex;gap:14px;align-items:flex-start;}
+.tip-icon{font-size:28px;flex-shrink:0;line-height:1;padding-top:2px;}
+.tip-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.tip-desc{font-size:13px;color:var(--ink-2);line-height:1.7;}
+.tip-desc code{background:var(--brand-light);color:var(--brand);padding:1px 6px;border-radius:4px;font-size:12px;font-family:monospace;font-weight:600;}
+
 /* ── CATEGORY SECTION ── */
 .cat-sec{padding:64px 0;border-top:2px solid var(--border);scroll-margin-top:60px;}
 .cat-sec:first-child{border-top:none;}
@@ -116,25 +129,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 .cat-bar{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden;}
 .cat-bar-fill{height:100%;border-radius:2px;background:var(--zc, var(--brand));}
 
-/* Prompt cards grid */
+/* ── PROMPT CARDS (light, in categories) ── */
 .prompt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;}
 @media(max-width:640px){.prompt-grid{grid-template-columns:1fr;}}
-.prompt-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;transition:box-shadow .2s;}
+.prompt-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;transition:box-shadow .2s;display:flex;flex-direction:column;}
 .prompt-card:hover{box-shadow:var(--shadow);}
 .prompt-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px;}
 .prompt-card-name{font-size:14px;font-weight:700;color:var(--ink);}
 .photo-badge{font-size:10px;font-weight:700;background:var(--brand-light);color:var(--brand);padding:2px 8px;border-radius:100px;white-space:nowrap;flex-shrink:0;}
-.prompt-card-text{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:14px;}
-.prompt-card-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.copy-btn-sm{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:white;background:var(--brand-grad);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:opacity .15s;}
+.prompt-zh{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:14px;flex:1;}
+.prompt-en{margin-top:0;padding:10px 0 10px;border-top:1px solid var(--border);display:none;}
+.prompt-en.open{display:block;}
+.prompt-en p{font-size:12px;color:var(--ink-3);line-height:1.65;}
+.prompt-card-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto;}
+.copy-btn-sm{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:white;background:var(--brand-grad);border:none;padding:6px 13px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:opacity .15s;}
 .copy-btn-sm:hover{opacity:.85;}
 .copy-btn-sm.copied{background:var(--green);}
-.zh-toggle-sm{font-size:11px;font-weight:600;color:var(--ink-3);background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--font);transition:all .15s;}
-.zh-toggle-sm:hover{border-color:var(--brand);color:var(--brand);}
-.prompt-zh-sm{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--ink-3);line-height:1.65;display:none;}
-.prompt-zh-sm.open{display:block;}
+.view-orig-sm{font-size:11px;font-weight:600;color:var(--ink-3);background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap;}
+.view-orig-sm:hover{border-color:var(--brand);color:var(--brand);}
 
-/* Challenge card */
+/* ── CHALLENGE CARD ── */
 .challenge-card{background:linear-gradient(135deg,#1A1440 0%,#2E1D6A 100%);border-radius:16px;padding:28px 32px;display:flex;gap:20px;align-items:flex-start;margin-top:8px;}
 .challenge-icon{font-size:40px;flex-shrink:0;}
 .challenge-body{}
@@ -219,7 +233,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
   .modal{border-radius:14px;}
 }
 
-/* ── ANIMATIONS ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 .fade-up{animation:fadeUp .5s ease both;}
 </style>
@@ -267,15 +280,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
           <span class="story-time">影片 4:00</span>
           <h3 class="story-title">一張普通合照，變成 90 年代好萊塢雜誌封面</h3>
           <p class="story-desc">發布會第一個演示：工程師 Gabe 把自己和 Sam Altman 的合照上傳，寫了一句話，60 秒後——一本真實感十足的雜誌出現了。</p>
+          <img class="story-img" src="week5-assets/story-1-magazine.png" alt="雜誌封面生成範例" loading="lazy">
           <div class="prompt-dark">
-            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
-            <p class="prompt-dark-text" id="s1p">create a magazine cover - editorial, fashion style from the 90s - called PIXEL PERFECTION with the headline 'chatgpt images 2.0 is here' and put these guys on the cover in a candid casual style like they are hollywood stars. make up other story headlines to tease on the cover. make it look like a real magazine! Make sure to change their wardrobe and lighting to match the vibe of the magazine.</p>
-            <div class="prompt-dark-footer">
-              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
-              <button class="copy-btn" onclick="copyPrompt('s1p',this)">📋 複製提示詞</button>
+            <span class="prompt-dark-label">提示詞 — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-zh">製作一個雜誌封面——採用 90 年代編輯時尚風格——名稱為「PIXEL PERFECTION」，主標題為「chatgpt images 2.0 is here」，把上傳的人物放在封面，以隨性風格呈現，就像好萊塢明星一樣。同時加上其他故事標題作為封面吸引點，讓整體看起來像一本真正的雜誌！請調整他們的服裝與燈光以符合雜誌氛圍。</p>
+            <div class="prompt-dark-en">
+              <p>create a magazine cover - editorial, fashion style from the 90s - called PIXEL PERFECTION with the headline 'chatgpt images 2.0 is here' and put these guys on the cover in a candid casual style like they are hollywood stars. make up other story headlines to tease on the cover. make it look like a real magazine! Make sure to change their wardrobe and lighting to match the vibe of the magazine.</p>
             </div>
-            <div class="prompt-zh-panel">
-              製作一個雜誌封面——採用 90 年代編輯時尚風格——名稱為「PIXEL PERFECTION」，主標題為「chatgpt images 2.0 is here」，把上傳的人物放在封面，以隨性風格呈現，就像好萊塢明星一樣。同時加上其他故事標題作為封面吸引點，讓整體看起來像一本真正的雜誌！請調整他們的服裝與燈光以符合雜誌氛圍。
+            <div class="prompt-dark-footer">
+              <div class="copy-btn-group">
+                <button class="copy-btn" onclick="copyZH(this)">📋 複製中文</button>
+                <button class="copy-btn copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+              </div>
+              <button class="view-orig-btn" onclick="toggleOriginal(this)">查看原文</button>
             </div>
           </div>
           <div class="story-insight">描述「媒體形式」（雜誌封面），不只描述畫面——這是讓 AI 生出高品質圖片的關鍵</div>
@@ -289,15 +306,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
           <span class="story-time">影片 6:00</span>
           <h3 class="story-title">同一張臉，8 套完整夏日造型——AI 記住你</h3>
           <p class="story-desc">工程師 Kwan 上傳自己的照片，要求 AI 生成 8 套不同穿搭。神奇的是，每一套裡的臉都是同一個人。</p>
+          <img class="story-img" src="week5-assets/story-2-outfits.png" alt="8 套穿搭生成範例" loading="lazy">
           <div class="prompt-dark">
-            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
-            <p class="prompt-dark-text" id="s2p">Freeform fashion-editorial collage of me in 8 distinct full-body summer outfits, arranged organically on a clean cream studio background. Keep my face consistent across all 8 looks. Add neat handwritten arrows and labels for the key clothing pieces. No grid, border, or boxed panels. Keep all 8 full-body figures at the same visual scale. Arrange them in a balanced two-row layout. Use a portrait 2:3 composition.</p>
-            <div class="prompt-dark-footer">
-              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
-              <button class="copy-btn" onclick="copyPrompt('s2p',this)">📋 複製提示詞</button>
+            <span class="prompt-dark-label">提示詞 — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-zh">以我為主角，創作一張自由形式的時尚編輯拼貼圖，包含 8 套不同的全身夏季穿搭，自然排列在乾淨的米色攝影棚背景上。保持我在這 8 個造型中的臉部一致性。為關鍵服裝單品加上手寫箭頭與標註。不要使用網格或邊框。讓 8 個人物在比例與鏡頭距離上一致，平衡兩排排列，2:3 直式構圖。</p>
+            <div class="prompt-dark-en">
+              <p>Freeform fashion-editorial collage of me in 8 distinct full-body summer outfits, arranged organically on a clean cream studio background. Keep my face consistent across all 8 looks. Add neat handwritten arrows and labels for the key clothing pieces. No grid, border, or boxed panels. Keep all 8 full-body figures at the same visual scale. Arrange them in a balanced two-row layout. Use a portrait 2:3 composition.</p>
             </div>
-            <div class="prompt-zh-panel">
-              以我為主角，創作一張自由形式的時尚編輯拼貼圖，包含 8 套不同的全身夏季穿搭，自然排列在乾淨的米色攝影棚背景上。保持我在這 8 個造型中的臉部一致性。為關鍵服裝單品加上手寫箭頭與標註。不要使用網格或邊框。讓 8 個人物在比例與鏡頭距離上一致，平衡兩排排列，2:3 直式構圖。
+            <div class="prompt-dark-footer">
+              <div class="copy-btn-group">
+                <button class="copy-btn" onclick="copyZH(this)">📋 複製中文</button>
+                <button class="copy-btn copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+              </div>
+              <button class="view-orig-btn" onclick="toggleOriginal(this)">查看原文</button>
             </div>
           </div>
           <div class="story-insight">「Keep my face consistent」= 告訴 AI 什麼需要保留，剩下的才是它發揮的空間</div>
@@ -311,15 +332,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
           <span class="story-time">影片 11:20</span>
           <h3 class="story-title">AI 搜尋網路、設計海報、生成真實可掃描的 QR Code</h3>
           <p class="story-desc">這一段是全場最震撼的演示。Kenji 要求 AI 去搜尋某個話題，整理成海報，還加上一個連結到 ChatGPT 的 QR Code——掃下去，真的能開！</p>
+          <img class="story-img" src="week5-assets/story-3-poster.png" alt="海報加 QR Code 生成範例" loading="lazy">
           <div class="prompt-dark">
-            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
-            <p class="prompt-dark-text" id="s3p">Search for the "duct tape image model" and make a playful poster of various information and quoted opinions from social media about it, highlighting its strengths. Only cite the platform to protect privacy. You are the model, so put your own generations as advertising in the poster. Put a big QR code to chatgpt.com/images somewhere that makes sense. At the end, unveil that it's actually GPT-Image-2 and that people can try it today!</p>
-            <div class="prompt-dark-footer">
-              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
-              <button class="copy-btn" onclick="copyPrompt('s3p',this)">📋 複製提示詞</button>
+            <span class="prompt-dark-label">提示詞 — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-zh">搜尋「duct tape image model」，製作一張有趣的海報，包含來自社群媒體的各種資訊與引用評論，突顯它的優勢。為保護隱私只標註來源平台。你就是這個模型，所以可以把你自己生成的圖片作為海報中的廣告素材。在合適位置放上連結到 chatgpt.com/images 的大型 QR Code。最後揭示這其實是 GPT-Image-2，並告訴大家現在就可以試用！</p>
+            <div class="prompt-dark-en">
+              <p>Search for the "duct tape image model" and make a playful poster of various information and quoted opinions from social media about it, highlighting its strengths. Only cite the platform to protect privacy. You are the model, so put your own generations as advertising in the poster. Put a big QR code to chatgpt.com/images somewhere that makes sense. At the end, unveil that it's actually GPT-Image-2 and that people can try it today!</p>
             </div>
-            <div class="prompt-zh-panel">
-              搜尋「duct tape image model」，製作一張有趣的海報，包含來自社群媒體的各種資訊與引用評論，突顯它的優勢。為保護隱私只標註來源平台。你就是這個模型，所以可以把你自己生成的圖片作為海報中的廣告素材。在合適位置放上連結到 chatgpt.com/images 的大型 QR Code。最後揭示這其實是 GPT-Image-2，並告訴大家現在就可以試用！
+            <div class="prompt-dark-footer">
+              <div class="copy-btn-group">
+                <button class="copy-btn" onclick="copyZH(this)">📋 複製中文</button>
+                <button class="copy-btn copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+              </div>
+              <button class="view-orig-btn" onclick="toggleOriginal(this)">查看原文</button>
             </div>
           </div>
           <div class="story-insight">AI 不只是畫圖——它可以搜尋資訊、設計版面、生成真實可掃描的 QR Code，把資料轉成「可以被人使用的產品」</div>
@@ -333,15 +358,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
           <span class="story-time">影片 13:30</span>
           <h3 class="story-title">讓 AI 抓住你的靈魂，然後重新設計你</h3>
           <p class="story-desc">Boyuan 的一句話改變了大家對「AI 生圖」的理解：「不要讓 AI 照著畫你——讓 AI 抓住你，然後重新設計你。」</p>
+          <img class="story-img" src="week5-assets/story-4-sticker.png" alt="日式貼圖風格漫畫範例" loading="lazy">
           <div class="prompt-dark">
-            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
-            <p class="prompt-dark-text" id="s4p">Use my photo only for identity. Redraw me as a very simple surreal Japanese sticker-style caricature: long thin neck, small deadpan face, minimal black outline, flat light coloring, almost no shading, very few facial details, simplified hair shape, lots of white space, plain white background, slightly awkward and funny. Ultratall 1:3 image.</p>
-            <div class="prompt-dark-footer">
-              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
-              <button class="copy-btn" onclick="copyPrompt('s4p',this)">📋 複製提示詞</button>
+            <span class="prompt-dark-label">提示詞 — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-zh">只將我的照片用於辨識身份。把我重新繪製成非常簡單、帶點超現實的日式貼圖風格漫畫形象：細長的脖子、小而面無表情的臉、極簡黑色外框、平面且輕淡的上色、幾乎沒有陰影、極少的臉部細節、簡化的髮型、大量留白、純白背景，整體帶點微妙尷尬又有趣的感覺。使用超高比例 1:3 的構圖。</p>
+            <div class="prompt-dark-en">
+              <p>Use my photo only for identity. Redraw me as a very simple surreal Japanese sticker-style caricature: long thin neck, small deadpan face, minimal black outline, flat light coloring, almost no shading, very few facial details, simplified hair shape, lots of white space, plain white background, slightly awkward and funny. Ultratall 1:3 image.</p>
             </div>
-            <div class="prompt-zh-panel">
-              只將我的照片用於辨識身份。把我重新繪製成非常簡單、帶點超現實的日式貼圖風格漫畫形象：細長的脖子、小而面無表情的臉、極簡黑色外框、平面且輕淡的上色、幾乎沒有陰影、極少的臉部細節、簡化的髮型、大量留白、純白背景，整體帶點微妙尷尬又有趣的感覺。使用超高比例 1:3 的構圖。
+            <div class="prompt-dark-footer">
+              <div class="copy-btn-group">
+                <button class="copy-btn" onclick="copyZH(this)">📋 複製中文</button>
+                <button class="copy-btn copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+              </div>
+              <button class="view-orig-btn" onclick="toggleOriginal(this)">查看原文</button>
             </div>
           </div>
           <div class="story-insight">Prompt 的核心思維 = 定義「什麼該保留」＋「什麼該被改寫」——這是讓 AI 真正替你創作的方法</div>
@@ -355,26 +384,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
           <span class="story-time">影片 16:00</span>
           <h3 class="story-title">中文、日文、阿拉伯文——AI 在一張圖裡全部寫對</h3>
           <p class="story-desc">過去 AI 生圖的最大弱點是「文字一定會寫錯」。現在這個問題幾乎解決了。這張日文麵包店海報，連語氣都對了。</p>
+          <img class="story-img" src="week5-assets/story-5-bakery.png" alt="日文麵包店海報生成範例" loading="lazy">
           <div class="prompt-dark">
-            <span class="prompt-dark-label">PROMPT — 複製後貼到 ChatGPT</span>
-            <p class="prompt-dark-text" id="s5p">Make an artistic marketing poster for a fictional "OpenAI bakery". The poster should be in Japanese language. Use a warm, minimalist aesthetic inspired by Japanese stationery brands like MUJI.</p>
-            <div class="prompt-dark-footer">
-              <button class="prompt-zh-toggle" onclick="toggleZH(this)">看中文翻譯</button>
-              <button class="copy-btn" onclick="copyPrompt('s5p',this)">📋 複製提示詞</button>
+            <span class="prompt-dark-label">提示詞 — 複製後貼到 ChatGPT</span>
+            <p class="prompt-dark-zh">為一間虛構的「OpenAI 麵包店」製作一張具有藝術感的行銷海報。海報應使用日文呈現。風格採用溫暖、簡約的美學，靈感來自 MUJI 這類日本文具品牌。</p>
+            <div class="prompt-dark-en">
+              <p>Make an artistic marketing poster for a fictional "OpenAI bakery". The poster should be in Japanese language. Use a warm, minimalist aesthetic inspired by Japanese stationery brands like MUJI.</p>
             </div>
-            <div class="prompt-zh-panel">
-              為一間虛構的「OpenAI 麵包店」製作一張具有藝術感的行銷海報。海報應使用日文呈現。風格採用溫暖、簡約的美學，靈感來自 MUJI 這類日本文具品牌。
+            <div class="prompt-dark-footer">
+              <div class="copy-btn-group">
+                <button class="copy-btn" onclick="copyZH(this)">📋 複製中文</button>
+                <button class="copy-btn copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+              </div>
+              <button class="view-orig-btn" onclick="toggleOriginal(this)">查看原文</button>
             </div>
           </div>
           <div class="story-insight">AI 不只「寫對語言」，而是「寫對語氣」——MUJI 的日文海報語感，和一般翻譯截然不同</div>
         </div>
       </div>
 
-    </div><!-- /story-cards -->
+    </div>
   </div>
 </section>
 
-<!-- ════ SECTION 2: PLAYGROUND ════ -->
+<!-- ════ SECTION 2: PLAYGROUND (ZONE MAP) ════ -->
 <section class="sec light" id="playground">
   <div class="sec-inner">
     <div class="sec-head">
@@ -382,7 +415,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <h2 class="sec-title">選一個你想玩的景點，<br>開始創作吧</h2>
       <p class="sec-lead">六大創作場景，每個都有可以直接複製的提示詞。帶 📷 的提示詞需要你上傳一張自己的照片。</p>
     </div>
-    <!-- Zone Map -->
     <div class="zone-map">
       <a class="zone-card" href="#z1" style="--zc:var(--z1)">
         <span class="zone-icon">🎨</span>
@@ -424,8 +456,56 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
   </div>
 </section>
 
+<!-- ════ 生圖小技巧 ════ -->
+<section class="sec tint" id="tips">
+  <div class="sec-inner">
+    <div class="sec-head" style="margin-bottom:32px;">
+      <span class="sec-eye">生圖小技巧</span>
+      <h2 class="sec-title">用對方式，效果差很多</h2>
+      <p class="sec-lead">開始玩之前，先看這五個小技巧——能幫你少走很多彎路。</p>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">📐</div>
+        <div>
+          <div class="tip-title">指定圖片比例</div>
+          <p class="tip-desc">在提示詞最後加上比例，例如 <code>9:16 ratio</code>（直式、適合 Instagram）或 <code>16:9 ratio</code>（橫式、適合投影），就能控制圖片方向。</p>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📷</div>
+        <div>
+          <div class="tip-title">帶 📷 的提示詞，先上傳照片</div>
+          <p class="tip-desc">看到「需要照片」的提示詞，記得先把你的照片上傳給 ChatGPT，然後再貼上提示詞。順序反了，AI 就不知道你要用哪張臉了。</p>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💬</div>
+        <div>
+          <div class="tip-title">不滿意？在同一個對話繼續調整</div>
+          <p class="tip-desc">生出來的圖不滿意，不用重開對話。直接在下面說「把背景改成戶外」或「臉部太誇張，自然一點」——AI 會記得上一張圖繼續修改。</p>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">✏️</div>
+        <div>
+          <div class="tip-title">記得換掉 [ ] 裡的內容</div>
+          <p class="tip-desc">部分提示詞裡有 [你的品牌名稱] 或 [料理名稱] 這樣的佔位文字，直接貼上去不會有好結果。複製前記得換成你自己的內容。</p>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌐</div>
+        <div>
+          <div class="tip-title">想要更精準？試試英文</div>
+          <p class="tip-desc">AI 的訓練資料以英文為主，英文提示詞的描述力通常更強。每張提示詞卡片都有「查看原文」按鈕，點一下就能複製英文版來試試看。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ════ CATEGORIES ════ -->
-<section class="sec tint" id="categories">
+<section class="sec tint" id="categories" style="padding-top:40px;">
   <div class="sec-inner">
 
     <!-- Z1: 藝術風格館 -->
@@ -438,66 +518,73 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="prompt-grid">
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">Studio Ghibli 吉卜力</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p1">Convert my photo into a Studio Ghibli scene with soft watercolor textures, pastel colors, dreamy background, and a warm nostalgic mood.</p>
+          <p class="prompt-zh">把我的照片轉換成吉卜力工作室風格，帶有柔和水彩質感、粉彩色調、夢幻背景，以及溫暖懷舊的氛圍。</p>
+          <div class="prompt-en"><p>Convert my photo into a Studio Ghibli scene with soft watercolor textures, pastel colors, dreamy background, and a warm nostalgic mood.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p1',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把我的照片轉換成吉卜力工作室風格，帶有柔和水彩質感、粉彩色調、夢幻背景，以及溫暖懷舊的氛圍。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">3D Pixar 皮克斯</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p2">Transform this photo into a 3D Pixar-style character with slightly exaggerated, expressive facial features, smooth skin, warm studio lighting, and a clean background.</p>
+          <p class="prompt-zh">把這張照片轉換成 3D 皮克斯風格角色，帶有略微誇張但富有表情的面部特徵、光滑的皮膚、溫暖的攝影棚燈光和乾淨的背景。</p>
+          <div class="prompt-en"><p>Transform this photo into a 3D Pixar-style character with slightly exaggerated, expressive facial features, smooth skin, warm studio lighting, and a clean background.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p2',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這張照片轉換成 3D 皮克斯風格角色，帶有略微誇張但富有表情的面部特徵、光滑的皮膚、溫暖的攝影棚燈光和乾淨的背景。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">梵谷 Van Gogh</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p3">Convert this photo into a Van Gogh oil painting style, with expressive swirling brushstrokes, bold vivid colors, and thick impasto paint texture.</p>
+          <p class="prompt-zh">把這張照片轉換成梵谷油畫風格，帶有充滿表情的旋轉筆觸、大膽鮮豔的色彩，以及厚重的油畫質感。</p>
+          <div class="prompt-en"><p>Convert this photo into a Van Gogh oil painting style, with expressive swirling brushstrokes, bold vivid colors, and thick impasto paint texture.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p3',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這張照片轉換成梵谷油畫風格，帶有充滿表情的旋轉筆觸、大膽鮮豔的色彩，以及厚重的油畫質感。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">水彩畫 Watercolor</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p4">Transform this image into a soft watercolor painting with gentle flowing brushstrokes, delicate colors that bleed into each other, and a hand-painted feel on textured paper.</p>
+          <p class="prompt-zh">把這張圖轉換成柔和水彩畫，帶有輕柔流動的筆觸、互相暈染的淡雅色彩，以及在有紋理紙張上的手繪感。</p>
+          <div class="prompt-en"><p>Transform this image into a soft watercolor painting with gentle flowing brushstrokes, delicate colors that bleed into each other, and a hand-painted feel on textured paper.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p4',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這張圖轉換成柔和水彩畫，帶有輕柔流動的筆觸、互相暈染的淡雅色彩，以及在有紋理紙張上的手繪感。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">漫畫風 Comic Book</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p5">Transform this photo into a bold comic book style with thick black outlines, halftone dot shading, vibrant flat colors, and a dynamic cinematic composition.</p>
+          <p class="prompt-zh">把這張照片轉換成粗獷的漫畫風格，帶有粗黑輪廓線、半調點狀陰影、鮮豔的平塗色彩，以及動態的電影感構圖。</p>
+          <div class="prompt-en"><p>Transform this photo into a bold comic book style with thick black outlines, halftone dot shading, vibrant flat colors, and a dynamic cinematic composition.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p5',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這張照片轉換成粗獷的漫畫風格，帶有粗黑輪廓線、半調點狀陰影、鮮豔的平塗色彩，以及動態的電影感構圖。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">黏土動畫 Claymation</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p6">Turn this photo into a Claymation-style character. Use soft, rounded modeling clay textures with visible sculpting marks, appearing as if made from colorful clay. Warm studio lighting.</p>
+          <p class="prompt-zh">把這張照片轉換成黏土動畫風格角色。使用柔軟圓潤的建模黏土質感，帶有可見的塑形痕跡，看起來像是由彩色黏土製成的。溫暖的攝影棚燈光。</p>
+          <div class="prompt-en"><p>Turn this photo into a Claymation-style character. Use soft, rounded modeling clay textures with visible sculpting marks, appearing as if made from colorful clay. Warm studio lighting.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p6',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這張照片轉換成黏土動畫風格角色。使用柔軟圓潤的建模黏土質感，帶有可見的塑形痕跡，看起來像是由彩色黏土製成的。溫暖的攝影棚燈光。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">像素藝術 Pixel Art</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z1p7">Convert this photo into pixel art with a retro 16-bit aesthetic, vibrant colors, and a neon sunset background. Each pixel clearly visible.</p>
+          <p class="prompt-zh">把這張照片轉換成像素藝術，帶有復古 16 位元風格、鮮豔的色彩，以及霓虹日落背景。每個像素清晰可見。</p>
+          <div class="prompt-en"><p>Convert this photo into pixel art with a retro 16-bit aesthetic, vibrant colors, and a neon sunset background. Each pixel clearly visible.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z1p7',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這張照片轉換成像素藝術，帶有復古 16 位元風格、鮮豔的色彩，以及霓虹日落背景。每個像素清晰可見。</div>
         </div>
       </div>
       <div class="challenge-card">
@@ -521,57 +608,63 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="prompt-grid">
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">玩具人偶包裝 Action Figure</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z2p1">Design a highly detailed 3D-rendered action figure inside a classic toy blister pack. Use the uploaded photo to model the character's face. Name the figure at the top. Include 4-5 mini accessories in separate compartments (e.g., laptop, coffee cup, book, headphones). Cardboard backing color: deep blue. Retro-modern collectible toy style. Ultra-realistic product shot.</p>
+          <p class="prompt-zh">設計一個高度詳細的 3D 渲染玩具人偶，放在經典玩具泡殼包裝內。用上傳的照片為角色建模。頂部標上人偶名稱，配件區放 4-5 個迷你配件（例如筆電、咖啡杯、書、耳機）。紙卡背景顏色：深藍。復古現代收藏玩具風格，超寫實產品照。</p>
+          <div class="prompt-en"><p>Design a highly detailed 3D-rendered action figure inside a classic toy blister pack. Use the uploaded photo to model the character's face. Name the figure at the top. Include 4-5 mini accessories in separate compartments (e.g., laptop, coffee cup, book, headphones). Cardboard backing color: deep blue. Retro-modern collectible toy style. Ultra-realistic product shot.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z2p1',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">設計一個高度詳細的 3D 渲染玩具人偶，放在經典玩具泡殼包裝內。用上傳的照片為角色建模。頂部標上人偶名稱，配件區放 4-5 個迷你配件（例如筆電、咖啡杯、書、耳機）。紙卡背景顏色：深藍。復古現代收藏玩具風格，超寫實產品照。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">Funko Pop 公仔</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z2p2">Create a Funko Pop vinyl figure of the person in this photo. Classic Funko style: large square head, small body, big round black eyes. Place it in an official white Funko Pop box with a clear plastic window. Show the POP! logo, figure name at bottom, number in a black circle top right. Professional product photography, full box visible, slightly angled view, studio lighting.</p>
+          <p class="prompt-zh">為這張照片中的人物創作一個 Funko Pop 黑膠公仔。經典 Funko 風格：大方形頭、小身體、圓形大黑眼睛。放在官方白色 Funko Pop 盒子內，透明塑料視窗。顯示 POP! 標誌、底部名字、右上角黑色圓圈內的編號。專業產品攝影，全盒可見，略微傾斜視角，攝影棚燈光。</p>
+          <div class="prompt-en"><p>Create a Funko Pop vinyl figure of the person in this photo. Classic Funko style: large square head, small body, big round black eyes. Place it in an official white Funko Pop box with a clear plastic window. Show the POP! logo, figure name at bottom, number in a black circle top right. Professional product photography, full box visible, slightly angled view, studio lighting.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z2p2',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">為這張照片中的人物創作一個 Funko Pop 黑膠公仔。經典 Funko 風格：大方形頭、小身體、圓形大黑眼睛。放在官方白色 Funko Pop 盒子內，透明塑料視窗。顯示 POP! 標誌、底部名字、右上角黑色圓圈內的編號。專業產品攝影，全盒可見，略微傾斜視角，攝影棚燈光。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">寶可夢集換式卡牌</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z2p3">Generate a Pokémon-style trading card. Vertical close-up held between thumb and finger, classic 1999 gold holo-foil frame. Three-quarter portrait with rim lighting. Include HP value, one ability with effect description, one attack with damage, weakness, resistance, and retreat cost. Render card and fingers sharp, background softly blurred, studio lighting sparkling on the foil.</p>
+          <p class="prompt-zh">生成一張寶可夢風格的集換式卡牌。直式特寫，被拇指和食指夾住，經典 1999 年金色全息閃亮邊框。四分之三角度肖像配合邊緣光。包含 HP 值、一個特技描述、一個攻擊傷害、弱點、抗性和退場費用。卡牌和手指清晰，背景柔化，閃亮箔面上的攝影棚燈光。</p>
+          <div class="prompt-en"><p>Generate a Pokémon-style trading card. Vertical close-up held between thumb and finger, classic 1999 gold holo-foil frame. Three-quarter portrait with rim lighting. Include HP value, one ability with effect description, one attack with damage, weakness, resistance, and retreat cost. Render card and fingers sharp, background softly blurred, studio lighting sparkling on the foil.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z2p3',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">生成一張寶可夢風格的集換式卡牌。直式特寫，被拇指和食指夾住，經典 1999 年金色全息閃亮邊框。四分之三角度肖像配合邊緣光。包含 HP 值、一個特技描述、一個攻擊傷害、弱點、抗性和退場費用。卡牌和手指清晰，背景柔化，閃亮箔面上的攝影棚燈光。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">Q 版貼圖組 Sticker Sheet</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z2p4">Create a sticker sheet of the person in this photo featuring 8 different expressions and poses. Cute chibi Q-version art style, thick white border on each sticker, transparent background. Arrange as a neat sticker sheet grid. Include emotions like happy, surprised, sleepy, laughing, thinking, cool, sad, heart-eyes.</p>
+          <p class="prompt-zh">為這張照片中的人物製作一組貼圖，包含 8 種不同的表情和姿勢。可愛的 Q 版 chibi 藝術風格，每個貼圖有白色厚邊框，透明背景。整齊排列成貼圖格。包含情緒：開心、驚訝、想睡、大笑、思考、酷、傷心、愛心眼。</p>
+          <div class="prompt-en"><p>Create a sticker sheet of the person in this photo featuring 8 different expressions and poses. Cute chibi Q-version art style, thick white border on each sticker, transparent background. Arrange as a neat sticker sheet grid. Include emotions like happy, surprised, sleepy, laughing, thinking, cool, sad, heart-eyes.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z2p4',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">為這張照片中的人物製作一組貼圖，包含 8 種不同的表情和姿勢。可愛的 Q 版 chibi 藝術風格，每個貼圖有白色厚邊框，透明背景。整齊排列成貼圖格。包含情緒：開心、驚訝、想睡、大笑、思考、酷、傷心、愛心眼。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">辛普森家族 The Simpsons</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z2p5">Turn this person into a Simpsons character. Classic Springfield resident style: yellow skin, slight overbite, 4 fingers, simple round eyes. Place them in a typical Springfield setting like a couch, Kwik-E-Mart, or Moe's Tavern. Match the original TV show's flat animation style.</p>
+          <p class="prompt-zh">把這個人變成辛普森家族角色。經典春田鎮居民風格：黃色皮膚、略帶暴牙、4 根手指、簡單的圓眼睛。放在典型的春田鎮場景，如沙發、Kwik-E-Mart 或 Moe 酒吧。符合原版電視節目的平面動畫風格。</p>
+          <div class="prompt-en"><p>Turn this person into a Simpsons character. Classic Springfield resident style: yellow skin, slight overbite, 4 fingers, simple round eyes. Place them in a typical Springfield setting like a couch, Kwik-E-Mart, or Moe's Tavern. Match the original TV show's flat animation style.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z2p5',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這個人變成辛普森家族角色。經典春田鎮居民風格：黃色皮膚、略帶暴牙、4 根手指、簡單的圓眼睛。放在典型的春田鎮場景，如沙發、Kwik-E-Mart 或 Moe 酒吧。符合原版電視節目的平面動畫風格。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">3D 毛絨圖標</div></div>
-          <p class="prompt-card-text" id="z2p6">Transform a simple flat icon of [描述一個物品，例如：a coffee cup / a book / a camera] into a soft, 3D fluffy object. Fully covered in plush fur or velvet texture, hyperrealistic hair texture. Studio lighting on a clean pastel background. High-resolution render.</p>
+          <p class="prompt-zh">把一個簡單的平面圖標（[描述一個物品，例如：咖啡杯 / 書本 / 相機]）轉換成柔軟的 3D 毛絨物體。完全覆蓋著毛絨或天鵝絨質感，超寫實毛髮紋理。在乾淨的粉彩背景上的攝影棚燈光。高解析度渲染。</p>
+          <div class="prompt-en"><p>Transform a simple flat icon of [describe an object, e.g.: a coffee cup / a book / a camera] into a soft, 3D fluffy object. Fully covered in plush fur or velvet texture, hyperrealistic hair texture. Studio lighting on a clean pastel background. High-resolution render.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z2p6',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把一個簡單的平面圖標（[描述一個物品，例如：咖啡杯 / 書本 / 相機]）轉換成柔軟的 3D 毛絨物體。完全覆蓋著毛絨或天鵝絨質感，超寫實毛髮紋理。在乾淨的粉彩背景上的攝影棚燈光。高解析度渲染。</div>
         </div>
       </div>
       <div class="challenge-card">
@@ -595,48 +688,53 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="prompt-grid">
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">賽博龐克夜景 Cyberpunk</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z3p1">Cinematic shot of me walking against a rushing cyber city crowd, all others blurred with motion trails. I'm in sharp focus, side profile, serious expression. It's raining and I'm soaked. Wearing a long trench coat. Neon cyberpunk tones, 35mm film look. Ratio 9:16.</p>
+          <p class="prompt-zh">我在賽博龐克風格的城市人群中逆向而行的電影感鏡頭，其他人帶有動態模糊殘影。我的側臉清晰對焦，表情嚴肅，在大雨中被淋濕，穿著長風衣。霓虹賽博龐克色調，35mm 膠片風格，9:16 比例。</p>
+          <div class="prompt-en"><p>Cinematic shot of me walking against a rushing cyber city crowd, all others blurred with motion trails. I'm in sharp focus, side profile, serious expression. It's raining and I'm soaked. Wearing a long trench coat. Neon cyberpunk tones, 35mm film look. Ratio 9:16.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z3p1',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">我在賽博龐克風格的城市人群中逆向而行的電影感鏡頭，其他人帶有動態模糊殘影。我的側臉清晰對焦，表情嚴肅，在大雨中被淋濕，穿著長風衣。霓虹賽博龐克色調，35mm 膠片風格，9:16 比例。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">車內霓虹夜 Neo-Noir</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z3p2">Sitting inside a car at night, bathed in moody neon lighting. Deep blue and magenta illuminating the interior. Rain droplets streak the car window. Grip the steering wheel with a serious expression. Replace the driver's face with the uploaded photo. Neo-noir thriller vibe, ultra-realistic. Text at the bottom reads "IN THE NIGHT".</p>
+          <p class="prompt-zh">在夜晚的車內，沐浴在迷幻的霓虹燈光中。深藍和品紅色照亮車內空間。雨滴劃過車窗。雙手握住方向盤，表情嚴肅。把駕駛的臉換成上傳的照片。黑色電影驚悚片氛圍，超寫實。底部文字寫「IN THE NIGHT」。</p>
+          <div class="prompt-en"><p>Sitting inside a car at night, bathed in moody neon lighting. Deep blue and magenta illuminating the interior. Rain droplets streak the car window. Grip the steering wheel with a serious expression. Replace the driver's face with the uploaded photo. Neo-noir thriller vibe, ultra-realistic. Text at the bottom reads "IN THE NIGHT".</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z3p2',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">在夜晚的車內，沐浴在迷幻的霓虹燈光中。深藍和品紅色照亮車內空間。雨滴劃過車窗。雙手握住方向盤，表情嚴肅。把駕駛的臉換成上傳的照片。黑色電影驚悚片氛圍，超寫實。底部文字寫「IN THE NIGHT」。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">人群中靜止 Still in the Crowd</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z3p3">Cinematic overhead shot of me standing perfectly still on a brick city sidewalk, wearing a dark oversized blazer. Motion-blurred crowd rushes past around me. Moody lighting, 35mm film look, shallow depth of field, sharp focus on me. Portrait 4:3 ratio.</p>
+          <p class="prompt-zh">俯拍電影感鏡頭：我靜靜站在磚砌城市人行道上，穿著深色寬大西裝外套。四周人群帶著動態模糊匆匆而過。迷幻光線，35mm 膠片風格，淺景深，我清晰對焦。4:3 直式比例。</p>
+          <div class="prompt-en"><p>Cinematic overhead shot of me standing perfectly still on a brick city sidewalk, wearing a dark oversized blazer. Motion-blurred crowd rushes past around me. Moody lighting, 35mm film look, shallow depth of field, sharp focus on me. Portrait 4:3 ratio.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z3p3',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">俯拍電影感鏡頭：我靜靜站在磚砌城市人行道上，穿著深色寬大西裝外套。四周人群帶著動態模糊匆匆而過。迷幻光線，35mm 膠片風格，淺景深，我清晰對焦。4:3 直式比例。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">黑白戲劇肖像 B&amp;W Drama</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z3p4">A dramatic black and white portrait of a confident person sitting on a wooden stool against a dark studio background. All-black outfit, small silver chain, silver watch. Posture is relaxed yet dominant. Moody, powerful aura. Rembrandt lighting technique.</p>
+          <p class="prompt-zh">一張戲劇性的黑白肖像，自信的人坐在深色攝影棚背景前的木凳上。全黑服裝，小銀項鍊，銀錶。姿態放鬆但有氣場。迷幻有力的氣質。鐫布朗特打光技術。</p>
+          <div class="prompt-en"><p>A dramatic black and white portrait of a confident person sitting on a wooden stool against a dark studio background. All-black outfit, small silver chain, silver watch. Posture is relaxed yet dominant. Moody, powerful aura. Rembrandt lighting technique.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z3p4',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">一張戲劇性的黑白肖像，自信的人坐在深色攝影棚背景前的木凳上。全黑服裝，小銀項鍊，銀錶。姿態放鬆但有氣場。迷幻有力的氣質。鐫布朗特打光技術。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">復古 90 年代臥室</div></div>
-          <p class="prompt-card-text" id="z3p5">Grungy analog photo of a teenager playing PlayStation 1 on a 90s CRT TV in a dimly lit bedroom. Warm nostalgic tones, VHS scan lines, posters on walls, unmade bed, soda cans. Candid flash photography, raw and unedited feel.</p>
+          <p class="prompt-zh">昏暗臥室中的骯髒類比照片：青少年在 90 年代 CRT 電視前玩 PlayStation 1。溫暖懷舊色調，VHS 掃描線，牆上貼滿海報，凌亂的床，汽水罐。隨機閃光攝影，原始未修圖的感覺。</p>
+          <div class="prompt-en"><p>Grungy analog photo of a teenager playing PlayStation 1 on a 90s CRT TV in a dimly lit bedroom. Warm nostalgic tones, VHS scan lines, posters on walls, unmade bed, soda cans. Candid flash photography, raw and unedited feel.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z3p5',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">昏暗臥室中的骯髒類比照片：青少年在 90 年代 CRT 電視前玩 PlayStation 1。溫暖懷舊色調，VHS 掃描線，牆上貼滿海報，凌亂的床，汽水罐。隨機閃光攝影，原始未修圖的感覺。</div>
         </div>
       </div>
       <div class="challenge-card">
@@ -660,57 +758,63 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="prompt-grid">
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">活動海報 Event Poster</div></div>
-          <p class="prompt-card-text" id="z4p1">A vibrant music festival poster, large bold text "SUMMER SOUND 2026" centered, dates "AUG 15–17" below, neon synthwave color palette with purple and cyan gradients, abstract sound waves in the background, dynamic layout.</p>
+          <p class="prompt-zh">充滿活力的音樂節海報，大型粗體文字「SUMMER SOUND 2026」置中，日期「AUG 15–17」在下方，紫色和青色漸變的霓虹合成波色調，背景有抽象聲波，動態排版。</p>
+          <div class="prompt-en"><p>A vibrant music festival poster, large bold text "SUMMER SOUND 2026" centered, dates "AUG 15–17" below, neon synthwave color palette with purple and cyan gradients, abstract sound waves in the background, dynamic layout.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z4p1',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">充滿活力的音樂節海報，大型粗體文字「SUMMER SOUND 2026」置中，日期「AUG 15–17」在下方，紫色和青色漸變的霓虹合成波色調，背景有抽象聲波，動態排版。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">品牌 Logo 設計</div></div>
-          <p class="prompt-card-text" id="z4p2">A modern minimalist logo for a brand called "[你的品牌名稱]". Clean sans-serif wordmark paired with a simple geometric symbol. Color palette: deep navy and warm gold. White background. Professional brand identity style.</p>
+          <p class="prompt-zh">一個名為「[你的品牌名稱]」的現代簡約 Logo。乾淨的無襯線字標與簡單幾何符號配對。色調：深海軍藍與暖金。白色背景。專業品牌識別風格。</p>
+          <div class="prompt-en"><p>A modern minimalist logo for a brand called "[your brand name]". Clean sans-serif wordmark paired with a simple geometric symbol. Color palette: deep navy and warm gold. White background. Professional brand identity style.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z4p2',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">一個名為「[你的品牌名稱]」的現代簡約 Logo。乾淨的無襯線字標與簡單幾何符號配對。色調：深海軍藍與暖金。白色背景。專業品牌識別風格。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">產品攝影 Product Shot</div></div>
-          <p class="prompt-card-text" id="z4p3">A glass of fresh orange juice on white marble surface, condensation droplets on the glass, mint leaf on top as garnish, soft diffused side lighting, professional food photography composition, top-tier commercial aesthetic.</p>
+          <p class="prompt-zh">一杯新鮮柳橙汁放在白色大理石表面，玻璃杯上有水滴凝結，頂部裝飾薄荷葉，柔和散射的側面燈光，專業食品攝影構圖，頂級商業美學。</p>
+          <div class="prompt-en"><p>A glass of fresh orange juice on white marble surface, condensation droplets on the glass, mint leaf on top as garnish, soft diffused side lighting, professional food photography composition, top-tier commercial aesthetic.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z4p3',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">一杯新鮮柳橙汁放在白色大理石表面，玻璃杯上有水滴凝結，頂部裝飾薄荷葉，柔和散射的側面燈光，專業食品攝影構圖，頂級商業美學。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">YouTube 縮圖 Thumbnail</div></div>
-          <p class="prompt-card-text" id="z4p4">YouTube thumbnail design: exaggerated shocked expression on the left side of the frame, large bold red text "我嘗試了這個 24 小時" on the right, high-contrast yellow background, dramatic studio lighting, eye-catching viral thumbnail style.</p>
+          <p class="prompt-zh">YouTube 縮圖設計：畫面左側誇張的震驚表情，右側大型粗體紅字「我嘗試了這個 24 小時」，高對比黃色背景，戲劇性攝影棚燈光，吸睛的病毒式縮圖風格。</p>
+          <div class="prompt-en"><p>YouTube thumbnail design: exaggerated shocked expression on the left side of the frame, large bold red text "我嘗試了這個 24 小時" on the right, high-contrast yellow background, dramatic studio lighting, eye-catching viral thumbnail style.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z4p4',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">YouTube 縮圖設計：畫面左側誇張的震驚表情，右側大型粗體紅字「我嘗試了這個 24 小時」，高對比黃色背景，戲劇性攝影棚燈光，吸睛的病毒式縮圖風格。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">食譜步驟圖 Recipe Card</div></div>
-          <p class="prompt-card-text" id="z4p5">Create a recipe visual guide for "[料理名稱]". Show 4 steps with small ingredient photos for each step. Clean minimalist design, warm cream background tones, hand-written style labels, appetizing food photography aesthetic.</p>
+          <p class="prompt-zh">為「[料理名稱]」製作一張食譜視覺指南。顯示 4 個步驟，每個步驟有小型食材圖片。乾淨簡約的設計，溫暖米色背景色調，手寫風格標籤，令人食慾大開的食品攝影美學。</p>
+          <div class="prompt-en"><p>Create a recipe visual guide for "[dish name]". Show 4 steps with small ingredient photos for each step. Clean minimalist design, warm cream background tones, hand-written style labels, appetizing food photography aesthetic.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z4p5',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">為「[料理名稱]」製作一張食譜視覺指南。顯示 4 個步驟，每個步驟有小型食材圖片。乾淨簡約的設計，溫暖米色背景色調，手寫風格標籤，令人食慾大開的食品攝影美學。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">咖啡包裝設計</div></div>
-          <p class="prompt-card-text" id="z4p6">Premium coffee bag packaging design. "TAIWAN ALISHAN" in elegant serif typography. "Single Origin · Medium Roast · 250g" subtitle. Natural kraft paper texture, top-down flat lay product shot, studio lighting with soft shadows.</p>
+          <p class="prompt-zh">高端咖啡袋包裝設計。「TAIWAN ALISHAN」以優雅的襯線字體呈現。副標題「Single Origin · Medium Roast · 250g」。天然牛皮紙質感，俯拍平鋪產品照，帶柔和陰影的攝影棚燈光。</p>
+          <div class="prompt-en"><p>Premium coffee bag packaging design. "TAIWAN ALISHAN" in elegant serif typography. "Single Origin · Medium Roast · 250g" subtitle. Natural kraft paper texture, top-down flat lay product shot, studio lighting with soft shadows.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z4p6',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">高端咖啡袋包裝設計。「TAIWAN ALISHAN」以優雅的襯線字體呈現。副標題「Single Origin · Medium Roast · 250g」。天然牛皮紙質感，俯拍平鋪產品照，帶柔和陰影的攝影棚燈光。</div>
         </div>
       </div>
       <div class="challenge-card">
@@ -734,48 +838,53 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="prompt-grid">
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">與動漫角色合照</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z5p1">Ultra-realistic 9:16 vertical format fisheye selfie of me with Naruto, Goku, and Doraemon. We're all making silly, exaggerated faces. Set in a small bright living room with white tones. High camera angle. Extreme fisheye distortion.</p>
+          <p class="prompt-zh">我與鳴人、悟空和哆啦 A 夢的超寫實 9:16 直式魚眼自拍。我們都做著誇張搞笑的表情。場景設在明亮白色調的小客廳。高角度攝影，極度魚眼扭曲效果。</p>
+          <div class="prompt-en"><p>Ultra-realistic 9:16 vertical format fisheye selfie of me with Naruto, Goku, and Doraemon. We're all making silly, exaggerated faces. Set in a small bright living room with white tones. High camera angle. Extreme fisheye distortion.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z5p1',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">我與鳴人、悟空和哆啦 A 夢的超寫實 9:16 直式魚眼自拍。我們都做著誇張搞笑的表情。場景設在明亮白色調的小客廳。高角度攝影，極度魚眼扭曲效果。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">魷魚遊戲場景</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z5p2">Transform this person into a scene from the Squid Game TV series. Keep the face exactly the same. Add a green tracksuit with a white number tag, dim indoor lighting, dramatic atmosphere. Make it look like a cinematic shot from the survival game show, keeping facial expression and identity unchanged.</p>
+          <p class="prompt-zh">把這個人變換到魷魚遊戲電視劇的場景中。臉部完全保持不變。加上綠色運動服和白色號碼牌，昏暗的室內燈光，戲劇性氛圍。讓它看起來像是生存遊戲節目的電影感鏡頭，保持面部表情和身份不變。</p>
+          <div class="prompt-en"><p>Transform this person into a scene from the Squid Game TV series. Keep the face exactly the same. Add a green tracksuit with a white number tag, dim indoor lighting, dramatic atmosphere. Make it look like a cinematic shot from the survival game show, keeping facial expression and identity unchanged.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z5p2',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">把這個人變換到魷魚遊戲電視劇的場景中。臉部完全保持不變。加上綠色運動服和白色號碼牌，昏暗的室內燈光，戲劇性氛圍。讓它看起來像是生存遊戲節目的電影感鏡頭，保持面部表情和身份不變。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">寵物變人類 Pet to Human</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z5p3">Show me what my pet would look like as a human. Keep the same fur color patterns, personality energy, and expression. Realistic human with subtle pet-like facial features. Dressed in clothing that matches their animal personality.</p>
+          <p class="prompt-zh">讓我看看我的寵物如果是人類會長什麼樣子。保持相同的毛色花紋、性格能量和表情。寫實的人類形象，帶有微妙的寵物臉部特徵。穿著符合牠們動物個性的服裝。</p>
+          <div class="prompt-en"><p>Show me what my pet would look like as a human. Keep the same fur color patterns, personality energy, and expression. Realistic human with subtle pet-like facial features. Dressed in clothing that matches their animal personality.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z5p3',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">讓我看看我的寵物如果是人類會長什麼樣子。保持相同的毛色花紋、性格能量和表情。寫實的人類形象，帶有微妙的寵物臉部特徵。穿著符合牠們動物個性的服裝。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">雙重曝光藝術</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z5p4">A cinematic double exposure of me in side profile, with a mountain forest landscape blended inside the silhouette. The inner scene shows sunlight filtering through tall pine trees, mist floating between branches. Moody atmospheric lighting, dark cinematic tones, 8K resolution.</p>
+          <p class="prompt-zh">我的側臉電影感雙重曝光，輪廓內融合了山林景觀。內部場景展現陽光穿透高聳松樹，薄霧在枝間飄浮。迷幻大氣燈光，深沉電影色調，8K 解析度。</p>
+          <div class="prompt-en"><p>A cinematic double exposure of me in side profile, with a mountain forest landscape blended inside the silhouette. The inner scene shows sunlight filtering through tall pine trees, mist floating between branches. Moody atmospheric lighting, dark cinematic tones, 8K resolution.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z5p4',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">我的側臉電影感雙重曝光，輪廓內融合了山林景觀。內部場景展現陽光穿透高聳松樹，薄霧在枝間飄浮。迷幻大氣燈光，深沉電影色調，8K 解析度。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">誇張漫畫大頭貼 Caricature</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z5p5">Create a fun exaggerated caricature of the person in this photo. Hugely enlarged head, tiny body, emphasize their most distinctive facial feature (smile, eyes, or hairstyle). Colorful cartoon style, white background, friendly and humorous tone.</p>
+          <p class="prompt-zh">為這張照片中的人物創作一幅有趣誇張的漫畫大頭貼。超大的頭，小小的身體，強調他們最有特色的臉部特徵（微笑、眼睛或髮型）。色彩繽紛的卡通風格，白色背景，友善幽默的語氣。</p>
+          <div class="prompt-en"><p>Create a fun exaggerated caricature of the person in this photo. Hugely enlarged head, tiny body, emphasize their most distinctive facial feature (smile, eyes, or hairstyle). Colorful cartoon style, white background, friendly and humorous tone.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z5p5',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">為這張照片中的人物創作一幅有趣誇張的漫畫大頭貼。超大的頭，小小的身體，強調他們最有特色的臉部特徵（微笑、眼睛或髮型）。色彩繽紛的卡通風格，白色背景，友善幽默的語氣。</div>
         </div>
       </div>
       <div class="challenge-card">
@@ -799,48 +908,53 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="prompt-grid">
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">移除背景</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z6p1">Keep the main subject in the foreground and remove all background elements completely. Replace with a clean pure white background. Preserve all fine details including hair strands and fabric edges.</p>
+          <p class="prompt-zh">保留前景的主要主體，完全移除所有背景元素。換成乾淨的純白背景。保留所有細節，包括髮絲和布料邊緣。</p>
+          <div class="prompt-en"><p>Keep the main subject in the foreground and remove all background elements completely. Replace with a clean pure white background. Preserve all fine details including hair strands and fabric edges.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z6p1',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">保留前景的主要主體，完全移除所有背景元素。換成乾淨的純白背景。保留所有細節，包括髮絲和布料邊緣。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">自然修圖 Natural Retouching</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z6p2">Enhance this portrait naturally. Improve clarity, sharpen details, slightly boost contrast. Preserve ALL natural skin texture, pores, and character. Do not over-smooth or create an artificial plastic look. Keep it real.</p>
+          <p class="prompt-zh">自然地增強這張肖像。提高清晰度，銳化細節，略微提升對比度。保留所有自然的皮膚質感、毛孔和特點。不要過度柔化或造成人工塑料感。保持真實。</p>
+          <div class="prompt-en"><p>Enhance this portrait naturally. Improve clarity, sharpen details, slightly boost contrast. Preserve ALL natural skin texture, pores, and character. Do not over-smooth or create an artificial plastic look. Keep it real.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z6p2',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">自然地增強這張肖像。提高清晰度，銳化細節，略微提升對比度。保留所有自然的皮膚質感、毛孔和特點。不要過度柔化或造成人工塑料感。保持真實。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">更換背景</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z6p3">Keep the subject exactly as they are. Replace the background with a professional office environment with large windows, city view, soft natural light. Maintain the original light direction and color temperature on the subject.</p>
+          <p class="prompt-zh">完全保持主體不變。把背景換成有大窗戶的專業辦公環境，城市景觀，柔和的自然光。保持原始光線方向和主體上的色溫。</p>
+          <div class="prompt-en"><p>Keep the subject exactly as they are. Replace the background with a professional office environment with large windows, city view, soft natural light. Maintain the original light direction and color temperature on the subject.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z6p3',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">完全保持主體不變。把背景換成有大窗戶的專業辦公環境，城市景觀，柔和的自然光。保持原始光線方向和主體上的色溫。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">電影調色 Cinematic Grade</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z6p4">Apply a cinematic color grade to this photo. Lift the shadows slightly to a cool blue-teal tone, warm orange mid-tones, slightly desaturate the skin. Add subtle film grain. Keep composition unchanged. Hollywood blockbuster aesthetic.</p>
+          <p class="prompt-zh">為這張照片進行電影調色。略微提亮陰影至冷藍青色調，暖橘色的中間調，略微降低皮膚飽和度。加入微妙的膠片顆粒。保持構圖不變。好萊塢大片美學。</p>
+          <div class="prompt-en"><p>Apply a cinematic color grade to this photo. Lift the shadows slightly to a cool blue-teal tone, warm orange mid-tones, slightly desaturate the skin. Add subtle film grain. Keep composition unchanged. Hollywood blockbuster aesthetic.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z6p4',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">為這張照片進行電影調色。略微提亮陰影至冷藍青色調，暖橘色的中間調，略微降低皮膚飽和度。加入微妙的膠片顆粒。保持構圖不變。好萊塢大片美學。</div>
         </div>
         <div class="prompt-card">
           <div class="prompt-card-top"><div class="prompt-card-name">LinkedIn 商務照</div><span class="photo-badge">📷 需要照片</span></div>
-          <p class="prompt-card-text" id="z6p5">Create a studio-quality LinkedIn profile headshot based on this photo. Clean neutral light grey background, confident and approachable expression, soft professional studio lighting from slightly above. Maintain the person's natural appearance. Square 1:1 format.</p>
+          <p class="prompt-zh">根據這張照片製作一張攝影棚品質的 LinkedIn 個人頭像。乾淨的中性淺灰背景，自信而平易近人的表情，從略高位置的柔和專業攝影棚燈光。保持人物自然外貌。1:1 正方形格式。</p>
+          <div class="prompt-en"><p>Create a studio-quality LinkedIn profile headshot based on this photo. Clean neutral light grey background, confident and approachable expression, soft professional studio lighting from slightly above. Maintain the person's natural appearance. Square 1:1 format.</p></div>
           <div class="prompt-card-footer">
-            <button class="copy-btn-sm" onclick="copyPrompt('z6p5',this)">📋 複製</button>
-            <button class="zh-toggle-sm" onclick="toggleZH(this)">中文</button>
+            <button class="copy-btn-sm" onclick="copyZH(this)">📋 複製中文</button>
+            <button class="copy-btn-sm copy-en-btn" onclick="copyEN(this)">📋 複製英文</button>
+            <button class="view-orig-sm" onclick="toggleOriginal(this)">查看原文</button>
           </div>
-          <div class="prompt-zh-sm">根據這張照片製作一張攝影棚品質的 LinkedIn 個人頭像。乾淨的中性淺灰背景，自信而平易近人的表情，從略高位置的柔和專業攝影棚燈光。保持人物自然外貌。1:1 正方形格式。</div>
         </div>
       </div>
       <div class="challenge-card">
@@ -854,7 +968,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       </div>
     </div>
 
-  </div><!-- /sec-inner -->
+  </div>
 </section>
 
 <!-- ════ SECTION 3: GALLERY ════ -->
@@ -865,9 +979,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
         <span class="sec-eye" style="margin-bottom:8px;">成果牆</span>
         <h2 class="sec-title">今天的創作</h2>
       </div>
-      <button class="upload-btn" onclick="openUpload()">
-        ＋ 上傳我的作品
-      </button>
+      <button class="upload-btn" onclick="openUpload()">＋ 上傳我的作品</button>
     </div>
     <div class="gallery-grid" id="galleryGrid">
       <div class="gallery-empty">
@@ -927,7 +1039,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
       <div class="form-error" id="formError"></div>
       <button class="form-submit" id="submitBtn" onclick="submitWork()">🚀 發布到成果牆</button>
     </div>
-    <!-- Success State -->
     <div class="success-state" id="successState">
       <div class="success-icon">🎉</div>
       <div class="success-title">作品已上牆！</div>
@@ -938,55 +1049,56 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 </div>
 
 <script>
-// ── SUPABASE ──
 const { createClient } = supabase;
 const sb = createClient(
   'https://nyvptaklqujfaqnjueku.supabase.co',
   'sb_publishable_EXaSn3GVNXsQCIyoorDEqg_Vocy1bm6'
 );
 
-// ── SCROLL: sticky nav + progress bar ──
+// ── Sticky nav + progress bar ──
 const snav = document.getElementById('snav');
 const progFill = document.getElementById('progFill');
 window.addEventListener('scroll', () => {
   const scrolled = window.scrollY;
-  if (scrolled > 80) snav.classList.add('vis');
-  else snav.classList.remove('vis');
+  snav.classList.toggle('vis', scrolled > 80);
   const total = document.body.scrollHeight - window.innerHeight;
   progFill.style.width = (scrolled / total * 100) + '%';
 });
 
-// ── COPY PROMPT ──
-function copyPrompt(id, btn) {
-  const text = document.getElementById(id)?.innerText || '';
-  navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.innerHTML;
-    btn.innerHTML = '✓ 已複製！';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
-  }).catch(() => {
+// ── Copy helpers ──
+function doCopy(text, btn, msg) {
+  const orig = btn.innerHTML;
+  const finish = () => { btn.innerHTML = msg; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000); };
+  navigator.clipboard.writeText(text).then(finish).catch(() => {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const orig = btn.innerHTML;
-    btn.innerHTML = '✓ 已複製！';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    finish();
   });
 }
 
-// ── TOGGLE ZH TRANSLATION ──
-function toggleZH(btn) {
-  const panel = btn.parentElement.nextElementSibling;
-  if (!panel) return;
-  panel.classList.toggle('open');
-  btn.textContent = panel.classList.contains('open') ? '收起翻譯' : (btn.classList.contains('prompt-zh-toggle') ? '看中文翻譯' : '中文');
+function copyZH(btn) {
+  const card = btn.closest('.prompt-card, .prompt-dark');
+  const el = card.querySelector('.prompt-zh, .prompt-dark-zh');
+  doCopy(el ? el.innerText : '', btn, '✓ 已複製中文！');
 }
 
-// ── MODAL ──
+function copyEN(btn) {
+  const card = btn.closest('.prompt-card, .prompt-dark');
+  const el = card.querySelector('.prompt-en p, .prompt-dark-en p');
+  doCopy(el ? el.innerText : '', btn, '✓ 已複製英文！');
+}
+
+function toggleOriginal(btn) {
+  const card = btn.closest('.prompt-card, .prompt-dark');
+  const panel = card.querySelector('.prompt-en, .prompt-dark-en');
+  if (!panel) return;
+  const isOpen = panel.classList.toggle('open');
+  btn.textContent = isOpen ? '收起原文' : '查看原文';
+  const enBtn = card.querySelector('.copy-en-btn');
+  if (enBtn) enBtn.style.display = isOpen ? 'inline-flex' : 'none';
+}
+
+// ── Modal ──
 function openUpload() {
   document.getElementById('uploadModal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -994,7 +1106,6 @@ function openUpload() {
 function closeUpload() {
   document.getElementById('uploadModal').classList.remove('open');
   document.body.style.overflow = '';
-  // Reset form
   document.getElementById('nameInput').value = '';
   document.getElementById('catSelect').value = '';
   document.getElementById('reflInput').value = '';
@@ -1009,84 +1120,62 @@ document.getElementById('uploadModal').addEventListener('click', function(e) {
   if (e.target === this) closeUpload();
 });
 
-// ── IMAGE PREVIEW ──
+// ── Image preview ──
 function previewImage(input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    const prev = document.getElementById('uploadPreview');
-    prev.src = e.target.result;
-    prev.style.display = 'block';
-  };
+  reader.onload = e => { const p = document.getElementById('uploadPreview'); p.src = e.target.result; p.style.display = 'block'; };
   reader.readAsDataURL(file);
 }
 
-// Drag-drop
 const uploadArea = document.getElementById('uploadArea');
 uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag'); });
 uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
 uploadArea.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadArea.classList.remove('drag');
+  e.preventDefault(); uploadArea.classList.remove('drag');
   const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) {
-    document.getElementById('imageInput').files = e.dataTransfer.files;
-    previewImage({ files: [file] });
-  }
+  if (file && file.type.startsWith('image/')) { document.getElementById('imageInput').files = e.dataTransfer.files; previewImage({ files: [file] }); }
 });
 
-// ── SUBMIT WORK ──
+// ── Submit ──
 async function submitWork() {
   const name = document.getElementById('nameInput').value.trim();
   const category = document.getElementById('catSelect').value;
   const imageFile = document.getElementById('imageInput').files[0];
   const reflection = document.getElementById('reflInput').value.trim();
   const errEl = document.getElementById('formError');
-
   errEl.classList.remove('show');
   if (!name) { showError('請填寫你的名字'); return; }
   if (!category) { showError('請選擇景點類別'); return; }
   if (!imageFile) { showError('請上傳一張作品截圖'); return; }
   if (imageFile.size > 5 * 1024 * 1024) { showError('圖片太大，請選擇 5MB 以下的圖片'); return; }
-
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = '上傳中...';
-
+  btn.disabled = true; btn.textContent = '上傳中...';
   try {
-    // Upload image to Supabase Storage
     const ext = imageFile.name.split('.').pop() || 'jpg';
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
     const { error: upErr } = await sb.storage.from('artwork').upload(filename, imageFile, { cacheControl: '3600', upsert: false });
     if (upErr) throw upErr;
-
     const { data: { publicUrl } } = sb.storage.from('artwork').getPublicUrl(filename);
-
-    // Save to database
     const { error: dbErr } = await sb.from('submissions').insert([{ name, category, image_url: publicUrl, reflection }]);
     if (dbErr) throw dbErr;
-
-    // Show success
     document.getElementById('uploadForm').style.display = 'none';
     document.getElementById('successState').classList.add('show');
     loadGallery();
-
   } catch (err) {
     console.error(err);
     showError('上傳失敗，請再試一次（' + (err.message || '未知錯誤') + '）');
-    btn.disabled = false;
-    btn.textContent = '🚀 發布到成果牆';
+    btn.disabled = false; btn.textContent = '🚀 發布到成果牆';
   }
 }
 
 function showError(msg) {
   const el = document.getElementById('formError');
-  el.textContent = msg;
-  el.classList.add('show');
+  el.textContent = msg; el.classList.add('show');
 }
 
-// ── LOAD GALLERY ──
+// ── Gallery ──
 async function loadGallery() {
   const grid = document.getElementById('galleryGrid');
   try {
@@ -1098,7 +1187,7 @@ async function loadGallery() {
     }
     grid.innerHTML = data.map(item => `
       <div class="gallery-item">
-        <img class="gallery-img" src="${item.image_url}" alt="${item.name}的作品" loading="lazy" onerror="this.style.display='none'">
+        <img class="gallery-img" src="${item.image_url}" alt="${escHtml(item.name)}的作品" loading="lazy" onerror="this.style.display='none'">
         <div class="gallery-info">
           <div class="gallery-name">${escHtml(item.name)}</div>
           <span class="gallery-cat">${escHtml(item.category)}</span>
@@ -1106,16 +1195,13 @@ async function loadGallery() {
         </div>
       </div>
     `).join('');
-  } catch (err) {
-    console.error('Gallery load error:', err);
-  }
+  } catch (err) { console.error('Gallery load error:', err); }
 }
 
 function escHtml(str) {
   return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Auto-load gallery on page load
 loadGallery();
 </script>
 </body>
